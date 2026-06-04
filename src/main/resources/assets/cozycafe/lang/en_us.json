@@ -1,0 +1,9 @@
+{
+  "itemGroup.cozycafe": "Cozy Cafe",
+  "itemGroup.cozycafe.creative_tab": "Cozy Cafe",
+
+  "block.cozycafe.cafe_manager": "Cafe Manager",
+  "gui.cozycafe.cafe_manager.edit_menu": "Edit Menu",
+  "gui.cozycafe.cafe_manager.open": "OPEN",
+  "gui.cozycafe.cafe_manager.close": "CLOSE"
+}

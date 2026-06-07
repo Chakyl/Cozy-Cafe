@@ -2,6 +2,7 @@ package io.github.chakyl.cozycafe.event;
 
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.gui.CafeManagerScreen;
+import io.github.chakyl.cozycafe.gui.MenuSelectorScreen;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,6 +19,7 @@ public class ClientModEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(CozyRegistry.MenuRegistry.CAFE_MANAGER.get(), CafeManagerScreen::new);
+            MenuScreens.register(CozyRegistry.MenuRegistry.MENU_SELECTOR.get(), MenuSelectorScreen::new);
         });
 
     }

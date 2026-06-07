@@ -1,0 +1,7 @@
+{
+  "item": "minecraft:cake",
+  "category": "dessert",
+  "price": 16,
+  "flavors": ["sweet","heavy"],
+  "themes": ["casual", "fancy"]
+}

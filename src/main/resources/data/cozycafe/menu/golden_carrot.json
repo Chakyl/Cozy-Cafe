@@ -1,0 +1,7 @@
+{
+  "item": "minecraft:golden_carrot",
+  "category": "main",
+  "price": 4,
+  "flavors": ["vegan", "cold", "metallic"],
+  "themes": ["fancy"]
+}

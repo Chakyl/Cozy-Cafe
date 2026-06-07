@@ -3,7 +3,18 @@
   "itemGroup.cozycafe.creative_tab": "Cozy Cafe",
 
   "block.cozycafe.cafe_manager": "Cafe Manager",
+
+  "category.cozycafe.main": "Main",
+  "category.cozycafe.dessert": "Dessert",
+  "category.cozycafe.drink": "Drink",
+
   "gui.cozycafe.cafe_manager.edit_menu": "Edit Menu",
   "gui.cozycafe.cafe_manager.open": "OPEN",
-  "gui.cozycafe.cafe_manager.close": "CLOSE"
+  "gui.cozycafe.cafe_manager.close": "CLOSE",
+
+  "gui.cozycafe.menu_selector.invalid": "Can't add!",
+  "gui.cozycafe.menu_selector.added": "Added!",
+  "gui.cozycafe.menu_selector.price": "Price: %s",
+  "gui.cozycafe.menu_selector.item_category": "Category: %s",
+  "gui.cozycafe.menu_selector.remove": "Click to remove"
 }

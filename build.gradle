@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
 }
 
@@ -136,7 +137,8 @@ repositories {
             includeGroup("com.eliotlash.mclib")
         }
     }
-
+    maven { url = 'https://maven.parchmentmc.org' }
+    mavenCentral()
 }
 
 dependencies {
@@ -160,8 +162,7 @@ dependencies {
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
 
     // Gecolib
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
-    implementation("com.eliotlash.mclib:mclib:20")
+    implementation fg.deobf("curse.maven:placebo-283644:6274231")
 
     // JEI
     implementation fg.deobf("curse.maven:jei-238222:6075247")

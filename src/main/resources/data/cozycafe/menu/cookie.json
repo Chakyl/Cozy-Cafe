@@ -1,0 +1,7 @@
+{
+  "item": "minecraft:cookie",
+  "category": "dessert",
+  "price": 2,
+  "flavors": ["sweet", "chocolate", "light"],
+  "themes": ["casual", "fast_food"]
+}

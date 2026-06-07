@@ -1,0 +1,7 @@
+{
+  "item": "minecraft:honey_bottle",
+  "category": "drink",
+  "price": 7,
+  "flavors": ["sweet","heavy"],
+  "themes": ["casual", "fancy"]
+}

@@ -5,6 +5,7 @@ import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blockentities.CafeManagerBlockEntity;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
+import io.github.chakyl.cozycafe.gui.MenuSelectorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -126,6 +127,7 @@ public final class CozyRegistry {
             MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
         public static final RegistryObject<MenuType<CafeManagerMenu>> CAFE_MANAGER = MENU_TYPES.register("cafe_manager", () -> IForgeMenuType.create(CafeManagerMenu::new));
+        public static final RegistryObject<MenuType<MenuSelectorMenu>> MENU_SELECTOR = MENU_TYPES.register("menu_selector", () -> IForgeMenuType.create(MenuSelectorMenu::new));
     }
     public static final class CreativeTabReg {
 

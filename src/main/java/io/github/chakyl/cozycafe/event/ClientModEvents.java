@@ -1,12 +1,15 @@
 package io.github.chakyl.cozycafe.event;
 
 import io.github.chakyl.cozycafe.CozyCafe;
+import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
+import io.github.chakyl.cozycafe.blockentities.renderer.CafeMenuBlockEntityRenderer;
 import io.github.chakyl.cozycafe.gui.CafeManagerScreen;
 import io.github.chakyl.cozycafe.gui.MenuSelectorScreen;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -21,6 +24,11 @@ public class ClientModEvents {
             MenuScreens.register(CozyRegistry.MenuRegistry.CAFE_MANAGER.get(), CafeManagerScreen::new);
             MenuScreens.register(CozyRegistry.MenuRegistry.MENU_SELECTOR.get(), MenuSelectorScreen::new);
         });
-
     }
+
+    @SubscribeEvent
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(CozyRegistry.BlockEntityRegistry.CAFE_MENU.get(), CafeMenuBlockEntityRenderer::new);
+    }
+
 }

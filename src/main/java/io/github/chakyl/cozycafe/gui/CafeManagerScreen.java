@@ -47,6 +47,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         int leftPos = this.getGuiLeft();
         int topPos = this.getGuiTop();
         cafeMenu = this.menu.getCafeMenu();
+        this.isCafeOpen = this.menu.getIsCafeOpen();
         this.addRenderableWidget(Button.builder(
                         Component.translatable("gui.cozycafe.cafe_manager.edit_menu"),
                         (button) -> {

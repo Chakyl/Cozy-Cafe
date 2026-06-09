@@ -39,8 +39,6 @@ public class ServerBoundToggleCafeOpenPacket {
                     BlockEntity cafeManager = level.getBlockEntity(this.pos);
                     if (cafeManager instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
                         cafeManagerBlockEntity.setOpen(this.isOpen);
-                        cafeManagerBlockEntity.setChanged();
-                        level.sendBlockUpdated(this.pos, cafeManager.getBlockState(), cafeManager.getBlockState(), 3);
                     }
                 }
             }

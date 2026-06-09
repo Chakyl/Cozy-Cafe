@@ -7,7 +7,7 @@
     "facing=north,open=false": {
       "model": "cozycafe:block/cafe_manager"
     },
-    "facing=southcozycaf,open=falsee": {
+    "facing=south,open=false": {
       "model": "cozycafe:block/cafe_manager",
       "y": 180
     },

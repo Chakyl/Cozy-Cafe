@@ -40,6 +40,10 @@ public class CafeManagerMenu extends AbstractContainerMenu {
         this.broadcastChanges();
     }
 
+    public boolean getIsCafeOpen() {
+        return this.blockEntity.isOpen();
+    }
+
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),

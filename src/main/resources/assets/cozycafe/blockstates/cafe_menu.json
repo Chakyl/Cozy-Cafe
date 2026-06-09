@@ -1,0 +1,35 @@
+{
+  "variants": {
+    "facing=east,dish=false": {
+      "model": "cozycafe:block/cafe_menu",
+      "y": 90
+    },
+    "facing=north,dish=false": {
+      "model": "cozycafe:block/cafe_menu"
+    },
+    "facing=south,dish=false": {
+      "model": "cozycafe:block/cafe_menu",
+      "y": 180
+    },
+    "facing=west,dish=false": {
+      "model": "cozycafe:block/cafe_menu",
+      "y": 270
+    },
+
+    "facing=east,dish=true": {
+      "model": "cozycafe:block/cafe_menu",
+      "y": 90
+    },
+    "facing=north,dish=true": {
+      "model": "cozycafe:block/cafe_menu"
+    },
+    "facing=south,dish=true": {
+      "model": "cozycafe:block/cafe_menu",
+      "y": 180
+    },
+    "facing=west,dish=true": {
+      "model": "cozycafe:block/cafe_menu",
+      "y": 270
+    }
+  }
+}

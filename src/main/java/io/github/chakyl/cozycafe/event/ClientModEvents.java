@@ -1,8 +1,8 @@
 package io.github.chakyl.cozycafe.event;
 
 import io.github.chakyl.cozycafe.CozyCafe;
-import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import io.github.chakyl.cozycafe.blockentities.renderer.CafeMenuBlockEntityRenderer;
+import io.github.chakyl.cozycafe.entities.renderer.CustomerRenderer;
 import io.github.chakyl.cozycafe.gui.CafeManagerScreen;
 import io.github.chakyl.cozycafe.gui.MenuSelectorScreen;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
@@ -29,6 +29,7 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(CozyRegistry.BlockEntityRegistry.CAFE_MENU.get(), CafeMenuBlockEntityRenderer::new);
+        event.registerEntityRenderer(CozyRegistry.EntityRegistry.CUSTOMER.get(), CustomerRenderer::new);
     }
 
 }

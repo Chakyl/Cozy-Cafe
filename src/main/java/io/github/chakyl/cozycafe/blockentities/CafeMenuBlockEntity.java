@@ -1,8 +1,11 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
+import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -10,6 +13,8 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,6 +27,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
     private static int MAX_WAIT_TIME = 600;
     private int currentCourse = 0;
     private int waitTime = -1;
+    private boolean hasCustomer = false;
     private ItemStack requestedItem = ItemStack.EMPTY;
 
     public CafeMenuBlockEntity(BlockPos pos, BlockState state) {
@@ -76,7 +82,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
     }
 
     public boolean canReceiveNewChoice() {
-        return requestedItem.isEmpty() && waitTime == -1;
+        return this.hasCustomer && requestedItem.isEmpty() && waitTime == -1;
     }
 
     public static int getMaxWaitTime() {
@@ -105,7 +111,20 @@ public class CafeMenuBlockEntity extends BlockEntity {
     public void closeMenu() {
         this.waitTime = -1;
         this.currentCourse = 0;
+        this.hasCustomer = false;
         this.setRequestedItem(ItemStack.EMPTY);
+    }
+
+
+    public void onCustomerArrived(PathfinderMob customer) {
+        if (!this.level.isClientSide() && !this.hasCustomer) {
+            if (customer instanceof CustomerEntity customerEntity) {
+                customerEntity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK);
+            }
+            this.hasCustomer = true;
+            this.setChanged();
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+        }
     }
 
     public int getWaitTime() {
@@ -126,6 +145,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
     }
 
+    public boolean getHasCustomer() {
+        return this.hasCustomer;
+    }
+
     @Override
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition).expandTowards(0, 1.5, 0).inflate(0.5, 0, 0.5);
@@ -136,6 +159,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
         super.saveAdditional(tag);
         tag.putInt("currentCourse", this.currentCourse);
         tag.putInt("waitTime", this.waitTime);
+        tag.putBoolean("hasCustomer", this.hasCustomer);
         if (!this.requestedItem.isEmpty()) {
             tag.put("requestedItem", this.requestedItem.save(new CompoundTag()));
         }
@@ -146,6 +170,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
         super.load(tag);
         this.currentCourse = tag.getInt("currentCourse");
         this.waitTime = tag.getInt("waitTime");
+        this.hasCustomer = tag.getBoolean("hasCustomer");
         if (tag.contains("requestedItem")) {
             this.requestedItem = ItemStack.of(tag.getCompound("requestedItem"));
         } else {

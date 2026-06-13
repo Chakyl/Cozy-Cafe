@@ -3,6 +3,7 @@ package io.github.chakyl.cozycafe.blockentities;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
+import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -82,6 +84,15 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
                 if (entity instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
                     // TODO: Store this blockpos to menu for signaling
                     if (cafeMenuBlockEntity.canReceiveNewChoice()) rollMenuCourse(cafeMenuBlockEntity);
+                }
+            }
+            if (!scannedState.isAir() && scannedState.is(Blocks.DIAMOND_BLOCK)) {
+                if (Math.random() < 0.1) {
+                    CustomerEntity customer = CozyRegistry.EntityRegistry.CUSTOMER.get().create(this.level);
+                    if (customer != null) {
+                        customer.moveTo(scannedPos.getX(), scannedPos.getY() + 1, scannedPos.getZ(), 0.0f, 0.0f);
+                        level.addFreshEntity(customer);
+                    }
                 }
             }
         });

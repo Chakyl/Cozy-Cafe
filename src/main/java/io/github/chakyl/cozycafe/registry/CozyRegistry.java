@@ -6,13 +6,14 @@ import io.github.chakyl.cozycafe.blockentities.CafeManagerBlockEntity;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
+import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.gui.MenuSelectorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -44,11 +45,13 @@ public final class CozyRegistry {
     private static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
+    private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
     public static void register() {
         BlockRegistry.register();
         BlockEntityRegistry.register();
+        EntityRegistry.register();
         MenuRegistry.register();
         ItemRegistry.register();
         CreativeTabReg.register();
@@ -88,6 +91,14 @@ public final class CozyRegistry {
         public static final RegistryObject<BlockEntityType<CafeMenuBlockEntity>> CAFE_MENU = BLOCK_ENTITY_TYPES.register("cafe_menu", () -> BlockEntityType.Builder.of(CafeMenuBlockEntity::new, BlockRegistry.CAFE_MENU.get()).build(null));
     }
 
+    public static final class EntityRegistry {
+        private static void register() {
+            ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        }
+
+        public static final RegistryObject<EntityType<CustomerEntity>> CUSTOMER = ENTITY_TYPES.register("customer", () -> EntityType.Builder.of(CustomerEntity::new, MobCategory.CREATURE).sized(0.6F, 1.8F).build("customer"));
+    }
+
     public static final class ItemRegistry {
 
         private static final List<RegistryObject<Item>> ALL_ITEMS = new ArrayList<>();
@@ -95,8 +106,6 @@ public final class CozyRegistry {
         private static void register() {
             ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
-//
-//        public static final RegistryObject<Item> GATCHA_CAPSULE = register("gatcha_capsule", () -> new GatchaCapsuleItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(64)));
 
 
         /**

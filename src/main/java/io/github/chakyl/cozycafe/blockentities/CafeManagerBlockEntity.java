@@ -11,24 +11,26 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider {
@@ -37,7 +39,8 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     // Persistent Data
     private boolean open = false;
     private int dayLastOpened = 0;
-    private int stars = 0;
+    private int reputation = 0;
+    private BlockPos linkedSign;
     private String cafeName = "My Cafe";
     private List<ItemStack> menu;
 
@@ -48,55 +51,63 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide() && this.open) {
             if (level.getGameTime() % 20 == 0) {
-                scanAreaInFront(level, pos, state);
+                assignCustomersInArea(level, pos, state);
             }
         }
     }
 
     private BlockPos getFirstPos(BlockState state, BlockPos pos) {
-        int addedRange = this.stars * 2;
+        int addedRange = this.getStarsFromReputation() * 2;
         Direction facing = state.getValue(CafeManagerBlock.FACING);
         return pos.relative(facing.getOpposite(), 1).above(-1).relative(facing.getClockWise().getOpposite(), (3 + addedRange) / 2);
     }
 
     private BlockPos getSecondPos(BlockState state, BlockPos pos) {
-        int addedRange = this.stars * 2;
+        int stars = this.getStarsFromReputation();
+        int addedRange = stars * 2;
         Direction facing = state.getValue(CafeManagerBlock.FACING);
-        return pos.relative(facing.getOpposite(),  6 + addedRange).above(this.stars > 2 ? Math.min(3, this.stars - 1) : 1).relative(facing.getClockWise(), (3 + addedRange) / 2);
+        return pos.relative(facing.getOpposite(), 6 + addedRange).above(stars > 2 ? Math.min(3, stars - 1) : 1).relative(facing.getClockWise(), (3 + addedRange) / 2);
     }
 
-    public void scanAreaInFront(Level level, BlockPos pos, BlockState state) {
-        BlockPos.betweenClosedStream(this.getFirstPos(state, pos), this.getSecondPos(state, pos)).forEach(scannedPos -> {
-            if (!level.isLoaded(scannedPos)) return;
-            BlockState scannedState = level.getBlockState(scannedPos);
-            // TODO: Add way to view area
+    public void assignCustomersInArea(Level level, BlockPos pos, BlockState state) {
+        if (!(level instanceof ServerLevel serverLevel)) return;
+        List<BlockPos> availableMenuPositions = new ArrayList<>();
+
+        for (BlockPos scannedPos : BlockPos.betweenClosedStream(this.getFirstPos(state, pos), this.getSecondPos(state, pos)).map(BlockPos::immutable).toList()) {
+            if (!serverLevel.isLoaded(scannedPos)) continue;
+            BlockState scannedState = serverLevel.getBlockState(scannedPos);
             if (false) {
-                ((ServerLevel) level).sendParticles(
+                serverLevel.sendParticles(
                         ParticleTypes.HAPPY_VILLAGER,
                         scannedPos.getX() + 0.5, scannedPos.getY() + 0.5, scannedPos.getZ() + 0.5,
-                        0,
-                        0, 0, 0,
-                        0.0
+                        1, 0, 0, 0, 0.0
                 );
             }
-            if (!scannedState.isAir() && scannedState.is(CozyRegistry.BlockRegistry.CAFE_MENU.get())) {
-                BlockEntity entity = level.getBlockEntity(scannedPos);
-                if (entity instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
-                    // TODO: Store this blockpos to menu for signaling
-                    if (cafeMenuBlockEntity.canReceiveNewChoice()) rollMenuCourse(cafeMenuBlockEntity);
-                }
-            }
-            if (!scannedState.isAir() && scannedState.is(Blocks.DIAMOND_BLOCK)) {
-                if (Math.random() < 0.1) {
-                    CustomerEntity customer = CozyRegistry.EntityRegistry.CUSTOMER.get().create(this.level);
-                    if (customer != null) {
-                        customer.moveTo(scannedPos.getX(), scannedPos.getY() + 1, scannedPos.getZ(), 0.0f, 0.0f);
-                        level.addFreshEntity(customer);
+            if (scannedState.is(CozyRegistry.BlockRegistry.CAFE_MENU.get())) {
+                if (serverLevel.getBlockEntity(scannedPos) instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
+                    if (serverLevel.random.nextFloat() < 0.1f && cafeMenuBlockEntity.canReceiveNewCustomer()) {
+                        availableMenuPositions.add(scannedPos);
+                        cafeMenuBlockEntity.setCustomerTravelTime(0);
+                        cafeMenuBlockEntity.setCafeManager(pos);
                     }
                 }
             }
-        });
+        }
+
+        Collections.shuffle(availableMenuPositions);
+        if (!serverLevel.isLoaded(this.linkedSign) || availableMenuPositions.isEmpty()) return;
+        if (serverLevel.getBlockState(this.linkedSign).is(CozyRegistry.BlockRegistry.CAFE_SIGN.get())) {
+            CustomerEntity customer = CozyRegistry.EntityRegistry.CUSTOMER.get().create(serverLevel);
+            if (customer != null) {
+                BlockPos targetMenuPos = availableMenuPositions.remove(0);
+                customer.moveTo(this.linkedSign.getX() + 0.5, this.linkedSign.getY() + 1.0, this.linkedSign.getZ() + 0.5, serverLevel.random.nextFloat() * 360.0F, 0.0F);
+                serverLevel.addFreshEntity(customer);
+                customer.setTargetMenuPos(targetMenuPos);
+            }
+
+        }
     }
+
     public void sendCloseCommandToMenus(Level level, BlockPos pos, BlockState state) {
         BlockPos.betweenClosedStream(this.getFirstPos(state, pos), this.getSecondPos(state, pos)).forEach(scannedPos -> {
             if (!level.isLoaded(scannedPos)) return;
@@ -119,7 +130,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         return sortedMenuItems;
     }
 
-    private void rollMenuCourse(CafeMenuBlockEntity cafeMenuBlockEntity) {
+    public void rollMenuCourse(CafeMenuBlockEntity cafeMenuBlockEntity) {
         CafeMenuItem.MenuItemCategory category = CafeMenuItem.MenuItemCategory.MAIN;
         switch (cafeMenuBlockEntity.getCurrentCourse()) {
             case 0:
@@ -159,6 +170,14 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         this.servedCustomers = servedCustomers;
     }
 
+    public BlockPos getLinkedSign() {
+        return linkedSign;
+    }
+
+    public void setLinkedSign(BlockPos linkedSign) {
+        this.linkedSign = linkedSign;
+    }
+
     public boolean isOpen() {
         return open;
     }
@@ -172,12 +191,26 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
 
-    public int getStars() {
-        return stars;
+    public int getStarsFromReputation() {
+        return Mth.clamp((int) Math.floor((double) reputation / 1000), 0, 5);
     }
 
-    public void setStars(int stars) {
-        this.stars = stars;
+    public int getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
+
+    public void increaseReputation(int reputation) {
+        this.reputation += reputation;
+        this.reputation = Mth.clamp(this.reputation, 0, 5000);
+    }
+
+    public void decreaseReputation(int reputation) {
+        this.reputation -= reputation;
+        this.reputation = Mth.clamp(this.reputation, 0, 5000);
     }
 
     public String getCafeName() {
@@ -217,14 +250,13 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         if (index < this.menu.size()) this.menu.remove(index);
     }
 
-
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         nbt.putInt("servedCustomers", this.servedCustomers);
         nbt.putBoolean("open", this.open);
         nbt.putInt("dayLastOpened", this.dayLastOpened);
-        nbt.putInt("stars", this.stars);
+        nbt.putInt("reputation", this.reputation);
         nbt.putString("cafeName", this.cafeName);
         if (this.menu != null && !this.menu.isEmpty()) {
             ListTag menuList = new ListTag();
@@ -235,6 +267,9 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             }
             nbt.put("menu", menuList);
         }
+        if (this.linkedSign != null) {
+            nbt.put("LinkedSign", NbtUtils.writeBlockPos(this.linkedSign));
+        }
     }
 
     @Override
@@ -243,7 +278,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         this.servedCustomers = nbt.getInt("servedCustomers");
         this.open = nbt.getBoolean("open");
         this.dayLastOpened = nbt.getInt("dayLastOpened");
-        this.stars = nbt.getInt("stars");
+        this.reputation = nbt.getInt("reputation");
         if (nbt.contains("cafeName", Tag.TAG_STRING)) {
             this.cafeName = nbt.getString("cafeName");
         }
@@ -256,6 +291,9 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
                     this.menu.add(stack);
                 }
             }
+        }
+        if (nbt.contains("LinkedSign")) {
+            this.linkedSign = NbtUtils.readBlockPos(nbt.getCompound("LinkedSign"));
         }
     }
 

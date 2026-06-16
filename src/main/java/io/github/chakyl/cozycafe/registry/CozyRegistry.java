@@ -4,11 +4,14 @@ import com.google.common.base.Suppliers;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blockentities.CafeManagerBlockEntity;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
+import io.github.chakyl.cozycafe.blockentities.CafeSignBlockEntity;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
+import io.github.chakyl.cozycafe.blocks.CafeSignBlock;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.gui.MenuSelectorMenu;
+import io.github.chakyl.cozycafe.item.CafeSignItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -64,6 +67,7 @@ public final class CozyRegistry {
         }
 
         public static final RegistryObject<Block> CAFE_MANAGER = registerWithItem("cafe_manager", () -> new CafeManagerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).noOcclusion().strength(1.5F, 6.0F)));
+        public static final RegistryObject<Block> CAFE_SIGN = registerWithItem( "cafe_sign", () -> new CafeSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)),  (blockObj) -> ITEMS.register("cafe_sign", () -> new CafeSignItem(blockObj.get(), new Item.Properties())));
         public static final RegistryObject<Block> CAFE_MENU = registerWithItem("cafe_menu", () -> new CafeMenuBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)));
 
 
@@ -88,6 +92,7 @@ public final class CozyRegistry {
         }
 
         public static final RegistryObject<BlockEntityType<CafeManagerBlockEntity>> CAFE_MANAGER = BLOCK_ENTITY_TYPES.register("cafe_manager", () -> BlockEntityType.Builder.of(CafeManagerBlockEntity::new, BlockRegistry.CAFE_MANAGER.get()).build(null));
+        public static final RegistryObject<BlockEntityType<CafeSignBlockEntity>> CAFE_SIGN = BLOCK_ENTITY_TYPES.register("cafe_sign", () -> BlockEntityType.Builder.of(CafeSignBlockEntity::new, BlockRegistry.CAFE_SIGN.get()).build(null));
         public static final RegistryObject<BlockEntityType<CafeMenuBlockEntity>> CAFE_MENU = BLOCK_ENTITY_TYPES.register("cafe_menu", () -> BlockEntityType.Builder.of(CafeMenuBlockEntity::new, BlockRegistry.CAFE_MENU.get()).build(null));
     }
 

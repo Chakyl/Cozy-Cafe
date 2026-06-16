@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "cozycafe:block/cafe_sign",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "cozycafe:block/cafe_sign"
+    },
+    "facing=south": {
+      "model": "cozycafe:block/cafe_sign",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "cozycafe:block/cafe_sign",
+      "y": 270
+    }
+  }
+}

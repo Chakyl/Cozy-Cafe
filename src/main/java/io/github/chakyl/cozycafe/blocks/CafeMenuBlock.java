@@ -1,19 +1,13 @@
 package io.github.chakyl.cozycafe.blocks;
 
-import io.github.chakyl.cozycafe.blockentities.CafeManagerBlockEntity;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
-import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,14 +21,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class CafeMenuBlock extends Block implements EntityBlock {
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
@@ -73,7 +64,7 @@ public class CafeMenuBlock extends Block implements EntityBlock {
             if (entity instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
                 if (!handStack.isEmpty() && cafeMenuBlockEntity.canServe()) {
                     pPlayer.swing(pHand);
-                    cafeMenuBlockEntity.handleServe(pLevel, pPos, pPlayer,  handStack);
+                    cafeMenuBlockEntity.handleServe(pPos, pPlayer,  handStack);
                     return InteractionResult.CONSUME;
                 }
             } else {

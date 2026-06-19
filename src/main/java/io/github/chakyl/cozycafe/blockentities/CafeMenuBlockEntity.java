@@ -1,6 +1,9 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import io.github.chakyl.cozycafe.data.CafeMenuItem;
+import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
+import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -65,8 +68,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
             if (!requestedItem.isEmpty()) {
                 if (this.waitTime == -1) {
                     this.waitTime = 0;
-                    this.setChanged();
-                    this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+                    this.setChangedForRender();
                 } else {
                     if (this.waitTime == MAX_WAIT_TIME) {
                         getCafeManager(level);
@@ -74,10 +76,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     } else {
                         this.waitTime++;
                         this.setChanged();
-                        if (this.waitTime >= 300 && this.level.getGameTime() % 100 == 0) {
-                            this.setChanged();
-                            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
-                        }
+                        if (this.waitTime >= 300 && this.level.getGameTime() % 100 == 0) this.setChangedForRender();
                     }
                 }
             }
@@ -91,8 +90,13 @@ public class CafeMenuBlockEntity extends BlockEntity {
         return null;
     }
 
-    public void handleServe(Level pLevel, BlockPos pPos, Player pPlayer, ItemStack handStack) {
-        if (handStack.is(requestedItem.getItem())) {
+    public void handleServe(BlockPos pPos, Player pPlayer, ItemStack handStack) {
+        boolean isMain = CafeMenuItemRegistry.INSTANCE.getForItem(requestedItem.getItem()).category() == CafeMenuItem.MenuItemCategory.MAIN;
+        if (isMain || handStack.is(requestedItem.getItem())) {
+            if (isMain && !(handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem()))) {
+                Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
+                return;
+            }
             if (!pPlayer.isCreative()) handStack.shrink(1);
             this.orderTime = 0;
             this.setCurrentCourse(this.currentCourse + 1);
@@ -118,7 +122,6 @@ public class CafeMenuBlockEntity extends BlockEntity {
             Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
         }
     }
-
     public boolean canServe() {
         return !requestedItem.isEmpty();
     }
@@ -184,7 +187,6 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.currentCourse = 0;
         this.hasCustomer = false;
         this.setRequestedItem(ItemStack.EMPTY);
-
     }
 
 
@@ -198,8 +200,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
             this.hasCustomer = true;
             this.customerTravelTime = -1;
             this.orderTime = 0;
-            this.setChanged();
-            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+            this.setChangedForRender();
         }
     }
 
@@ -217,8 +218,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
 
     public void setRequestedItem(ItemStack requestedItem) {
         this.requestedItem = requestedItem;
-        this.setChanged();
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        this.setChangedForRender();
     }
 
     public boolean getHasCustomer() {
@@ -228,6 +228,11 @@ public class CafeMenuBlockEntity extends BlockEntity {
     @Override
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition).expandTowards(0, 1.5, 0).inflate(0.5, 0, 0.5);
+    }
+
+    private void setChangedForRender() {
+        this.setChanged();
+        this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
 
     @Override

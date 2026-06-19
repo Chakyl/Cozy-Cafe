@@ -4,6 +4,8 @@
 
   "block.cozycafe.cafe_manager": "Cafe Manager",
   "block.cozycafe.cafe_menu": "Cafe Menu",
+  "item.cozycafe.serving_plate": "Serving Plate",
+  "item.cozycafe.serving_plate.served": "Plated %s",
 
   "category.cozycafe.main": "Main",
   "category.cozycafe.dessert": "Dessert",

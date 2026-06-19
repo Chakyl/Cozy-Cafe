@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -56,7 +55,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     this.setChanged();
                 } else if (this.orderTime == ORDER_TIME) {
                     CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
-                    if (cafeManagerBlockEntity == null || !cafeManagerBlockEntity.isOpen()) {
+                    if (cafeManagerBlockEntity == null) {
                         this.closeMenu();
                         return;
                     } else {
@@ -91,7 +90,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
     }
 
     public void handleServe(BlockPos pPos, Player pPlayer, ItemStack handStack) {
-        boolean isMain = CafeMenuItemRegistry.INSTANCE.getForItem(requestedItem.getItem()).category() == CafeMenuItem.MenuItemCategory.MAIN;
+        CafeMenuItem menuItem = CafeMenuItemRegistry.INSTANCE.getForItem(requestedItem.getItem());
+        boolean isMain = menuItem.category() == CafeMenuItem.MenuItemCategory.MAIN;
         if (isMain || handStack.is(requestedItem.getItem())) {
             if (isMain && !(handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem()))) {
                 Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
@@ -112,9 +112,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
 
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
-                int increase = (int) (Math.floor(((double) MAX_WAIT_TIME - this.waitTime) / 24) + 15);
-                cafeManagerBlockEntity.increaseReputation(increase);
-                pPlayer.sendSystemMessage(Component.literal("Rep: " + cafeManagerBlockEntity.getReputation() + " (+" + increase + ")"));
+                cafeManagerBlockEntity.handleSuccessfulServe(menuItem, handStack, (double) MAX_WAIT_TIME / this.waitTime);
             }
             this.waitTime = -1;
             this.setChanged();
@@ -179,11 +177,12 @@ public class CafeMenuBlockEntity extends BlockEntity {
         if (this.hasCustomer) {
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
-                cafeManagerBlockEntity.decreaseReputation(100);
+                cafeManagerBlockEntity.decreaseReputation(50);
             }
         }
         this.waitTime = -1;
         this.orderTime = -1;
+        this.customerTravelTime = -1;
         this.currentCourse = 0;
         this.hasCustomer = false;
         this.setRequestedItem(ItemStack.EMPTY);

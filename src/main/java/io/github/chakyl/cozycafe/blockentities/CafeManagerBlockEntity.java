@@ -1,11 +1,13 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
+import io.github.chakyl.cozycafe.util.GeneralUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,8 +36,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider {
+    private final boolean EVENT_LOGGING = true;
     // Temporary data, only relevant when cafe open
-    private int servedCustomers = 0;
+    private int attemptedCustomers = 0;
     // Persistent Data
     private boolean open = false;
     private int dayLastOpened = 0;
@@ -50,8 +53,23 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide() && this.open) {
-            if (level.getGameTime() % 20 == 0) {
-                assignCustomersInArea(level, pos, state);
+            // TODO: Config: spawn interval
+            if (level.getGameTime() % 20 == 0 && this.attemptedCustomers >= this.getMaxCustomers()) {
+                if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Closing Cafe due to reaching max attempted customers");
+//                this.reputation = 2000;
+                this.open = false;
+                this.attemptedCustomers = 0;
+                this.setChanged();
+                this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+                return;
+            }
+            if ((level.getGameTime() % (20 * (20 * (1 - (this.reputation / 5000))))) == 0) {
+                if (this.dayLastOpened != GeneralUtils.getDay(this.level)) {
+                    if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Force-Closing Cafe due to reaching next day");
+                    this.setOpen(!open);
+                } else {
+                    assignCustomersInArea(level, pos, state);
+                }
             }
         }
     }
@@ -71,6 +89,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public void assignCustomersInArea(Level level, BlockPos pos, BlockState state) {
         if (!(level instanceof ServerLevel serverLevel)) return;
+        if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Running menu assignment");
         List<BlockPos> availableMenuPositions = new ArrayList<>();
 
         for (BlockPos scannedPos : BlockPos.betweenClosedStream(this.getFirstPos(state, pos), this.getSecondPos(state, pos)).map(BlockPos::immutable).toList()) {
@@ -85,26 +104,32 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             }
             if (scannedState.is(CozyRegistry.BlockRegistry.CAFE_MENU.get())) {
                 if (serverLevel.getBlockEntity(scannedPos) instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
-                    if (serverLevel.random.nextFloat() < 0.1f && cafeMenuBlockEntity.canReceiveNewCustomer()) {
+                    if (cafeMenuBlockEntity.canReceiveNewCustomer()) {
                         availableMenuPositions.add(scannedPos);
-                        cafeMenuBlockEntity.setCustomerTravelTime(0);
-                        cafeMenuBlockEntity.setCafeManager(pos);
                     }
                 }
             }
         }
 
         Collections.shuffle(availableMenuPositions);
+        if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Max Potential: " + availableMenuPositions.size());
         if (!serverLevel.isLoaded(this.linkedSign) || availableMenuPositions.isEmpty()) return;
-        if (serverLevel.getBlockState(this.linkedSign).is(CozyRegistry.BlockRegistry.CAFE_SIGN.get())) {
+        int i = 0;
+        for (BlockPos menuPos : availableMenuPositions) {
+            if (level.getBlockEntity(menuPos) instanceof CafeMenuBlockEntity cafeMenuBlockEntity && serverLevel.getBlockState(this.linkedSign).is(CozyRegistry.BlockRegistry.CAFE_SIGN.get())) {
             CustomerEntity customer = CozyRegistry.EntityRegistry.CUSTOMER.get().create(serverLevel);
-            if (customer != null) {
-                BlockPos targetMenuPos = availableMenuPositions.remove(0);
-                customer.moveTo(this.linkedSign.getX() + 0.5, this.linkedSign.getY() + 1.0, this.linkedSign.getZ() + 0.5, serverLevel.random.nextFloat() * 360.0F, 0.0F);
-                serverLevel.addFreshEntity(customer);
-                customer.setTargetMenuPos(targetMenuPos);
+                if (customer != null) {
+                    cafeMenuBlockEntity.setCustomerTravelTime(0);
+                    cafeMenuBlockEntity.setCafeManager(pos);
+                    customer.moveTo(this.linkedSign.getX() + 0.5, this.linkedSign.getY() + 1.0, this.linkedSign.getZ() + 0.5, serverLevel.random.nextFloat() * 360.0F, 0.0F);
+                    serverLevel.addFreshEntity(customer);
+                    customer.setTargetMenuPos(menuPos);
+                    this.attemptedCustomers++;
+                    // TODO: Config: spawn chance
+                    i++;
+                    if (i == 4 || serverLevel.random.nextFloat() <= 0.5f) break;
+                }
             }
-
         }
     }
 
@@ -162,14 +187,18 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         return new CafeManagerMenu(containerId, inventory, this);
     }
 
-    public int getServedCustomers() {
-        return servedCustomers;
+    public int getAttemptedCustomers() {
+        return attemptedCustomers;
     }
 
-    public void setServedCustomers(int servedCustomers) {
-        this.servedCustomers = servedCustomers;
+    public void setAttemptedCustomers(int attemptedCustomers) {
+        this.attemptedCustomers = attemptedCustomers;
     }
 
+    private int getMaxCustomers() {
+        int stars = this.getStarsFromReputation();
+        return (int) ((stars == 5 ? 50 : ((stars + 1) * 8)) + Mth.randomBetween(this.getLevel().getRandom(), 0, 5));
+    }
     public BlockPos getLinkedSign() {
         return linkedSign;
     }
@@ -186,6 +215,8 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         this.open = open;
         if (!open) {
             sendCloseCommandToMenus(this.level, this.worldPosition, this.getBlockState());
+        } else {
+            this.dayLastOpened = GeneralUtils.getDay(this.level);
         }
         this.setChanged();
         level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
@@ -250,10 +281,28 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         if (index < this.menu.size()) this.menu.remove(index);
     }
 
+
+    private void handleReputation(CafeMenuItem menuItem, ItemStack handStack, double waitTimeDiff) {
+        double increase = switch (menuItem.category()) {
+            case DRINK -> 2;
+            case MAIN -> 10;
+            case DESSERT -> 4;
+        };
+        // TODO: quality increases base rep by 2/4/8
+        if (waitTimeDiff >= 0.95) increase *= 2;
+        if (waitTimeDiff >= 0.75) increase *= 1.5;
+        if (waitTimeDiff >= 5) increase *= 1.25;
+        if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Reputation: +" + increase);
+        this.increaseReputation((int) Math.floor(increase));
+    }
+
+    public void handleSuccessfulServe(CafeMenuItem menuItem, ItemStack handStack, double waitTimeDiff) {
+        this.handleReputation(menuItem, handStack, waitTimeDiff);
+    }
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        nbt.putInt("servedCustomers", this.servedCustomers);
+        nbt.putInt("attemptedCustomers", this.attemptedCustomers);
         nbt.putBoolean("open", this.open);
         nbt.putInt("dayLastOpened", this.dayLastOpened);
         nbt.putInt("reputation", this.reputation);
@@ -275,7 +324,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        this.servedCustomers = nbt.getInt("servedCustomers");
+        this.attemptedCustomers = nbt.getInt("attemptedCustomers");
         this.open = nbt.getBoolean("open");
         this.dayLastOpened = nbt.getInt("dayLastOpened");
         this.reputation = nbt.getInt("reputation");

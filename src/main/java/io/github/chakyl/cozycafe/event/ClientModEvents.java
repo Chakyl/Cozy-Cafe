@@ -3,17 +3,20 @@ package io.github.chakyl.cozycafe.event;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blockentities.renderer.CafeMenuBlockEntityRenderer;
 import io.github.chakyl.cozycafe.blockentities.renderer.PlatingStationBlockEntityRenderer;
+import io.github.chakyl.cozycafe.client.model.ServingPlateItemOverrides;
 import io.github.chakyl.cozycafe.entities.renderer.CustomerRenderer;
 import io.github.chakyl.cozycafe.gui.CafeManagerScreen;
 import io.github.chakyl.cozycafe.gui.MenuSelectorScreen;
-import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -37,19 +40,21 @@ public class ClientModEvents {
         event.registerEntityRenderer(CozyRegistry.EntityRegistry.CUSTOMER.get(), CustomerRenderer::new);
     }
 
+
     @SubscribeEvent
-    public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
-        event.register(CozyRegistry.ItemRegistry.SERVING_PLATE.get(), (guiGraphics, font, stack, xOffset, yOffset) -> {
-            ItemStack food = ServingPlateItem.getStoredFood(stack);
-            if (!food.isEmpty()) {
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate(xOffset + 2, yOffset + 2, 100);
-                guiGraphics.pose().scale(0.8f, 0.8f, 0.8f);
-                guiGraphics.renderItem(food, 0, 0);
-                guiGraphics.pose().popPose();
-                return true;
-            }
-            return false;
-        });
+    public static void onModelBake(ModelEvent.ModifyBakingResult event) {
+        ModelResourceLocation plateLocation = new ModelResourceLocation("cozycafe", "serving_plate", "inventory");
+        BakedModel originalPlateModel = event.getModels().get(plateLocation);
+
+        if (originalPlateModel != null) {
+            event.getModels().put(plateLocation, new BakedModelWrapper(originalPlateModel) {
+                private final ItemOverrides overrides = new ServingPlateItemOverrides(originalPlateModel);
+
+                @Override
+                public ItemOverrides getOverrides() {
+                    return overrides;
+                }
+            });
+        }
     }
 }

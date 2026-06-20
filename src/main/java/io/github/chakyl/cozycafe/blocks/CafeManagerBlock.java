@@ -39,6 +39,7 @@ public class CafeManagerBlock extends Block implements EntityBlock {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
     }
+
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite()).setValue(OPEN, false);
@@ -57,8 +58,7 @@ public class CafeManagerBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
-            BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if (entity instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
+            if (pLevel.getBlockEntity(pPos) instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
                 NetworkHooks.openScreen((ServerPlayer) pPlayer, new SimpleMenuProvider((cId, inv, playerEntity) -> new CafeManagerMenu(cId, inv, cafeManagerBlockEntity),
                         Component.translatable("container.cozycafe.cafe_manager")
                 ), buffer -> {

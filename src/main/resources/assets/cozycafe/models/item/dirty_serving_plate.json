@@ -1,0 +1,6 @@
+{
+	"parent": "cozycafe:item/serving_plate",
+	"textures": {
+		"0": "cozycafe:item/dirty_serving_plate"
+	}
+}

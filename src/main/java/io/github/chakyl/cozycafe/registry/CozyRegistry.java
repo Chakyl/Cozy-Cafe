@@ -14,6 +14,7 @@ import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.gui.MenuSelectorMenu;
 import io.github.chakyl.cozycafe.item.CafeSignItem;
+import io.github.chakyl.cozycafe.item.DirtyServingPlateItem;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -114,6 +115,7 @@ public final class CozyRegistry {
         private static final List<RegistryObject<Item>> ALL_ITEMS = new ArrayList<>();
 
         public static final RegistryObject<Item> SERVING_PLATE = register("serving_plate", () -> new ServingPlateItem(new Item.Properties().stacksTo(8)));
+        public static final RegistryObject<Item> DIRTY_SERVING_PLATE = register("dirty_serving_plate", () -> new DirtyServingPlateItem(new Item.Properties().stacksTo(8)));
 
         private static void register() {
             ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());

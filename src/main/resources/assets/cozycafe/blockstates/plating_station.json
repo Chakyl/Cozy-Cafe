@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "cozycafe:block/plating_station",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "cozycafe:block/plating_station"
+    },
+    "facing=south": {
+      "model": "cozycafe:block/plating_station",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "cozycafe:block/plating_station",
+      "y": 270
+    }
+  }
+}

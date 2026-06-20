@@ -1,5 +1,6 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
@@ -61,6 +62,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     } else {
                         cafeManagerBlockEntity.rollMenuCourse(this);
                         this.orderTime = -1;
+                        if (this.currentCourse > 1) {
+                            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DIRTY, true), 3);
+                        }
+                        this.setChangedForRender();
                     }
                 }
             }
@@ -120,6 +125,18 @@ public class CafeMenuBlockEntity extends BlockEntity {
             Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
         }
     }
+
+
+    public void handleClearDirtyIfPossible(BlockPos pPos, Player pPlayer, ItemStack handStack) {
+        if (this.getBlockState().getValue(CafeMenuBlock.DIRTY)) {
+            if (!pPlayer.getInventory().add(CozyRegistry.ItemRegistry.DIRTY_SERVING_PLATE.get().getDefaultInstance())) {
+                pPlayer.drop(CozyRegistry.ItemRegistry.DIRTY_SERVING_PLATE.get().getDefaultInstance(), false);
+            }
+
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, false).setValue(CafeMenuBlock.DIRTY, false), 3);
+        }
+    }
+
     public boolean canServe() {
         return !requestedItem.isEmpty();
     }
@@ -129,7 +146,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
     }
 
     public boolean canReceiveNewCustomer() {
-        return this.getCustomerTravelTime() == -1 && !this.getHasCustomer();
+        return this.getCustomerTravelTime() == -1 && !this.getHasCustomer() && !this.getBlockState().getValue(CafeMenuBlock.DIRTY);
     }
 
     public static int getMaxWaitTime() {
@@ -164,7 +181,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
     public void setCurrentCourse(int currentCourse) {
         if (currentCourse < 3) {
             this.currentCourse = currentCourse;
-            this.setChanged();
+            if (currentCourse > 1) {
+                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, true), 3);
+            }
+            this.setChangedForRender();
         } else {
             this.hasCustomer = false;
             this.closeMenu();
@@ -180,12 +200,14 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 cafeManagerBlockEntity.decreaseReputation(50);
             }
         }
+        this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, false), 3);
         this.waitTime = -1;
         this.orderTime = -1;
         this.customerTravelTime = -1;
         this.currentCourse = 0;
         this.hasCustomer = false;
         this.setRequestedItem(ItemStack.EMPTY);
+        this.setChangedForRender();
     }
 
 

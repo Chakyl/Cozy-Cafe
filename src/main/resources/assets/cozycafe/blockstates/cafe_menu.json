@@ -1,34 +1,66 @@
 {
   "variants": {
-    "facing=east,dish=false": {
+    "facing=east,dish=false,dirty=false": {
       "model": "cozycafe:block/cafe_menu",
       "y": 90
     },
-    "facing=north,dish=false": {
+    "facing=north,dish=false,dirty=false": {
       "model": "cozycafe:block/cafe_menu"
     },
-    "facing=south,dish=false": {
+    "facing=south,dish=false,dirty=false": {
       "model": "cozycafe:block/cafe_menu",
       "y": 180
     },
-    "facing=west,dish=false": {
+    "facing=west,dish=false,dirty=false": {
       "model": "cozycafe:block/cafe_menu",
       "y": 270
     },
 
-    "facing=east,dish=true": {
-      "model": "cozycafe:block/cafe_menu",
+    "facing=east,dish=true,dirty=false": {
+      "model": "cozycafe:item/serving_plate",
       "y": 90
     },
-    "facing=north,dish=true": {
-      "model": "cozycafe:block/cafe_menu"
+    "facing=north,dish=true,dirty=false": {
+      "model": "cozycafe:item/serving_plate"
     },
-    "facing=south,dish=true": {
-      "model": "cozycafe:block/cafe_menu",
+    "facing=south,dish=true,dirty=false": {
+      "model": "cozycafe:item/serving_plate",
       "y": 180
     },
-    "facing=west,dish=true": {
-      "model": "cozycafe:block/cafe_menu",
+    "facing=west,dish=true,dirty=false": {
+      "model": "cozycafe:item/serving_plate",
+      "y": 270
+    },
+
+    "facing=east,dish=true,dirty=true": {
+      "model": "cozycafe:item/dirty_serving_plate",
+      "y": 90
+    },
+    "facing=north,dish=true,dirty=true": {
+      "model": "cozycafe:item/dirty_serving_plate"
+    },
+    "facing=south,dish=true,dirty=true": {
+      "model": "cozycafe:item/dirty_serving_plate",
+      "y": 180
+    },
+    "facing=west,dish=true,dirty=true": {
+      "model": "cozycafe:item/dirty_serving_plate",
+      "y": 270
+    },
+
+    "facing=east,dish=false,dirty=true": {
+      "model": "item:block/dirty_serving_plate",
+      "y": 90
+    },
+    "facing=north,dish=false,dirty=true": {
+      "model": "cozycafe:item/dirty_serving_plate"
+    },
+    "facing=south,dish=false,dirty=true": {
+      "model": "cozycafe:item/dirty_serving_plate",
+      "y": 180
+    },
+    "facing=west,dish=false,dirty=true": {
+      "model": "cozycafe:item/dirty_serving_plate",
       "y": 270
     }
   }

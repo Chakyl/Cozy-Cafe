@@ -6,7 +6,11 @@
   "block.cozycafe.cafe_menu": "Cafe Menu",
   "item.cozycafe.serving_plate": "Serving Plate",
   "item.cozycafe.serving_plate.served": "Plated %s",
+  "item.cozycafe.dirty_serving_plate": "Dirty Serving Plate",
 
+  "block.cozycafe.plating_station.not_main": "This type of menu item does not need to be plated!",
+  "block.cozycafe.plating_station.not_menu_item": "This item cannot be served!",
+  "block.cozycafe.plating_station.already_plated": "This plate already has an item!",
   "category.cozycafe.main": "Main",
   "category.cozycafe.dessert": "Dessert",
   "category.cozycafe.drink": "Drink",

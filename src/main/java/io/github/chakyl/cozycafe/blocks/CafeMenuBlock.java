@@ -31,19 +31,20 @@ public class CafeMenuBlock extends Block implements EntityBlock {
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty DISH = BooleanProperty.create("dish");
+    public static final BooleanProperty DIRTY = BooleanProperty.create("dirty");
 
     public CafeMenuBlock(Properties props) {
         super(props);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(DISH, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(DISH, false).setValue(DIRTY, false));
     }
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite()).setValue(DISH, false);
+        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite()).setValue(DISH, false).setValue(DIRTY, false);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING, DISH);
+        pBuilder.add(FACING, DISH, DIRTY);
     }
 
     @Override
@@ -66,6 +67,8 @@ public class CafeMenuBlock extends Block implements EntityBlock {
                     pPlayer.swing(pHand);
                     cafeMenuBlockEntity.handleServe(pPos, pPlayer,  handStack);
                     return InteractionResult.CONSUME;
+                } else {
+                    cafeMenuBlockEntity.handleClearDirtyIfPossible(pPos, pPlayer,  handStack);
                 }
             } else {
                 throw new IllegalStateException("No Container Provider for Cafe Manager!");

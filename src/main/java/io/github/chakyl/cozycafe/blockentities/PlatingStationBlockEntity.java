@@ -1,9 +1,13 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import io.github.chakyl.cozycafe.data.CafeMenuItem;
+import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -39,10 +43,22 @@ public class PlatingStationBlockEntity extends BlockEntity {
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
         } else if (this.plateItem.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get())) {
-            if (!heldItem.isEmpty() && heldItem.getItem().isEdible()) {
+            if (!heldItem.isEmpty()) {
                 if (!level.isClientSide) {
-                    this.plateItem = ServingPlateItem.createPlatedFood(heldItem.split(1));
-                    this.setChangedForRender();
+                    if (CafeMenuItemRegistry.INSTANCE.isMenuItem(heldItem.getItem())) {
+                        if (CafeMenuItemRegistry.INSTANCE.getForItem(heldItem.getItem()).category() == CafeMenuItem.MenuItemCategory.MAIN) {
+                            if (ServingPlateItem.getStoredFood(this.plateItem).isEmpty()) {
+                                this.plateItem = ServingPlateItem.createPlatedFood(heldItem.split(1));
+                                this.setChangedForRender();
+                            } else {
+                                player.displayClientMessage(Component.translatable("block.cozycafe.plating_station.already_plated").withStyle(ChatFormatting.RED), true);
+                            }
+                        } else {
+                            player.displayClientMessage(Component.translatable("block.cozycafe.plating_station.not_main").withStyle(ChatFormatting.RED), true);
+                        }
+                    } else {
+                        player.displayClientMessage(Component.translatable("block.cozycafe.plating_station.not_menu_item").withStyle(ChatFormatting.RED), true);
+                    }
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }

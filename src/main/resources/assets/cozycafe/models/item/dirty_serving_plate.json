@@ -1,6 +1,64 @@
 {
-	"parent": "cozycafe:item/serving_plate",
+	"render_type": "minecraft:cutout",
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
 	"textures": {
-		"0": "cozycafe:item/dirty_serving_plate"
+		"1": "cozycafe:item/serving_plate",
+		"3": "cozycafe:item/stain"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 2, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 1]},
+			"faces": {
+				"north": {"uv": [8.5, 1, 15.5, 2], "texture": "#1"},
+				"east": {"uv": [8.5, 1, 15.5, 2], "texture": "#1"},
+				"south": {"uv": [8.5, 1, 15.5, 2], "texture": "#1"},
+				"west": {"uv": [8.5, 1, 15.5, 2], "texture": "#1"},
+				"up": {"uv": [7.5, 7.5, 0.5, 0.5], "texture": "#1"},
+				"down": {"uv": [7.5, 0.5, 0.5, 7.5], "texture": "#1"}
+			}
+		},
+		{
+			"from": [0.95711, 2.1, 1.37868],
+			"to": [12.95711, 2.1, 13.37868],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8.95711, 1.1, 6.37868]},
+			"faces": {
+				"north": {"uv": [0, 0, 12, 0], "texture": "#3"},
+				"east": {"uv": [0, 0, 12, 0], "texture": "#3"},
+				"south": {"uv": [0, 0, 12, 0], "texture": "#3"},
+				"west": {"uv": [0, 0, 12, 0], "texture": "#3"},
+				"up": {"uv": [12, 12, 0, 0], "texture": "#3"},
+				"down": {"uv": [12, 12, 0, 24], "texture": "#3"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 2.5],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 2.5],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"translation": [0, 7.25, 0]
+		},
+		"firstperson_lefthand": {
+			"translation": [0, 7.25, 0]
+		},
+		"ground": {
+			"translation": [0, 2, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
 	}
 }

@@ -57,8 +57,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             if (level.getGameTime() % 20 == 0 && this.attemptedCustomers >= this.getMaxCustomers()) {
                 if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Closing Cafe due to reaching max attempted customers");
 //                this.reputation = 2000;
-                this.open = false;
-                this.attemptedCustomers = 0;
+                this.setOpen(!open, false);
                 this.setChanged();
                 this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
                 return;
@@ -66,7 +65,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             if ((level.getGameTime() % (20 * (20 * (1 - (this.reputation / 5000))))) == 0) {
                 if (this.dayLastOpened != GeneralUtils.getDay(this.level)) {
                     if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Force-Closing Cafe due to reaching next day");
-                    this.setOpen(!open);
+                    this.setOpen(!open, false);
                 } else {
                     assignCustomersInArea(level, pos, state);
                 }
@@ -211,13 +210,20 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         return open;
     }
 
-    public void setOpen(boolean open) {
+    public void setOpen(boolean open, boolean forceClose) {
         this.open = open;
+        CafeSignBlockEntity cafeSignBlockEntity = null;
+        if (this.level.isLoaded(this.linkedSign) && this.level.getBlockEntity(this.linkedSign) instanceof CafeSignBlockEntity sign) {
+            cafeSignBlockEntity = sign;
+        }
+        if (cafeSignBlockEntity == null) return;
         if (!open) {
-            sendCloseCommandToMenus(this.level, this.worldPosition, this.getBlockState());
+            if (forceClose) sendCloseCommandToMenus(this.level, this.worldPosition, this.getBlockState());
+            this.attemptedCustomers = 0;
         } else {
             this.dayLastOpened = GeneralUtils.getDay(this.level);
         }
+        cafeSignBlockEntity.setOpen(open);
         this.setChanged();
         level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }

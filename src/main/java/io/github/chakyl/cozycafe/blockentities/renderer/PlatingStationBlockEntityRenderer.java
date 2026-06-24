@@ -19,10 +19,17 @@ public class PlatingStationBlockEntityRenderer implements BlockEntityRenderer<Pl
     public PlatingStationBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         this.itemRenderer = context.getItemRenderer();
     }
-
-    private void renderItem(ItemStack stack, float yOffset, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
+    private void renderPlate(ItemStack stack,  PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
         poseStack.pushPose();
-        poseStack.translate(0.5D, yOffset, 0.5D);
+        poseStack.translate(0.5D, 0.65f, 0.5D);
+        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+        poseStack.scale(1.0f, 1.0f, 1.0f);
+        itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, poseStack, bufferSource, null, 0);
+        poseStack.popPose();
+    }
+    private void renderFoodItem(ItemStack stack, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
+        poseStack.pushPose();
+        poseStack.translate(0.5D, 1.19f, 0.5D);
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         poseStack.scale(1.0f, 1.0f, 1.0f);
         itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, poseStack, bufferSource, null, 0);
@@ -34,13 +41,13 @@ public class PlatingStationBlockEntityRenderer implements BlockEntityRenderer<Pl
         ItemStack stationItem = pBlockEntity.getPlateItem();
         if (stationItem == null || stationItem.isEmpty()) return;
         if (!ServingPlateItem.getStoredFood(stationItem).isEmpty()) {
-            renderItem(new ItemStack(CozyRegistry.ItemRegistry.SERVING_PLATE.get()), 1.05f, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+            renderPlate(new ItemStack(CozyRegistry.ItemRegistry.SERVING_PLATE.get()), pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
             ItemStack plateInTheFoodOfEatTheHotFoodOut = ServingPlateItem.getStoredFood(stationItem);
             if (!plateInTheFoodOfEatTheHotFoodOut.isEmpty()) {
-                renderItem(plateInTheFoodOfEatTheHotFoodOut, 1.125f, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+                renderFoodItem(plateInTheFoodOfEatTheHotFoodOut, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
             }
         } else if (stationItem.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get())) {
-            renderItem(stationItem, 1.05f, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+            renderPlate(stationItem,  pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
         }
     }
 }

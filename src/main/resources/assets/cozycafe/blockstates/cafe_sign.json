@@ -1,19 +1,35 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "cozycafe:block/cafe_sign",
+    "facing=east,open=false": {
+      "model": "cozycafe:block/cafe_sign_closed"
+    },
+    "facing=north,open=false": {
+      "model": "cozycafe:block/cafe_sign_closed",
+      "y": 270
+    },
+    "facing=south,open=false": {
+      "model": "cozycafe:block/cafe_sign_closed",
       "y": 90
     },
-    "facing=north": {
-      "model": "cozycafe:block/cafe_sign"
-    },
-    "facing=south": {
-      "model": "cozycafe:block/cafe_sign",
+    "facing=west,open=false": {
+      "model": "cozycafe:block/cafe_sign_closed",
       "y": 180
     },
-    "facing=west": {
-      "model": "cozycafe:block/cafe_sign",
+
+    "facing=east,open=true": {
+      "model": "cozycafe:block/cafe_sign_open"
+    },
+    "facing=north,open=true": {
+      "model": "cozycafe:block/cafe_sign_open",
       "y": 270
+    },
+    "facing=south,open=true": {
+      "model": "cozycafe:block/cafe_sign_open",
+      "y": 90
+    },
+    "facing=west,open=true": {
+      "model": "cozycafe:block/cafe_sign_open",
+      "y": 180
     }
   }
 }

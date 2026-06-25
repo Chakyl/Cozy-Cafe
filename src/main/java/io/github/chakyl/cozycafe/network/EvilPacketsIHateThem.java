@@ -41,7 +41,12 @@ public class EvilPacketsIHateThem {
                 .consumerMainThread(ClientBoundAddMenuItemPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ServerBoundRemoveMenuItemPacket.class, 4, NetworkDirection.PLAY_TO_SERVER)
+        INSTANCE.messageBuilder(ClientBoundCafeCannotOpenPacket.class, 4, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundCafeCannotOpenPacket::encode)
+                .decoder(ClientBoundCafeCannotOpenPacket::new)
+                .consumerMainThread(ClientBoundCafeCannotOpenPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ServerBoundRemoveMenuItemPacket.class, 5, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(ServerBoundRemoveMenuItemPacket::encode)
                 .decoder(ServerBoundRemoveMenuItemPacket::new)
                 .consumerMainThread(ServerBoundRemoveMenuItemPacket::handle)

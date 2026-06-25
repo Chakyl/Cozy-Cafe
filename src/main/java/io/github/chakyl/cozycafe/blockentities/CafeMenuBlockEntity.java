@@ -99,7 +99,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
         boolean isMain = menuItem.category() == CafeMenuItem.MenuItemCategory.MAIN;
         if (isMain || handStack.is(requestedItem.getItem())) {
             if (isMain && !(handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem()))) {
-                Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
+                pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
                 return;
             }
             if (!pPlayer.isCreative()) handStack.shrink(1);
@@ -113,7 +113,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     0.5, 0.5, 0.5,
                     1.0
             );
-            Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_CHIME.get(), 1.0F, 1.0F);
+            pPlayer.playSound(SoundEvents.NOTE_BLOCK_CHIME.get(), 1.0F, 1.0F);
 
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
@@ -122,7 +122,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
             this.waitTime = -1;
             this.setChanged();
         } else {
-            Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
+            pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
         }
     }
 

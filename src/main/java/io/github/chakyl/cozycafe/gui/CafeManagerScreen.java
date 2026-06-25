@@ -34,13 +34,24 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
     private boolean isDragging;
     private boolean isCafeOpen = false;
     private List<ItemStack> cafeMenu = new ArrayList<>();
+    private Component errorMessage = null;
+    private int errorDisplayTicks = 0;
 
     public CafeManagerScreen(CafeManagerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.imageWidth = 176;
-        this.imageHeight = 208;
+        this.imageHeight = 225;
     }
 
+    public void setErrorMessage(Byte errorCode) {
+        this.errorMessage = switch (errorCode) {
+            case 0 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small");
+            case 1 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small_for_stars");
+            case 2 -> Component.translatable("block.cozycafe.cafe_manager.already_opened");
+            default -> throw new IllegalStateException("Unexpected value: " + errorCode);
+        };
+        this.errorDisplayTicks = 240;
+    }
     @Override
     protected void init() {
         super.init();
@@ -55,19 +66,28 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                                 EvilPacketsIHateThem.sendToServer(new ServerBoundOpenMenuSelectorMenuPacket(this.menu.blockEntity.getBlockPos()));
                             }
                         })
-                .bounds(leftPos + 55, topPos + 66, 64, 20)
+                .bounds(leftPos + 55, topPos + 60, 64, 20)
                 .build()
         );
         this.addRenderableWidget(Button.builder(
                         Component.translatable("gui.cozycafe.cafe_manager." + (this.isCafeOpen ? "close" : "open")),
                         (button) -> {
-                            this.isCafeOpen = !this.isCafeOpen;
-                            button.setMessage(Component.translatable("gui.cozycafe.cafe_manager." + (this.isCafeOpen ? "close" : "open")));
-                            EvilPacketsIHateThem.sendToServer(new ServerBoundToggleCafeOpenPacket(this.menu.blockEntity.getBlockPos(), this.isCafeOpen));
+                            EvilPacketsIHateThem.sendToServer(new ServerBoundToggleCafeOpenPacket(this.menu.blockEntity.getBlockPos()));
                         })
-                .bounds(leftPos + 62, topPos + 180, 52, 20)
+                .bounds(leftPos + 62, topPos + 198, 52, 20)
                 .build()
         );
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        if (this.errorDisplayTicks > 0) {
+            this.errorDisplayTicks--;
+            if (this.errorDisplayTicks == 0) {
+                this.errorMessage = null;
+            }
+        }
     }
 
     @Override
@@ -86,13 +106,18 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         poseStack.scale(2f, 2f, 1.0f);
         gfx.drawString(this.font, Component.translatable("Cafe Sun"), 0, 0, 0x181425, false);
         poseStack.popPose();
+        // Stars
+        for (int i = 0; i < this.menu.getStars(); i++) {
+
+            gfx.blit(GUI_LOCATION, this.leftPos +48 + (i * 16), this.topPos +40, 176, 32, 16, 16);
+        }
         // Menu Items
         if (this.cafeMenu != null && !this.cafeMenu.isEmpty()) {
             int slotWidth = 22;
-            int startX = this.leftPos + slotWidth;
-            int startY = this.topPos + 96;
+            int startX = this.leftPos + 12;
+            int startY = this.topPos + 91;
 
-            int maxColumns = 6;
+            int maxColumns = 7;
             int hoveredIndex = -1;
             ItemStack hoveredItem = ItemStack.EMPTY;
             int index = 0;
@@ -131,6 +156,10 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                 }
             }
         }
+        if (this.errorMessage != null) {
+            gfx.drawWordWrap(this.font, this.errorMessage, left + 14, top + 155, 160, 0xFF5555);
+        }
+
 //        gfx.drawString(this.font, Component.translatable("gui.cozycafe.cafe_manager.edit_menu"), left + 64, top + 71, 0x181425, false);
 //        gfx.drawString(this.font, Component.translatable("gui.cozycafe.cafe_manager.open"), left + 75, top + 185, 0xFFFFFF, false);
     }

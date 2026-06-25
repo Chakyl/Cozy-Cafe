@@ -49,7 +49,7 @@
     },
 
     "facing=east,dish=false,dirty=true": {
-      "model": "item:block/dirty_serving_plate",
+      "model": "cozycafe:item/dirty_serving_plate",
       "y": 90
     },
     "facing=north,dish=false,dirty=true": {

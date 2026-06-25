@@ -6,8 +6,11 @@ import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
+import io.github.chakyl.cozycafe.network.ClientBoundCafeCannotOpenPacket;
+import io.github.chakyl.cozycafe.network.EvilPacketsIHateThem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import io.github.chakyl.cozycafe.util.GeneralUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,6 +23,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -196,7 +200,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     private int getMaxCustomers() {
         int stars = this.getStarsFromReputation();
-        return (int) ((stars == 5 ? 50 : ((stars + 1) * 8)) + Mth.randomBetween(this.getLevel().getRandom(), 0, 5));
+        return (int) ((stars == 5 ? 40 : ((stars + 1) * 5)) + Mth.randomBetween(this.getLevel().getRandom(), 0, 5));
     }
     public BlockPos getLinkedSign() {
         return linkedSign;
@@ -208,6 +212,34 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public boolean isOpen() {
         return open;
+    }
+
+
+    public void toggleOpenFromMenu(ServerPlayer player) {
+        if (!this.open && !this.canBeOpened(player)) return;
+        this.toggleOpen();
+    }
+
+    private boolean canBeOpened(ServerPlayer player) {
+        // TODO: config option for menu size
+        int stars = this.getStarsFromReputation();
+        if (stars == 0 && this.menu.size() < 5) {
+            EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 0), player);
+            return false;
+        }
+        if (Math.floor((double) this.menu.size() / 5) - 1 < stars) {
+            EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 1), player);
+            return false;
+        }
+        if (this.dayLastOpened == GeneralUtils.getDay(this.level)) {
+            EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 2), player);
+            return false;
+        }
+        return true;
+    }
+
+    public void toggleOpen() {
+        this.setOpen(!this.open, true);
     }
 
     public void setOpen(boolean open, boolean forceClose) {

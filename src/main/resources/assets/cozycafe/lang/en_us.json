@@ -8,6 +8,10 @@
   "item.cozycafe.serving_plate.served": "Plated %s",
   "item.cozycafe.dirty_serving_plate": "Dirty Serving Plate",
 
+  "block.cozycafe.cafe_manager.menu_too_small": "You need at least 5 menu items!",
+  "block.cozycafe.cafe_manager.menu_too_small_for_stars": "You need at least 5 additional menu items per star!",
+  "block.cozycafe.cafe_manager.already_opened": "You already opened your cafe today! Try again tomorrow!",
+
   "block.cozycafe.plating_station.not_main": "This type of menu item does not need to be plated!",
   "block.cozycafe.plating_station.not_menu_item": "This item cannot be served!",
   "block.cozycafe.plating_station.already_plated": "This plate already has an item!",

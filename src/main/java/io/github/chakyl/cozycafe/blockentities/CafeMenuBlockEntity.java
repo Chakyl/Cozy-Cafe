@@ -1,5 +1,6 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -26,8 +28,8 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 public class CafeMenuBlockEntity extends BlockEntity {
-    private static int MAX_WAIT_TIME = 600;
-    private static int ORDER_TIME = 200;
+    private static int MAX_WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
+    private static int ORDER_TIME =  CozyCafe.CONFIG.customerOrderTime.get();
     public static int MAX_TRAVEL_TIME = 600;
     private int currentCourse = 0;
     private int waitTime = -1;
@@ -113,7 +115,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     0.5, 0.5, 0.5,
                     1.0
             );
-            pPlayer.playSound(SoundEvents.NOTE_BLOCK_CHIME.get(), 1.0F, 1.0F);
+            pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.NOTE_BLOCK_CHIME.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
@@ -122,7 +124,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
             this.waitTime = -1;
             this.setChanged();
         } else {
-            pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
+            pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.NOTE_BLOCK_BASS.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
         }
     }
 

@@ -1,6 +1,7 @@
 package io.github.chakyl.cozycafe.blockentities;
 
 import io.github.chakyl.cozycafe.CozyCafe;
+import io.github.chakyl.cozycafe.CozyConfig;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
@@ -57,16 +58,15 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide() && this.open) {
-            // TODO: Config: spawn interval
             if (level.getGameTime() % 20 == 0 && this.attemptedCustomers >= this.getMaxCustomers()) {
                 if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Closing Cafe due to reaching max attempted customers");
-//                this.reputation = 2000;
                 this.setOpen(!open, false);
                 this.setChanged();
                 this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
                 return;
             }
-            if ((level.getGameTime() % (20 * (20 * (1 - (this.reputation / 5000))))) == 0) {
+
+            if ((level.getGameTime() % (20 * ((long) CozyCafe.CONFIG.customerSpawnInterval.get() * (1 - (Math.max(0, this.reputation - 1) / 5000))))) == 0) {
                 if (this.dayLastOpened != GeneralUtils.getDay(this.level)) {
                     if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Force-Closing Cafe due to reaching next day");
                     this.setOpen(!open, false);
@@ -128,9 +128,8 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
                     serverLevel.addFreshEntity(customer);
                     customer.setTargetMenuPos(menuPos);
                     this.attemptedCustomers++;
-                    // TODO: Config: spawn chance
                     i++;
-                    if (i == 4 || serverLevel.random.nextFloat() <= 0.5f) break;
+                    if (i == 4 || serverLevel.random.nextFloat() < CozyCafe.CONFIG.groupCustomerChance.get()) break;
                 }
             }
         }
@@ -221,13 +220,13 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     private boolean canBeOpened(ServerPlayer player) {
-        // TODO: config option for menu size
         int stars = this.getStarsFromReputation();
-        if (stars == 0 && this.menu.size() < 5) {
+        int menuSizePerStar = CozyCafe.CONFIG.menuSizePerStar.get();
+        if (stars == 0 && this.menu.size() < menuSizePerStar) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 0), player);
             return false;
         }
-        if (Math.floor((double) this.menu.size() / 5) - 1 < stars) {
+        if (Math.floor((double) this.menu.size() / menuSizePerStar) - 1 < stars) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 1), player);
             return false;
         }

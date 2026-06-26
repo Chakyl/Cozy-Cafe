@@ -82,6 +82,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
     @Override
     protected void containerTick() {
         super.containerTick();
+        this.isCafeOpen = this.menu.getIsCafeOpen();
         if (this.errorDisplayTicks > 0) {
             this.errorDisplayTicks--;
             if (this.errorDisplayTicks == 0) {

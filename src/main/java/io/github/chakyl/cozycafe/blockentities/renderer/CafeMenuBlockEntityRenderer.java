@@ -3,6 +3,7 @@ package io.github.chakyl.cozycafe.blockentities.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
 import net.minecraft.client.Minecraft;
@@ -19,7 +20,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 
+
 public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenuBlockEntity> {
+    private static final int WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
     private final ItemRenderer itemRenderer;
     private final PlayerModel<?> playerModel;
     // TODO: Match blockentityData
@@ -40,9 +43,8 @@ public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenu
             EntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
             poseStack.mulPose(Axis.YP.rotationDegrees(-renderDispatcher.camera.getYRot()));
 
-            // TODO: Scale off config option
-            if (blockEntity.getWaitTime() >= 200) {
-                float wiggleStage = (blockEntity.getWaitTime() - 200) / 100.0f;
+            if (blockEntity.getWaitTime() >= WAIT_TIME) {
+                float wiggleStage = (blockEntity.getWaitTime() - WAIT_TIME) / 100.0f;
                 poseStack.mulPose(Axis.ZP.rotationDegrees((float) Math.sin(ticks * (0.2f + (wiggleStage))) * (wiggleStage * 0.8f)));
             }
             poseStack.scale(1.5f, 1.5f, 1.5f);

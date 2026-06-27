@@ -5,11 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class ServingPlateItem extends Item {
     public static String PLATED_FOOD = "platedFood";
@@ -40,27 +35,5 @@ public class ServingPlateItem extends Item {
         if (!food.isEmpty()) return Component.translatable("item.cozycafe.serving_plate.served", food.getHoverName());
 
         return super.getName(stack);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        // TODO: freshness?
-    }
-
-    public boolean checkFreshness(ItemStack stack, Level level) {
-        if (stack.hasTag() && stack.getTag().contains("platedTime")) {
-            long platedTime = stack.getTag().getLong("platedTime");
-            long age = level.getGameTime() - platedTime;
-            long maxFreshnessTicks = 24000;
-            if (age >= maxFreshnessTicks) {
-                stack.getTag().remove("platedTime");
-                if (stack.getTag().isEmpty()) {
-                    stack.setTag(null);
-                }
-                return false;
-            }
-            return true;
-        }
-        return false;
     }
 }

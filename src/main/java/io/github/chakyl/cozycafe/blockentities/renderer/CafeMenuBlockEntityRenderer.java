@@ -1,5 +1,6 @@
 package io.github.chakyl.cozycafe.blockentities.renderer;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -15,18 +16,16 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.level.block.state.BlockState;
 
 
 public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenuBlockEntity> {
     private static final int WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
     private final ItemRenderer itemRenderer;
     private final PlayerModel<?> playerModel;
-    // TODO: Match blockentityData
-    private static final ResourceLocation PLAYER_TEXTURE = new ResourceLocation("minecraft", "textures/entity/player/wide/steve.png");
 
     public CafeMenuBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         this.itemRenderer = context.getItemRenderer();
@@ -71,7 +70,6 @@ public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenu
             poseStack.scale(modelScale, modelScale, modelScale);
             poseStack.scale(-1.0F, -1.0F, 1.0F);
 
-            // idk why the head is so big without this
             playerModel.head.xScale = 0.7F;
             playerModel.head.yScale = 0.7F;
             playerModel.head.zScale = 0.7F;
@@ -93,7 +91,13 @@ public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenu
             playerModel.rightSleeve.copyFrom(playerModel.rightArm);
             playerModel.leftSleeve.copyFrom(playerModel.leftArm);
 
-            VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(PLAYER_TEXTURE));
+            GameProfile profile = blockEntity.getGameProfile();
+            ResourceLocation textureLocation = DefaultPlayerSkin.getDefaultSkin();
+            if (profile != null) {
+                textureLocation = Minecraft.getInstance().getSkinManager().getInsecureSkinLocation(profile);
+            }
+
+            VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(textureLocation));
             playerModel.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
             poseStack.popPose();
         }

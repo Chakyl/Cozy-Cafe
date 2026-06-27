@@ -1,7 +1,6 @@
 package io.github.chakyl.cozycafe.item;
 
 import io.github.chakyl.cozycafe.blockentities.CafeManagerBlockEntity;
-import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;

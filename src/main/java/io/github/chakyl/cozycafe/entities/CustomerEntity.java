@@ -1,9 +1,16 @@
 package io.github.chakyl.cozycafe.entities;
 
+import com.mojang.authlib.GameProfile;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
+import io.netty.util.internal.StringUtil;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -15,8 +22,13 @@ import net.minecraft.world.level.pathfinder.Path;
 import java.util.EnumSet;
 
 public class CustomerEntity extends PathfinderMob {
+    private static final EntityDataAccessor<CompoundTag> SKIN_PROFILE = SynchedEntityData.defineId(CustomerEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    private boolean isLoadingSkin = false;
+    private String lastLoadedId = "";
+
     private BlockPos targetMenuPos;
     private int travelTime = 0;
+    private GameProfile gameProfile;
     public CustomerEntity(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
     }
@@ -38,6 +50,50 @@ public class CustomerEntity extends PathfinderMob {
         }
     }
 
+    public void setCustomerSkinFromUsername(String name) {
+        if (StringUtil.isNullOrEmpty(name) || this.level().isClientSide()) return;
+
+        var server = this.level().getServer();
+        if (server == null) return;
+
+        var cache = server.getProfileCache();
+        if (cache != null) {
+            cache.getAsync(name, profileOpt -> {
+                if (profileOpt != null && profileOpt.isPresent()) {
+                    server.execute(() -> {
+                        this.entityData.set(SKIN_PROFILE, NbtUtils.writeGameProfile(new CompoundTag(), profileOpt.get()));
+                    });
+                }
+            });
+        }
+    }
+
+
+    public GameProfile getOrCreateProfile() {
+        CompoundTag tag = this.entityData.get(SKIN_PROFILE);
+        if (tag.isEmpty()) return null;
+        GameProfile rawProfile = NbtUtils.readGameProfile(tag);
+        if (rawProfile == null) return null;
+        String currentId = rawProfile.getId() != null ? rawProfile.getId().toString() : rawProfile.getName();
+
+        if (!currentId.equals(this.lastLoadedId)) {
+            this.lastLoadedId = currentId;
+            this.isLoadingSkin = false;
+            this.gameProfile = null;
+        }
+
+        if (this.gameProfile == null && !this.isLoadingSkin) {
+            this.isLoadingSkin = true;
+            Util.backgroundExecutor().execute(() -> {
+                GameProfile filledProfile = Minecraft.getInstance().getMinecraftSessionService().fillProfileProperties(rawProfile, true);
+                Minecraft.getInstance().execute(() -> {
+                    this.gameProfile = filledProfile;
+                });
+            });
+        }
+        return this.gameProfile;
+    }
+
     public BlockPos getTargetMenuPos() {
         return this.targetMenuPos;
     }
@@ -47,12 +103,19 @@ public class CustomerEntity extends PathfinderMob {
     }
 
     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SKIN_PROFILE, new CompoundTag());
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (this.targetMenuPos != null) {
             nbt.put("targetMenuPos", NbtUtils.writeBlockPos(this.targetMenuPos));
         }
         nbt.putInt("travelTime", this.travelTime);
+        nbt.put("customerProfile", this.entityData.get(SKIN_PROFILE));
     }
 
     @Override
@@ -62,6 +125,9 @@ public class CustomerEntity extends PathfinderMob {
             this.targetMenuPos = NbtUtils.readBlockPos(nbt.getCompound("targetMenuPos"));
         }
         this.travelTime = nbt.getInt("travelTime");
+        if (nbt.contains("customerProfile")) {
+            this.entityData.set(SKIN_PROFILE, nbt.getCompound("customerProfile"));
+        }
     }
 
     public static class NavigateToMenuGoal extends Goal {

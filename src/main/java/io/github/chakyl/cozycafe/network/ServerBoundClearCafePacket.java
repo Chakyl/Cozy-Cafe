@@ -10,14 +10,14 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ServerBoundToggleCafeOpenPacket {
+public class ServerBoundClearCafePacket {
     private final BlockPos pos;
 
-    public ServerBoundToggleCafeOpenPacket(BlockPos pos) {
+    public ServerBoundClearCafePacket(BlockPos pos) {
         this.pos = pos;
     }
 
-    public ServerBoundToggleCafeOpenPacket(FriendlyByteBuf buffer) {
+    public ServerBoundClearCafePacket(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
     }
 
@@ -34,7 +34,7 @@ public class ServerBoundToggleCafeOpenPacket {
                 if (level.isLoaded(this.pos)) {
                     BlockEntity cafeManager = level.getBlockEntity(this.pos);
                     if (cafeManager instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
-                        cafeManagerBlockEntity.toggleOpenFromMenu(player);
+                        cafeManagerBlockEntity.clearCafeData();
 
                     }
                 }

@@ -46,7 +46,8 @@ public class PlatingStationBlockEntity extends BlockEntity {
             if (!heldItem.isEmpty()) {
                 if (!level.isClientSide) {
                     if (CafeMenuItemRegistry.INSTANCE.isMenuItem(heldItem.getItem())) {
-                        if (CafeMenuItemRegistry.INSTANCE.getForItem(heldItem.getItem()).category() == CafeMenuItem.MenuItemCategory.MAIN) {
+                        CafeMenuItem cafeMenuItem = CafeMenuItemRegistry.INSTANCE.getForItem(heldItem.getItem());
+                        if (cafeMenuItem.category() == CafeMenuItem.MenuItemCategory.MAIN && !cafeMenuItem.bowlFood()) {
                             if (ServingPlateItem.getStoredFood(this.plateItem).isEmpty()) {
                                 this.plateItem = ServingPlateItem.createPlatedFood(heldItem.split(1));
                                 this.setChangedForRender();

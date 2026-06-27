@@ -46,11 +46,31 @@ public class EvilPacketsIHateThem {
                 .decoder(ClientBoundCafeCannotOpenPacket::new)
                 .consumerMainThread(ClientBoundCafeCannotOpenPacket::handle)
                 .add();
+
         INSTANCE.messageBuilder(ServerBoundRemoveMenuItemPacket.class, 5, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(ServerBoundRemoveMenuItemPacket::encode)
                 .decoder(ServerBoundRemoveMenuItemPacket::new)
                 .consumerMainThread(ServerBoundRemoveMenuItemPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ServerBoundRenameCafePacket.class, 6, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundRenameCafePacket::encode)
+                .decoder(ServerBoundRenameCafePacket::new)
+                .consumerMainThread(ServerBoundRenameCafePacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ServerBoundShowCafeAreaPacket.class, 7, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundShowCafeAreaPacket::encode)
+                .decoder(ServerBoundShowCafeAreaPacket::new)
+                .consumerMainThread(ServerBoundShowCafeAreaPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ServerBoundClearCafePacket.class, 8, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundClearCafePacket::encode)
+                .decoder(ServerBoundClearCafePacket::new)
+                .consumerMainThread(ServerBoundClearCafePacket::handle)
+                .add();
+
 
     }
 

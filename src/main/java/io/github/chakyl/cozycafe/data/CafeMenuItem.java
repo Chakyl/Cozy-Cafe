@@ -13,7 +13,9 @@ import dev.shadowsoffire.placebo.codec.CodecProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
@@ -24,10 +26,13 @@ import java.util.List;
  * @param item
  * @param category
  * @param price
+ * @param bowlFood
+ * @param bottleDrink
  * @param themes
  * @param flavors
  */
-public record CafeMenuItem(Item item, MenuItemCategory category, int price, List<String> themes,
+public record CafeMenuItem(Item item, MenuItemCategory category, int price, boolean bowlFood, boolean bottleDrink,
+                           List<String> themes,
                            List<String> flavors) implements CodecProvider<CafeMenuItem> {
     public enum MenuItemCategory {
         DRINK, MAIN, DESSERT
@@ -35,7 +40,7 @@ public record CafeMenuItem(Item item, MenuItemCategory category, int price, List
     public static final Codec<CafeMenuItem> CODEC = new CafeMenuItemCodec();
 
     public CafeMenuItem(CafeMenuItem other) {
-        this(other.item, other.category, other.price, other.themes, other.flavors);
+        this(other.item, other.category, other.price, other.bowlFood, other.bottleDrink, other.themes, other.flavors);
     }
 
 
@@ -43,6 +48,20 @@ public record CafeMenuItem(Item item, MenuItemCategory category, int price, List
         Preconditions.checkNotNull(this.item, "Invalid item ID!");
         Preconditions.checkNotNull(this.category, "Invalid category!");
         return this;
+    }
+
+    public static boolean dropsBowl(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+
+        if (stack.getItem() instanceof BowlFoodItem) return true;
+
+        return stack.hasCraftingRemainingItem() && stack.getCraftingRemainingItem().is(Items.BOWL);
+    }
+
+    public static boolean dropsBottle(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+
+        return stack.hasCraftingRemainingItem() && stack.getCraftingRemainingItem().is(Items.GLASS_BOTTLE);
     }
 
     @Override
@@ -63,6 +82,8 @@ public record CafeMenuItem(Item item, MenuItemCategory category, int price, List
                 case DRINK -> "drink";
             });
             obj.addProperty("price", input.price);
+            obj.addProperty("bowl_food", input.bowlFood);
+            obj.addProperty("bottle_drink", input.bottleDrink);
             JsonArray themes = new JsonArray();
             obj.add("themes", themes);
             for (String theme : input.themes) {
@@ -95,7 +116,23 @@ public record CafeMenuItem(Item item, MenuItemCategory category, int price, List
             }
             int price = 1;
             if (obj.has("price")) {
-                price = (GsonHelper.getAsInt(obj, "price"));
+                price = GsonHelper.getAsInt(obj, "price");
+            }
+            boolean bowlFood = false;
+            if (menuItemCategory == MenuItemCategory.MAIN) {
+                if (obj.has("bowl_food")) {
+                    bowlFood = GsonHelper.getAsBoolean(obj, "bowl_food");
+                } else {
+                    bowlFood = dropsBowl(food.getDefaultInstance());
+                }
+            }
+            boolean bottleDrink = false;
+            if (menuItemCategory == MenuItemCategory.DRINK) {
+                if (obj.has("bottle_drink")) {
+                    bottleDrink = GsonHelper.getAsBoolean(obj, "bottle_drink");
+                } else {
+                    bottleDrink = dropsBottle(food.getDefaultInstance());
+                }
             }
             List<String> themes = new ArrayList<>();
             if (obj.has("themes")) {
@@ -109,7 +146,7 @@ public record CafeMenuItem(Item item, MenuItemCategory category, int price, List
                     flavors.add(String.valueOf(json).replace("\"", ""));
                 }
             }
-            return DataResult.success(Pair.of(new CafeMenuItem(food, menuItemCategory, price, themes, flavors), input));
+            return DataResult.success(Pair.of(new CafeMenuItem(food, menuItemCategory, price, bowlFood, bottleDrink, themes, flavors), input));
         }
 
     }

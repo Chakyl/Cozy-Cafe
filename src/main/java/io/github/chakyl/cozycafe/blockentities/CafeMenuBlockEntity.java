@@ -1,5 +1,6 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import com.mojang.authlib.GameProfile;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
@@ -7,20 +8,25 @@ import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
-import net.minecraft.client.Minecraft;
+import io.netty.util.internal.StringUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,17 +40,20 @@ public class CafeMenuBlockEntity extends BlockEntity {
     private int currentCourse = 0;
     private int waitTime = -1;
     private int orderTime = -1;
+    private boolean dropItem = false;
     private boolean hasCustomer = false;
     private int customerTravelTime = -1;
     private BlockPos cafeManager;
     private ItemStack requestedItem = ItemStack.EMPTY;
+    private String customerSkin = "";
+    private GameProfile gameProfile;
 
     public CafeMenuBlockEntity(BlockPos pos, BlockState state) {
         super(CozyRegistry.BlockEntityRegistry.CAFE_MENU.get(), pos, state);
     }
 
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide()) {
+    public void tick(Level pLevel, BlockPos pPos, BlockState pState) {
+        if (!pLevel.isClientSide()) {
             if (this.customerTravelTime > -1 && this.customerTravelTime < MAX_TRAVEL_TIME) {
                 this.customerTravelTime++;
                 this.setChanged();
@@ -65,7 +74,17 @@ public class CafeMenuBlockEntity extends BlockEntity {
                         cafeManagerBlockEntity.rollMenuCourse(this);
                         this.orderTime = -1;
                         if (this.currentCourse > 1) {
-                            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DIRTY, true), 3);
+                            if (this.dropItem) {
+                                pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, new ItemStack(Items.BOWL)));
+                                this.dropItem = false;
+                                this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DISH, false), 3);
+                            } else {
+                                this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DIRTY, true), 3);
+                            }
+                        } else if (currentCourse == 1 && this.dropItem) {
+                            pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, new ItemStack(Items.GLASS_BOTTLE)));
+                            this.dropItem = false;
+
                         }
                         this.setChangedForRender();
                     }
@@ -77,7 +96,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     this.setChangedForRender();
                 } else {
                     if (this.waitTime == MAX_WAIT_TIME) {
-                        getCafeManager(level);
+                        getCafeManager(pLevel);
                         this.closeMenu();
                     } else {
                         this.waitTime++;
@@ -100,9 +119,20 @@ public class CafeMenuBlockEntity extends BlockEntity {
         CafeMenuItem menuItem = CafeMenuItemRegistry.INSTANCE.getForItem(requestedItem.getItem());
         boolean isMain = menuItem.category() == CafeMenuItem.MenuItemCategory.MAIN;
         if (isMain || handStack.is(requestedItem.getItem())) {
-            if (isMain && !(handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem()))) {
-                pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
-                return;
+            if (isMain) {
+                boolean success = false;
+                if (menuItem.bowlFood()) {
+                    success = true;
+                    this.dropItem = true;
+                } else if (handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem()))
+                    success = true;
+                if (!success) {
+                    pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
+                    return;
+                }
+            }
+            if (menuItem.bottleDrink()) {
+                this.dropItem = true;
             }
             if (!pPlayer.isCreative()) handStack.shrink(1);
             this.orderTime = 0;
@@ -258,6 +288,35 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
 
+    public void setCustomerSkinFromUsername(String name) {
+        if (StringUtil.isNullOrEmpty(name)) return;
+        this.customerSkin = name;
+        MinecraftServer server = this.level.getServer();
+        if (server == null) return;
+
+        GameProfileCache cache = server.getProfileCache();
+        if (cache != null) {
+            cache.getAsync(name, profileOpt -> {
+                if (profileOpt != null && profileOpt.isPresent()) {
+                    GameProfile profile = profileOpt.get();
+                    GameProfile filledProfile = server.getSessionService().fillProfileProperties(profile, true);
+
+                    server.execute(() -> {
+                        this.gameProfile = filledProfile;
+                        setChangedForRender();
+                    });
+                }
+            });
+        }
+        setChangedForRender();
+    }
+
+
+    @Nullable
+    public GameProfile getGameProfile() {
+        return this.gameProfile;
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
@@ -265,9 +324,14 @@ public class CafeMenuBlockEntity extends BlockEntity {
         tag.putInt("waitTime", this.waitTime);
         tag.putInt("orderTime", this.orderTime);
         tag.putInt("customerTravelTime", this.customerTravelTime);
+        tag.putBoolean("dropItem", this.dropItem);
         tag.putBoolean("hasCustomer", this.hasCustomer);
         if (!this.requestedItem.isEmpty()) {
             tag.put("requestedItem", this.requestedItem.save(new CompoundTag()));
+        }
+        tag.putString("customerSkin", this.customerSkin);
+        if (this.gameProfile != null) {
+            tag.put("customerProfile", NbtUtils.writeGameProfile(new CompoundTag(), this.gameProfile));
         }
     }
 
@@ -279,10 +343,15 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.orderTime = tag.getInt("orderTime");
         this.customerTravelTime = tag.getInt("customerTravelTime");
         this.hasCustomer = tag.getBoolean("hasCustomer");
+        this.dropItem = tag.getBoolean("dropItem");
         if (tag.contains("requestedItem")) {
             this.requestedItem = ItemStack.of(tag.getCompound("requestedItem"));
         } else {
             this.requestedItem = ItemStack.EMPTY;
+        }
+        this.customerSkin = tag.getString("customerSkin");
+        if (tag.contains("customerProfile")) {
+            this.gameProfile = NbtUtils.readGameProfile(tag.getCompound("customerProfile"));
         }
     }
 

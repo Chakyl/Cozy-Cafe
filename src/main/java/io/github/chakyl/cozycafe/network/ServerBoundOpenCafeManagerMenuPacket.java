@@ -1,6 +1,5 @@
 package io.github.chakyl.cozycafe.network;
 
-import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.gui.MenuSelectorMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

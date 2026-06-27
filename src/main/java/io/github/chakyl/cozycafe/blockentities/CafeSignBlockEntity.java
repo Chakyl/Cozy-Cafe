@@ -1,6 +1,5 @@
 package io.github.chakyl.cozycafe.blockentities;
 
-import io.github.chakyl.cozycafe.blocks.CafeSignBlock;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

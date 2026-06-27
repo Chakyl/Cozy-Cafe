@@ -22,10 +22,15 @@
   "gui.cozycafe.cafe_manager.edit_menu": "Edit Menu",
   "gui.cozycafe.cafe_manager.open": "OPEN",
   "gui.cozycafe.cafe_manager.close": "CLOSE",
+  "gui.cozycafe.cafe_manager.show_area": "Show cafe area",
+  "gui.cozycafe.cafe_manager.clear_data": "Clear cafe data (Hold Shift)",
+  "gui.cozycafe.cafe_manager.edit_name": "Edit Cafe Name",
 
   "gui.cozycafe.menu_selector.invalid": "Can't add!",
   "gui.cozycafe.menu_selector.added": "Added!",
   "gui.cozycafe.menu_selector.price": "Price: %s",
   "gui.cozycafe.menu_selector.item_category": "Category: %s",
-  "gui.cozycafe.menu_selector.remove": "Click to remove"
+  "gui.cozycafe.menu_selector.remove": "Click to remove",
+  "gui.cozycafe.menu_selector.bowl_food": "Bowl food, no plating needed",
+  "gui.cozycafe.menu_selector.bottle_drink": "Drops bottle when consumed"
 }

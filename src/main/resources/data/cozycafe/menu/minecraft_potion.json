@@ -1,6 +1,7 @@
 {
   "item": "minecraft:potion",
   "category": "drink",
+  "bottle_drink": true,
   "price": 7,
   "flavors": ["neutral"],
   "themes": ["casual", "fancy"]

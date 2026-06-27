@@ -7,13 +7,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +37,22 @@ public class CafeManagerMenu extends AbstractContainerMenu {
         this.broadcastChanges();
     }
 
+    public void setName(String name) { this.blockEntity.setCafeName(name); }
+
+    public void showArea() { this.blockEntity.showCafeArea(); }
+
+    public void clearCafe() { this.blockEntity.clearCafeData(); }
+
     public boolean getIsCafeOpen() {
         return this.blockEntity.isOpen();
     }
 
     public int getStars() {
         return this.blockEntity.getStarsFromReputation();
+    }
+
+    public String getCafeName() {
+        return this.blockEntity.getCafeName();
     }
 
     @Override

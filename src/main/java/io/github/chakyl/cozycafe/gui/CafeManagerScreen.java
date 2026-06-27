@@ -5,13 +5,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
-import io.github.chakyl.cozycafe.network.EvilPacketsIHateThem;
-import io.github.chakyl.cozycafe.network.ServerBoundOpenMenuSelectorMenuPacket;
-import io.github.chakyl.cozycafe.network.ServerBoundToggleCafeOpenPacket;
+import io.github.chakyl.cozycafe.network.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @OnlyIn(Dist.CLIENT)
 public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> {
@@ -36,6 +39,9 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
     private List<ItemStack> cafeMenu = new ArrayList<>();
     private Component errorMessage = null;
     private int errorDisplayTicks = 0;
+
+    private EditBox nameField;
+    private boolean isNameEditing = false;
 
     public CafeManagerScreen(CafeManagerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -52,6 +58,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         };
         this.errorDisplayTicks = 240;
     }
+
     @Override
     protected void init() {
         super.init();
@@ -59,6 +66,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         int topPos = this.getGuiTop();
         cafeMenu = this.menu.getCafeMenu();
         this.isCafeOpen = this.menu.getIsCafeOpen();
+
         this.addRenderableWidget(Button.builder(
                         Component.translatable("gui.cozycafe.cafe_manager.edit_menu"),
                         (button) -> {
@@ -69,6 +77,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                 .bounds(leftPos + 55, topPos + 60, 64, 20)
                 .build()
         );
+
         this.addRenderableWidget(Button.builder(
                         Component.translatable("gui.cozycafe.cafe_manager." + (this.isCafeOpen ? "close" : "open")),
                         (button) -> {
@@ -77,6 +86,62 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                 .bounds(leftPos + 62, topPos + 198, 52, 20)
                 .build()
         );
+
+        this.nameField = new EditBox(this.font, leftPos + 40, topPos + 16, 96, 20, Component.empty());
+        this.nameField.setMaxLength(32);
+        this.nameField.setEditable(false);
+        this.nameField.setVisible(false);
+        this.addRenderableWidget(this.nameField);
+
+        ImageButton toggleEditButton = new ImageButton(leftPos + 121, topPos + 66, 15, 15, 176, 80, 16, GUI_LOCATION, 256, 256, (button) -> {
+            this.isNameEditing = !this.isNameEditing;
+            this.nameField.setEditable(this.isNameEditing);
+            this.nameField.setVisible(this.isNameEditing);
+
+            if (!this.isNameEditing) {
+                EvilPacketsIHateThem.sendToServer(new ServerBoundRenameCafePacket(this.menu.blockEntity.getBlockPos(), this.nameField.getValue()));
+            } else {
+                this.nameField.setValue(this.menu.getCafeName());
+                this.nameField.setFocused(true);
+            }
+        });
+        toggleEditButton.setTooltip(Tooltip.create(Component.translatable("gui.cozycafe.cafe_manager.edit_name")));
+        this.addRenderableWidget(toggleEditButton);
+
+        ImageButton showAreaButton = new ImageButton(leftPos + this.imageWidth - 20, topPos + this.imageHeight - 20, 15, 15, 192, 80, 16, GUI_LOCATION, 256, 256, (button) -> {
+            EvilPacketsIHateThem.sendToServer(new ServerBoundShowCafeAreaPacket(this.menu.blockEntity.getBlockPos()));
+            this.onClose();
+        });
+        showAreaButton.setTooltip(Tooltip.create(Component.translatable("gui.cozycafe.cafe_manager.show_area")));
+        this.addRenderableWidget(showAreaButton);
+
+        ImageButton clearCafeButton = new ImageButton(leftPos + 5, topPos + this.imageHeight - 20, 15, 15, 208, 80, 16, GUI_LOCATION, 256, 256, (button) -> {
+            if (Screen.hasShiftDown()) {
+                EvilPacketsIHateThem.sendToServer(new ServerBoundClearCafePacket(this.menu.blockEntity.getBlockPos()));
+                this.onClose();
+            }
+        });
+        clearCafeButton.setTooltip(Tooltip.create(Component.translatable("gui.cozycafe.cafe_manager.clear_data")));
+        this.addRenderableWidget(clearCafeButton);
+    }
+
+    @Override
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        if (this.nameField.isFocused()) {
+            if (pKeyCode == 256 || pKeyCode == 257) {
+                this.isNameEditing = false;
+                this.nameField.setEditable(false);
+                this.nameField.setVisible(false);
+                this.nameField.setFocused(false);
+                this.menu.setName(this.nameField.getValue());
+                return true;
+            }
+
+            this.nameField.keyPressed(pKeyCode, pScanCode, pModifiers);
+            return true;
+        }
+
+        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
     @Override
@@ -100,17 +165,21 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         int left = this.getGuiLeft();
         int top = this.getGuiTop();
         gfx.blit(GUI_LOCATION, left, top, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        if (!this.isNameEditing) {
+            Component titleText = Component.literal(this.menu.getCafeName());
+            int textWidth = this.font.width(titleText);
+            float scale = Math.min(3.0f, (this.imageWidth - 32.0f) / (float) textWidth);
 
-        PoseStack poseStack = gfx.pose();
-        poseStack.pushPose();
-        poseStack.translate(left + 42, top + 16, 0);
-        poseStack.scale(2f, 2f, 1.0f);
-        gfx.drawString(this.font, Component.translatable("Cafe Sun"), 0, 0, 0x181425, false);
-        poseStack.popPose();
+            PoseStack poseStack = gfx.pose();
+            poseStack.pushPose();
+            poseStack.translate(left + (this.imageWidth / 2.0f), top + 16, 0);
+            poseStack.scale(scale, scale, 1.0f);
+            gfx.drawString(this.font, titleText, -(textWidth / 2), 0, 0x181425, false);
+            poseStack.popPose();
+        }
         // Stars
         for (int i = 0; i < this.menu.getStars(); i++) {
-
-            gfx.blit(GUI_LOCATION, this.leftPos +48 + (i * 16), this.topPos +40, 176, 32, 16, 16);
+            gfx.blit(GUI_LOCATION, this.leftPos + 48 + (i * 16), this.topPos + 40, 176, 32, 16, 16);
         }
         // Menu Items
         if (this.cafeMenu != null && !this.cafeMenu.isEmpty()) {
@@ -151,6 +220,12 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                     List<Component> tooltipList = new ArrayList<>(getTooltipFromItem(Minecraft.getInstance(), hoveredItem));
                     tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()).withStyle(ChatFormatting.GREEN));
                     tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
+                    if (cafeMenuItem.bowlFood()) {
+                        tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bowl_food").withStyle(ChatFormatting.GRAY));
+                    }
+                    if (cafeMenuItem.bottleDrink()) {
+                        tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bottle_drink").withStyle(ChatFormatting.RED));
+                    }
                     gfx.renderTooltip(this.font, tooltipList, hoveredItem.getTooltipImage(), pMouseX, pMouseY);
                 } else {
                     super.renderTooltip(gfx, pMouseX, pMouseY);
@@ -160,9 +235,6 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         if (this.errorMessage != null) {
             gfx.drawWordWrap(this.font, this.errorMessage, left + 14, top + 155, 160, 0xFF5555);
         }
-
-//        gfx.drawString(this.font, Component.translatable("gui.cozycafe.cafe_manager.edit_menu"), left + 64, top + 71, 0x181425, false);
-//        gfx.drawString(this.font, Component.translatable("gui.cozycafe.cafe_manager.open"), left + 75, top + 185, 0xFFFFFF, false);
     }
 
     @Override

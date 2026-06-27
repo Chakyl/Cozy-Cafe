@@ -166,6 +166,9 @@ dependencies {
 
     // JEI
     implementation fg.deobf("curse.maven:jei-238222:6075247")
+
+
+//    jarJar(implementation("curse.maven:libtooltips-1370245:8258361"))
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html

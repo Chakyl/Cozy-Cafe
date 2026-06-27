@@ -4,13 +4,14 @@ import com.mojang.authlib.GameProfile;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import io.netty.util.internal.StringUtil;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -23,12 +24,10 @@ import java.util.EnumSet;
 
 public class CustomerEntity extends PathfinderMob {
     private static final EntityDataAccessor<CompoundTag> SKIN_PROFILE = SynchedEntityData.defineId(CustomerEntity.class, EntityDataSerializers.COMPOUND_TAG);
-    private boolean isLoadingSkin = false;
-    private String lastLoadedId = "";
-
+    private GameProfile cachedProfile = null;
     private BlockPos targetMenuPos;
     private int travelTime = 0;
-    private GameProfile gameProfile;
+
     public CustomerEntity(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
     }
@@ -53,15 +52,18 @@ public class CustomerEntity extends PathfinderMob {
     public void setCustomerSkinFromUsername(String name) {
         if (StringUtil.isNullOrEmpty(name) || this.level().isClientSide()) return;
 
-        var server = this.level().getServer();
+        MinecraftServer server = this.level().getServer();
         if (server == null) return;
 
-        var cache = server.getProfileCache();
+        GameProfileCache cache = server.getProfileCache();
         if (cache != null) {
-            cache.getAsync(name, profileOpt -> {
-                if (profileOpt != null && profileOpt.isPresent()) {
-                    server.execute(() -> {
-                        this.entityData.set(SKIN_PROFILE, NbtUtils.writeGameProfile(new CompoundTag(), profileOpt.get()));
+            cache.getAsync(name, profile -> {
+                if (profile != null && profile.isPresent()) {
+                    Util.backgroundExecutor().execute(() -> {
+                        GameProfile filledProfile = server.getSessionService().fillProfileProperties(profile.get(), true);
+                        server.execute(() -> {
+                            this.entityData.set(SKIN_PROFILE, NbtUtils.writeGameProfile(new CompoundTag(), filledProfile));
+                        });
                     });
                 }
             });
@@ -70,28 +72,20 @@ public class CustomerEntity extends PathfinderMob {
 
 
     public GameProfile getOrCreateProfile() {
-        CompoundTag tag = this.entityData.get(SKIN_PROFILE);
-        if (tag.isEmpty()) return null;
-        GameProfile rawProfile = NbtUtils.readGameProfile(tag);
-        if (rawProfile == null) return null;
-        String currentId = rawProfile.getId() != null ? rawProfile.getId().toString() : rawProfile.getName();
+        return this.cachedProfile;
+    }
 
-        if (!currentId.equals(this.lastLoadedId)) {
-            this.lastLoadedId = currentId;
-            this.isLoadingSkin = false;
-            this.gameProfile = null;
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        super.onSyncedDataUpdated(pKey);
+        if (SKIN_PROFILE.equals(pKey)) {
+            CompoundTag tag = this.entityData.get(SKIN_PROFILE);
+            if (!tag.isEmpty()) {
+                this.cachedProfile = NbtUtils.readGameProfile(tag);
+            } else {
+                this.cachedProfile = null;
+            }
         }
-
-        if (this.gameProfile == null && !this.isLoadingSkin) {
-            this.isLoadingSkin = true;
-            Util.backgroundExecutor().execute(() -> {
-                GameProfile filledProfile = Minecraft.getInstance().getMinecraftSessionService().fillProfileProperties(rawProfile, true);
-                Minecraft.getInstance().execute(() -> {
-                    this.gameProfile = filledProfile;
-                });
-            });
-        }
-        return this.gameProfile;
     }
 
     public BlockPos getTargetMenuPos() {
@@ -134,7 +128,7 @@ public class CustomerEntity extends PathfinderMob {
         private final CustomerEntity customer;
         private final double speed;
         private int timeToRecalcPath;
-
+        // TODO: Make customers walk on the floor
         public NavigateToMenuGoal(CustomerEntity customer, double speed) {
             this.customer = customer;
             this.speed = speed;
@@ -162,11 +156,11 @@ public class CustomerEntity extends PathfinderMob {
         private boolean canReach(BlockPos target) {
             return this.customer.distanceToSqr(target.getX() + 0.5, target.getY(), target.getZ() + 0.5) <= 4.0D;
         }
+
         @Override
         public void tick() {
             BlockPos target = this.customer.getTargetMenuPos();
             if (target == null) return;
-
 
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = 10 + this.customer.getRandom().nextInt(10);

@@ -4,9 +4,19 @@
 
   "block.cozycafe.cafe_manager": "Cafe Manager",
   "block.cozycafe.cafe_menu": "Cafe Menu",
+  "block.cozycafe.plating_station": "Plating Station",
+  "block.cozycafe.cafe_sign": "Cafe Sign",
   "item.cozycafe.serving_plate": "Serving Plate",
   "item.cozycafe.serving_plate.served": "Plated %s",
   "item.cozycafe.dirty_serving_plate": "Dirty Serving Plate",
+
+  "tooltip.always.cozycafe.cafe_sign.0" : "Defines where customers will spawn at your cafe",
+  "tooltip.cozycafe.cafe_sign.1" : "Shift + Right Click to link to your Cafe Manager",
+  "tooltip.always.cozycafe.cafe_manager.0" : "The heart of your Cafe",
+  "tooltip.always.cozycafe.plating_station.0" : "Allows you to plate mains for serving customers.",
+  "tooltip.cozycafe.plating_station.1" : "Right Click with a clean plate to start",
+  "tooltip.cozycafe.plating_station.2" : "Right Click with your menu item to plate",
+  "tooltip.cozycafe.plating_station.3" : "Right Click the plated menu item to extract",
 
   "block.cozycafe.cafe_manager.menu_too_small": "You need at least 5 menu items!",
   "block.cozycafe.cafe_manager.menu_too_small_for_stars": "You need at least 5 additional menu items per star!",

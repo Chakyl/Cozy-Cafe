@@ -71,7 +71,7 @@ public final class CozyRegistry {
         }
 
         public static final RegistryObject<Block> CAFE_MANAGER = registerWithItem("cafe_manager", () -> new CafeManagerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).noOcclusion().strength(1.5F, 6.0F)));
-        public static final RegistryObject<Block> CAFE_SIGN = registerWithItem( "cafe_sign", () -> new CafeSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)),  (blockObj) -> ITEMS.register("cafe_sign", () -> new CafeSignItem(blockObj.get(), new Item.Properties())));
+        public static final RegistryObject<Block> CAFE_SIGN = registerWithItem( "cafe_sign", () -> new CafeSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)),  (blockObj) -> ItemRegistry.register("cafe_sign", () -> new CafeSignItem(blockObj.get(), new Item.Properties())));
         public static final RegistryObject<Block> CAFE_MENU = registerWithItem("cafe_menu", () -> new CafeMenuBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)));
         public static final RegistryObject<Block> PLATING_STATION = registerWithItem("plating_station", () -> new PlatingStationBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)));
 

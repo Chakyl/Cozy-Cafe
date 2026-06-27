@@ -117,7 +117,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
                 if (customer != null) {
                     cafeMenuBlockEntity.setCustomerTravelTime(0);
                     cafeMenuBlockEntity.setCafeManager(pos);
-                    customer.moveTo(this.linkedSign.getX() + 0.5, this.linkedSign.getY() + 1.0, this.linkedSign.getZ() + 0.5, serverLevel.random.nextFloat() * 360.0F, 0.0F);
+                    customer.moveTo(this.linkedSign.getX() + 0.5, this.linkedSign.getY(), this.linkedSign.getZ() + 0.5, serverLevel.random.nextFloat() * 360.0F, 0.0F);
                     serverLevel.addFreshEntity(customer);
                     customer.setTargetMenuPos(menuPos);
                     String skinUsername = rollCustomerSkin();
@@ -162,7 +162,8 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public void rollMenuCourse(CafeMenuBlockEntity cafeMenuBlockEntity) {
         CafeMenuItem.MenuItemCategory category = CafeMenuItem.MenuItemCategory.MAIN;
-        switch (cafeMenuBlockEntity.getCurrentCourse()) {
+        int currentCourse = cafeMenuBlockEntity.getCurrentCourse();
+        switch (currentCourse) {
             case 0:
                 category = CafeMenuItem.MenuItemCategory.DRINK;
                 break;
@@ -175,7 +176,10 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         }
         List<ItemStack> sortedMenuItems = getMenuItemsByCategory(category);
         if (sortedMenuItems.isEmpty()) {
-            cafeMenuBlockEntity.setCurrentCourse(cafeMenuBlockEntity.getCurrentCourse() + 1);
+            cafeMenuBlockEntity.setCurrentCourse(currentCourse + 1, false);
+            if (currentCourse + 1 < 3) {
+                this.rollMenuCourse(cafeMenuBlockEntity);
+            }
         } else if (this.level != null) {
             cafeMenuBlockEntity.setRequestedItem(sortedMenuItems.get(this.level.random.nextInt(sortedMenuItems.size())));
 

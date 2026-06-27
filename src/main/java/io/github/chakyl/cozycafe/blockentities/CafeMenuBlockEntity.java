@@ -136,7 +136,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
             }
             if (!pPlayer.isCreative()) handStack.shrink(1);
             this.orderTime = 0;
-            this.setCurrentCourse(this.currentCourse + 1);
+            // TODO: Implement money via config
+            this.setCurrentCourse(this.currentCourse + 1, true);
             this.setRequestedItem(ItemStack.EMPTY);
             ((ServerLevel) level).sendParticles(
                     ParticleTypes.HAPPY_VILLAGER,
@@ -210,10 +211,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
         return currentCourse;
     }
 
-    public void setCurrentCourse(int currentCourse) {
+    public void setCurrentCourse(int currentCourse, boolean setPlate) {
         if (currentCourse < 3) {
             this.currentCourse = currentCourse;
-            if (currentCourse > 1) {
+            if (setPlate && currentCourse > 1) {
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, true), 3);
             }
             this.setChangedForRender();
@@ -238,6 +239,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.customerTravelTime = -1;
         this.currentCourse = 0;
         this.hasCustomer = false;
+        this.customerSkin = "";
+        this.gameProfile = null;
         this.setRequestedItem(ItemStack.EMPTY);
         this.setChangedForRender();
     }
@@ -249,7 +252,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 customerEntity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK);
             }
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
-            if (cafeManagerBlockEntity == null || !cafeManagerBlockEntity.isOpen()) return;
+            if (cafeManagerBlockEntity == null || cafeManagerBlockEntity.isOpen()) {
+                this.closeMenu();
+                return;
+            }
             this.hasCustomer = true;
             this.customerTravelTime = -1;
             this.orderTime = 0;

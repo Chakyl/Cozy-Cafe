@@ -1,8 +1,8 @@
 {
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
-	"render_type": "minecraft:cutout",
 	"ambientocclusion": false,
+	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
 		"3": "cozycafe:block/cafe_sign",
@@ -11,9 +11,9 @@
 	},
 	"elements": [
 		{
-			"from": [16, 12.6, 7],
-			"to": [16, 14.6, 9],
-			"rotation": {"angle": 0, "axis": "z", "origin": [14, 13.6, 8.25]},
+			"from": [15.95, 12.6, 7],
+			"to": [15.95, 14.6, 9],
+			"rotation": {"angle": 0, "axis": "z", "origin": [13.95, 13.6, 8.25]},
 			"faces": {
 				"north": {"uv": [0, 0, 0, 1], "texture": "#3"},
 				"east": {"uv": [0, 11, 2, 13], "texture": "#3"},

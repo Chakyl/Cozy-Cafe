@@ -39,10 +39,6 @@ public class CafeManagerMenu extends AbstractContainerMenu {
 
     public void setName(String name) { this.blockEntity.setCafeName(name); }
 
-    public void showArea() { this.blockEntity.showCafeArea(); }
-
-    public void clearCafe() { this.blockEntity.clearCafeData(); }
-
     public boolean getIsCafeOpen() {
         if (this.blockEntity.getLevel() != null && this.blockEntity.getLevel().isClientSide()) {
             if (this.blockEntity.getLevel().getBlockEntity(this.blockEntity.getBlockPos()) instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {

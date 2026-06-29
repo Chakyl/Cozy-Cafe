@@ -13,6 +13,7 @@ import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import io.github.chakyl.cozycafe.util.PaymentUtils;
 import io.github.chakyl.numismaticsutils.utils.CurioUtils;
 import io.netty.util.internal.StringUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -136,8 +137,11 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 if (menuItem.bowlFood()) {
                     success = true;
                     this.dropItem = true;
-                } else if (handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem()))
+                } else if (handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem())) {
                     success = true;
+                } else if (handStack.is(requestedItem.getItem())) {
+                    pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.not_plated").withStyle(ChatFormatting.RED), true);
+                }
                 if (!success) {
                     pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
                     return;

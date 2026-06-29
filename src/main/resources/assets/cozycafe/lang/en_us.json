@@ -37,6 +37,7 @@
   "block.cozycafe.cafe_manager.already_opened": "You already opened your cafe today! Try again tomorrow!",
 
   "block.cozycafe.cafe_menu.payment": "%s added to bank account",
+  "block.cozycafe.cafe_menu.not_plated": "This dish needs to be plated at a Plating Station!",
 
   "block.cozycafe.plating_station.not_main": "This type of menu item does not need to be plated!",
   "block.cozycafe.plating_station.not_menu_item": "This item cannot be served!",

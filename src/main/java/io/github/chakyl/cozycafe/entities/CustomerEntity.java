@@ -17,8 +17,12 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.*;
 
 import java.util.EnumSet;
 
@@ -124,11 +128,51 @@ public class CustomerEntity extends PathfinderMob {
         }
     }
 
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new GroundPathNavigation(this, level) {
+            @Override
+            protected PathFinder createPathFinder(int maxVisitedNodes) {
+                this.nodeEvaluator = new WalkNodeEvaluator() {
+                    @Override
+                    public BlockPathTypes getBlockPathType(BlockGetter blockGetter, int x, int y, int z) {
+                        BlockPos pos = new BlockPos(x, y, z);
+                        BlockState state = blockGetter.getBlockState(pos);
+
+                        if (!state.isAir() && !state.isCollisionShapeFullBlock(blockGetter, pos)) {
+                            return BlockPathTypes.TRAPDOOR;
+                        }
+
+                        return super.getBlockPathType(blockGetter, x, y, z);
+                    }
+
+                    @Override
+                    public int getNeighbors(Node[] outputArray, Node node) {
+                        int count = super.getNeighbors(outputArray, node);
+
+                        for (int i = 0; i < count; i++) {
+                            Node neighbor = outputArray[i];
+
+                            if (neighbor.y != node.y) {
+                                neighbor.costMalus += 200.0F;
+                            }
+                            if (neighbor.type == BlockPathTypes.TRAPDOOR) {
+                                neighbor.costMalus += 100.0F;
+                            }
+                        }
+                        return count;
+                    }
+                };
+
+                this.nodeEvaluator.setCanPassDoors(true);
+                return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
+            }
+        };
+    }
     public static class NavigateToMenuGoal extends Goal {
         private final CustomerEntity customer;
         private final double speed;
         private int timeToRecalcPath;
-        // TODO: Make customers walk on the floor
         public NavigateToMenuGoal(CustomerEntity customer, double speed) {
             this.customer = customer;
             this.speed = speed;
@@ -154,7 +198,7 @@ public class CustomerEntity extends PathfinderMob {
             this.timeToRecalcPath = 0;
         }
         private boolean canReach(BlockPos target) {
-            return this.customer.distanceToSqr(target.getX() + 0.5, target.getY(), target.getZ() + 0.5) <= 4.0D;
+            return this.customer.distanceToSqr(target.getX(), target.getY(), target.getZ()) <= 4.0D;
         }
 
         @Override

@@ -40,15 +40,15 @@ public class CafeSignBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         if (this.linkedManager != null) {
-            nbt.put("LinkedManager", NbtUtils.writeBlockPos(this.linkedManager));
+            nbt.put("linkedManager", NbtUtils.writeBlockPos(this.linkedManager));
         }
     }
 
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        if (nbt.contains("LinkedManager")) {
-            this.linkedManager = NbtUtils.readBlockPos(nbt.getCompound("LinkedManager"));
+        if (nbt.contains("linkedManager")) {
+            this.linkedManager = NbtUtils.readBlockPos(nbt.getCompound("linkedManager"));
         }
     }
 

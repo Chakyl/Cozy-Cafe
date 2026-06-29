@@ -24,15 +24,19 @@ public class CafeSignItem extends BlockItem {
         BlockPos clickedPos = context.getClickedPos();
         BlockEntity clickedBlockEntity = level.getBlockEntity(clickedPos);
 
-        if (!level.isClientSide && clickedBlockEntity instanceof CafeManagerBlockEntity) {
+        if (clickedBlockEntity instanceof CafeManagerBlockEntity) {
+            if (level.isClientSide) {
+                return InteractionResult.SUCCESS;
+            }
             ItemStack stack = context.getItemInHand();
             CompoundTag tag = stack.getOrCreateTag();
-            tag.put("LinkedManager", NbtUtils.writeBlockPos(clickedPos));
+            tag.put("linkedManager", NbtUtils.writeBlockPos(clickedPos));
 
             if (context.getPlayer() != null) {
                 context.getPlayer().sendSystemMessage(Component.literal("Saved cafe manager position to sign item!"));
             }
-            return InteractionResult.sidedSuccess(false);
+
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return super.useOn(context);

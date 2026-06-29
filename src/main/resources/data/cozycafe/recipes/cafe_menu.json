@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "tag": "minecraft:planks"
+    },
+    "X": {
+      "item": "minecraft:paper"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "###"
+  ],
+  "result": {
+    "item": "cozycafe:cafe_menu"
+  },
+  "show_notification": true
+}

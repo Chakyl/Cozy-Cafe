@@ -143,13 +143,30 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    // Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
     // Placebo
     implementation fg.deobf("curse.maven:placebo-283644:6274231")
     // JEI
     implementation fg.deobf("curse.maven:jei-238222:6075247")
-    jarJar(implementation fg.deobf("curse.maven:libtooltips-1370245:8258361"))
+    // Quality food:
+    implementation fg.deobf("curse.maven:quality-food-973932:7618171")
+    // KubeJS
+    implementation fg.deobf("curse.maven:kubejs-238086:5853326")
+    implementation fg.deobf("curse.maven:rhino-416294:6186971")
+    implementation fg.deobf("curse.maven:architectury-api-419699:5137938")
+    // Numismatics Support
+    implementation fg.deobf("curse.maven:create-numismatics-utils-1339392:8026503")
+    implementation fg.deobf("curse.maven:numismatics-889722:6264591")
+    implementation fg.deobf("curse.maven:create-328085:7178761")
+    implementation fg.deobf("curse.maven:curios-309927:6418456")
+    // LibTooltips
+    implementation fg.deobf("curse.maven:libtooltips-1370245:8332581")
+    jarJar("curse.maven:libtooltips-1370245:8332581") {
+        // Tells JarJar to use a valid Maven range for the manifest metadata,
+        // preventing the version specification crash.
+        jarJar.ranged(it, '[8332581,)')
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

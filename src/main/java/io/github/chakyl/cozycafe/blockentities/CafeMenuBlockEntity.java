@@ -1,6 +1,8 @@
 package io.github.chakyl.cozycafe.blockentities;
 
 import com.mojang.authlib.GameProfile;
+import de.cadentem.quality_food.util.QualityUtils;
+import dev.latvian.mods.kubejs.stages.Stages;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
@@ -8,11 +10,14 @@ import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
+import io.github.chakyl.cozycafe.util.PaymentUtils;
+import io.github.chakyl.numismaticsutils.utils.CurioUtils;
 import io.netty.util.internal.StringUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -21,6 +26,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -32,6 +38,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import static io.github.chakyl.cozycafe.tags.CozyTags.PICKLE;
+import static io.github.chakyl.cozycafe.util.PaymentUtils.getCropSellMultiplier;
 
 public class CafeMenuBlockEntity extends BlockEntity {
     private static int MAX_WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
@@ -136,7 +148,6 @@ public class CafeMenuBlockEntity extends BlockEntity {
             }
             if (!pPlayer.isCreative()) handStack.shrink(1);
             this.orderTime = 0;
-            // TODO: Implement money via config
             this.setCurrentCourse(this.currentCourse + 1, true);
             this.setRequestedItem(ItemStack.EMPTY);
             ((ServerLevel) level).sendParticles(
@@ -147,7 +158,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     1.0
             );
             pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.NOTE_BLOCK_CHIME.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-
+            this.handlePayment(pPos, pPlayer, menuItem, handStack);
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
                 cafeManagerBlockEntity.handleSuccessfulServe(menuItem, handStack, (double) MAX_WAIT_TIME / this.waitTime);
@@ -159,6 +170,47 @@ public class CafeMenuBlockEntity extends BlockEntity {
         }
     }
 
+    public void handlePayment(BlockPos pPos, Player pPlayer, CafeMenuItem cafeMenuItem, ItemStack handStack) {
+        double resolvedPrice = cafeMenuItem.price();
+        if (this.waitTime < MAX_WAIT_TIME) {
+            // In theory this would make your mult start at 2x and then slowly reduce to 1 for service speed
+            resolvedPrice *= (2 - ((double) this.waitTime / MAX_WAIT_TIME));
+        }
+        if (CozyCafe.KUBEJS_INSTALLED) {
+            if (cafeMenuItem.item().getDefaultInstance().is(PICKLE) && Stages.get(pPlayer).has(CozyCafe.CONFIG.pickle_bonus_stage.get())) {
+                resolvedPrice *= 2;
+            }
+        }
+        if (CozyCafe.QUALITY_FOOD_INSTALLED && QualityUtils.hasQuality(handStack)) {
+            boolean doubled = false;
+            if (CozyCafe.KUBEJS_INSTALLED) {
+                if (Stages.get(pPlayer).has(CozyCafe.CONFIG.quality_bonus_stage.get())) {
+                    doubled = true;
+                }
+            }
+            double mult = switch (QualityUtils.getQuality(handStack)) {
+                case GOLD -> doubled ? 2.0 : 1.5;
+                case DIAMOND -> doubled ? 3.0 : 2.0;
+                case UNDEFINED, IRON -> doubled ? 1.5 : 1.25;
+                default -> 1;
+            };
+            resolvedPrice *= mult;
+        }
+        resolvedPrice *= getCropSellMultiplier(pPlayer);
+        int finalPrice = Mth.floor(resolvedPrice);
+        if (CozyCafe.CONFIG.numismaticsUtilsPayment.get() && CozyCafe.NUMISMATICS_UTILS_INSTALLED) {
+            CurioUtils.depositIntoPersonalOrCurio(this.level, pPlayer, finalPrice);
+            pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.payment", NumberFormat.getNumberInstance(Locale.US).format(finalPrice)), true);
+        } else {
+            for (ItemStack stack : PaymentUtils.getPaymentItems(finalPrice)) {
+                if (!stack.isEmpty()) {
+                    this.level.addFreshEntity(new ItemEntity(this.level, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, stack));
+                }
+            }
+        }
+        pPlayer.sendSystemMessage(Component.literal("Base Price: " + cafeMenuItem.price()));
+        pPlayer.sendSystemMessage(Component.literal("After Bonuses: " + finalPrice));
+    }
 
     public void handleClearDirtyIfPossible(BlockPos pPos, Player pPlayer, ItemStack handStack) {
         if (this.getBlockState().getValue(CafeMenuBlock.DIRTY)) {
@@ -252,7 +304,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 customerEntity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK);
             }
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
-            if (cafeManagerBlockEntity == null || cafeManagerBlockEntity.isOpen()) {
+            if (cafeManagerBlockEntity == null || !cafeManagerBlockEntity.isOpen()) {
                 this.closeMenu();
                 return;
             }
@@ -332,6 +384,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
         tag.putInt("customerTravelTime", this.customerTravelTime);
         tag.putBoolean("dropItem", this.dropItem);
         tag.putBoolean("hasCustomer", this.hasCustomer);
+        if (this.cafeManager != null) {
+            tag.put("cafeManager", NbtUtils.writeBlockPos(this.cafeManager));
+        }
+
         if (!this.requestedItem.isEmpty()) {
             tag.put("requestedItem", this.requestedItem.save(new CompoundTag()));
         }
@@ -350,6 +406,11 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.customerTravelTime = tag.getInt("customerTravelTime");
         this.hasCustomer = tag.getBoolean("hasCustomer");
         this.dropItem = tag.getBoolean("dropItem");
+        if (tag.contains("cafeManager")) {
+            this.cafeManager = NbtUtils.readBlockPos(tag.getCompound("cafeManager"));
+        } else {
+            this.cafeManager = null;
+        }
         if (tag.contains("requestedItem")) {
             this.requestedItem = ItemStack.of(tag.getCompound("requestedItem"));
         } else {

@@ -5,11 +5,13 @@ import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -24,6 +26,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -40,6 +44,7 @@ public class CafeManagerBlock extends Block implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
     }
 
+
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite()).setValue(OPEN, false);
@@ -53,6 +58,42 @@ public class CafeManagerBlock extends Block implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new CafeManagerBlockEntity(pPos, pState);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
+        List<ItemStack> drops = super.getDrops(pState, pBuilder);
+
+        BlockEntity blockEntity = pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (blockEntity instanceof CafeManagerBlockEntity cafeManager) {
+            for (ItemStack stack : drops) {
+                if (stack.getItem() == this.asItem()) {
+                    CompoundTag customTag = new CompoundTag();
+                    if (cafeManager.getMenu() != null) {
+                        customTag.put("menu", cafeManager.serializeMenuNBT());
+                    }
+                    customTag.putInt("reputation", cafeManager.getReputation());
+                    customTag.putString("cafeName", cafeManager.getCafeName());
+                    customTag.putInt("dayLastOpened", cafeManager.getDayLastOpened());
+                    stack.addTagElement("cafeData", customTag);
+                }
+            }
+        }
+        return drops;
+    }
+
+    @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+        if (pLevel.isClientSide) return;
+        if (pStack.hasTag() && pStack.getTag().contains("cafeData")) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof CafeManagerBlockEntity cafeEntity) {
+                CompoundTag blockEntityNbt = pStack.getTag().getCompound("cafeData");
+                cafeEntity.load(blockEntityNbt);
+                cafeEntity.setChanged();
+            }
+        }
     }
 
     @Override

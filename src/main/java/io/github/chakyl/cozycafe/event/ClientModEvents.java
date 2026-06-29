@@ -40,7 +40,6 @@ public class ClientModEvents {
         event.registerEntityRenderer(CozyRegistry.EntityRegistry.CUSTOMER.get(), CustomerRenderer::new);
     }
 
-
     @SubscribeEvent
     public static void onModelBake(ModelEvent.ModifyBakingResult event) {
         ModelResourceLocation plateLocation = new ModelResourceLocation("cozycafe", "serving_plate", "inventory");

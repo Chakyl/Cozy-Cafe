@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 
@@ -60,6 +61,7 @@ public class CafeMenuBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide  && pHand == InteractionHand.MAIN_HAND) {
+            if (pPlayer instanceof FakePlayer) return InteractionResult.sidedSuccess(pLevel.isClientSide());
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             ItemStack handStack = pPlayer.getItemInHand(pHand);
             if (entity instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {

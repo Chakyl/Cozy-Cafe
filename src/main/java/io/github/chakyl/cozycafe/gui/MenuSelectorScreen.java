@@ -183,7 +183,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
             CafeMenuItem cafeMenuItem = CafeMenuItemRegistry.INSTANCE.getForItem(itemStack.getItem());
             if (cafeMenuItem != null) {
                 List<Component> tooltipList = new ArrayList<>(getTooltipFromItem(Minecraft.getInstance(), itemStack));
-                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()).withStyle(ChatFormatting.GREEN));
+                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()));
                 tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
                 if (cafeMenuItem.bowlFood()) {
                     tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bowl_food").withStyle(ChatFormatting.GRAY));
@@ -279,7 +279,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
                 List<Component> tooltipList = new ArrayList<>(3);
                 CafeMenuItem cafeMenuItem = CafeMenuItemRegistry.INSTANCE.getForItem(MenuSelectorScreen.this.cafeMenu.get(this.index + MenuSelectorScreen.this.scrollOff).getItem());
                 tooltipList.add(cafeMenuItem.item().getDefaultInstance().getHoverName());
-                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()).withStyle(ChatFormatting.GREEN));
+                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()));
                 tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
                 if (cafeMenuItem.bowlFood()) {
                     tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bowl_food").withStyle(ChatFormatting.GRAY));

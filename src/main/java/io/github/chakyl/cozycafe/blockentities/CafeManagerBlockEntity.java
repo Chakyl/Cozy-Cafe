@@ -1,5 +1,6 @@
 package io.github.chakyl.cozycafe.blockentities;
 
+import de.cadentem.quality_food.util.QualityUtils;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -54,6 +56,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public CafeManagerBlockEntity(BlockPos pos, BlockState state) {
         super(CozyRegistry.BlockEntityRegistry.CAFE_MANAGER.get(), pos, state);
+
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -245,9 +248,12 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public boolean isOpen() {
-        return open;
+        return this.open;
     }
 
+    public int getDayLastOpened() {
+        return this.dayLastOpened;
+    }
 
     public void toggleOpenFromMenu(ServerPlayer player) {
         if (!this.open && !this.canBeOpened(player)) return;
@@ -257,16 +263,20 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     private boolean canBeOpened(ServerPlayer player) {
         int stars = this.getStarsFromReputation();
         int menuSizePerStar = CozyCafe.CONFIG.menuSizePerStar.get();
-        if (stars == 0 && this.menu.size() < menuSizePerStar) {
+        if (this.linkedSign == null || !this.level.isLoaded(this.linkedSign) || (this.level.isLoaded(this.linkedSign) && !(this.level.getBlockEntity(this.linkedSign) instanceof CafeSignBlockEntity))) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 0), player);
             return false;
         }
-        if (Math.floor((double) this.menu.size() / menuSizePerStar) - 1 < stars) {
+        if (stars == 0 && this.menu.size() < menuSizePerStar) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 1), player);
             return false;
         }
-        if (this.dayLastOpened == GeneralUtils.getDay(this.level)) {
+        if (Math.floor((double) this.menu.size() / menuSizePerStar) - 1 < stars) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 2), player);
+            return false;
+        }
+        if (this.dayLastOpened == GeneralUtils.getDay(this.level)) {
+            EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 3), player);
             return false;
         }
         return true;
@@ -278,6 +288,10 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public void setOpen(boolean open, boolean forceClose) {
         this.open = open;
+        this.setChanged();
+        if (this.level != null && !this.level.isClientSide()) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+        }
         CafeSignBlockEntity cafeSignBlockEntity = null;
         if (this.level.isLoaded(this.linkedSign) && this.level.getBlockEntity(this.linkedSign) instanceof CafeSignBlockEntity sign) {
             cafeSignBlockEntity = sign;
@@ -290,8 +304,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             this.dayLastOpened = GeneralUtils.getDay(this.level);
         }
         cafeSignBlockEntity.setOpen(open);
-        this.setChanged();
-        level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+
     }
 
     public int getStarsFromReputation() {
@@ -331,6 +344,19 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         return this.menu;
     }
 
+    public Tag serializeMenuNBT() {
+        if (this.menu != null && !this.menu.isEmpty()) {
+            this.sortMenuByCategory();
+            ListTag menuList = new ListTag();
+            for (ItemStack stack : this.menu) {
+                CompoundTag itemTag = new CompoundTag();
+                stack.save(itemTag);
+                menuList.add(itemTag);
+            }
+            return menuList;
+        }
+        return new ListTag();
+    }
     public void sortMenuByCategory() {
         this.menu.sort(comparingInt(item -> {
             CafeMenuItem.MenuItemCategory category = CafeMenuItemRegistry.INSTANCE.getForItem(item.getItem()).category();
@@ -373,7 +399,14 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             case MAIN -> 10;
             case DESSERT -> 4;
         };
-        // TODO: quality increases base rep by 2/4/8
+        if (CozyCafe.QUALITY_FOOD_INSTALLED && QualityUtils.hasQuality(handStack)) {
+            increase += switch (QualityUtils.getQuality(handStack)) {
+                case GOLD -> 4;
+                case DIAMOND -> 8;
+                case UNDEFINED, IRON -> 2;
+                default -> 1;
+            };
+        }
         if (waitTimeDiff >= 0.95) increase *= 2;
         if (waitTimeDiff >= 0.75) increase *= 1.5;
         if (waitTimeDiff >= 5) increase *= 1.25;
@@ -443,5 +476,13 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         CompoundTag tag = new CompoundTag();
         this.saveAdditional(tag);
         return tag;
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            this.load(tag);
+        }
     }
 }

@@ -35,11 +35,10 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
     private int shopItem;
     int scrollOff;
     private boolean isDragging;
-    private boolean isCafeOpen = false;
     private List<ItemStack> cafeMenu = new ArrayList<>();
     private Component errorMessage = null;
     private int errorDisplayTicks = 0;
-
+    private Button toggleOpenButton;
     private EditBox nameField;
     private boolean isNameEditing = false;
 
@@ -51,9 +50,10 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
 
     public void setErrorMessage(Byte errorCode) {
         this.errorMessage = switch (errorCode) {
-            case 0 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small");
-            case 1 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small_for_stars");
-            case 2 -> Component.translatable("block.cozycafe.cafe_manager.already_opened");
+            case 0 -> Component.translatable("block.cozycafe.cafe_manager.no_sign");
+            case 1 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small");
+            case 2 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small_for_stars");
+            case 3 -> Component.translatable("block.cozycafe.cafe_manager.already_opened");
             default -> throw new IllegalStateException("Unexpected value: " + errorCode);
         };
         this.errorDisplayTicks = 240;
@@ -65,7 +65,6 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         int leftPos = this.getGuiLeft();
         int topPos = this.getGuiTop();
         cafeMenu = this.menu.getCafeMenu();
-        this.isCafeOpen = this.menu.getIsCafeOpen();
 
         this.addRenderableWidget(Button.builder(
                         Component.translatable("gui.cozycafe.cafe_manager.edit_menu"),
@@ -78,8 +77,8 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                 .build()
         );
 
-        this.addRenderableWidget(Button.builder(
-                        Component.translatable("gui.cozycafe.cafe_manager." + (this.isCafeOpen ? "close" : "open")),
+        this.toggleOpenButton = this.addRenderableWidget(Button.builder(
+                        Component.translatable("gui.cozycafe.cafe_manager." + (this.menu.getIsCafeOpen() ? "close" : "open")),
                         (button) -> {
                             EvilPacketsIHateThem.sendToServer(new ServerBoundToggleCafeOpenPacket(this.menu.blockEntity.getBlockPos()));
                         })
@@ -147,7 +146,6 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
     @Override
     protected void containerTick() {
         super.containerTick();
-        this.isCafeOpen = this.menu.getIsCafeOpen();
         if (this.errorDisplayTicks > 0) {
             this.errorDisplayTicks--;
             if (this.errorDisplayTicks == 0) {
@@ -218,7 +216,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                 CafeMenuItem cafeMenuItem = CafeMenuItemRegistry.INSTANCE.getForItem(hoveredItem.getItem());
                 if (cafeMenuItem != null) {
                     List<Component> tooltipList = new ArrayList<>(getTooltipFromItem(Minecraft.getInstance(), hoveredItem));
-                    tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()).withStyle(ChatFormatting.GREEN));
+                    tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()));
                     tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
                     if (cafeMenuItem.bowlFood()) {
                         tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bowl_food").withStyle(ChatFormatting.GRAY));
@@ -240,6 +238,10 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
+        if (this.toggleOpenButton != null) {
+            boolean open = this.menu.getIsCafeOpen();
+            this.toggleOpenButton.setMessage(Component.translatable("gui.cozycafe.cafe_manager." + (open ? "close" : "open")));
+        }
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }

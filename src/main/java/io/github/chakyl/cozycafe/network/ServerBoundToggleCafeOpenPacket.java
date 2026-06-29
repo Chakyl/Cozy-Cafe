@@ -35,7 +35,6 @@ public class ServerBoundToggleCafeOpenPacket {
                     BlockEntity cafeManager = level.getBlockEntity(this.pos);
                     if (cafeManager instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
                         cafeManagerBlockEntity.toggleOpenFromMenu(player);
-                        // TODO: Sync status to menu
                     }
                 }
             }

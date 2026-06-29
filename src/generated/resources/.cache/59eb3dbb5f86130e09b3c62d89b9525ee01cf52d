@@ -1,0 +1,5 @@
+// 1.20.1	2026-06-29T15:04:23.8716515	Loot Tables
+f47f87b67fde4dfdd309527a79c39be2b7af4274 data/cozycafe/loot_tables/blocks/cafe_manager.json
+cda429bafd103d6ac1451b6637508b48ea041ba3 data/cozycafe/loot_tables/blocks/cafe_menu.json
+02e5f6b7044d88730416f478cd4df80d9ca020cf data/cozycafe/loot_tables/blocks/cafe_sign.json
+2e5e47b40193dc35f384a8d57c3679fcf84fabb4 data/cozycafe/loot_tables/blocks/plating_station.json

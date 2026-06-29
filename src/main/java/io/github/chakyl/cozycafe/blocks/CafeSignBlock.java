@@ -79,8 +79,8 @@ public class CafeSignBlock extends Block implements EntityBlock {
             if (level.getBlockEntity(pos) instanceof CafeSignBlockEntity cafeSignBlockEntity) {
                 CompoundTag tag = stack.getTag();
 
-                if (tag.contains("LinkedManager")) {
-                    BlockPos savedPos = NbtUtils.readBlockPos(tag.getCompound("LinkedManager"));
+                if (tag.contains("linkedManager")) {
+                    BlockPos savedPos = NbtUtils.readBlockPos(tag.getCompound("linkedManager"));
                     cafeSignBlockEntity.setLinkedManager(savedPos);
                     if (level.getBlockEntity(savedPos) instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
                         cafeManagerBlockEntity.setLinkedSign(pos);
@@ -95,12 +95,11 @@ public class CafeSignBlock extends Block implements EntityBlock {
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
         BlockPos currentPos = BlockPos.containing(builder.getOptionalParameter(LootContextParams.ORIGIN));
-
         if (currentPos != null) {
             for (ItemStack stack : drops) {
                 if (stack.getItem() == this.asItem()) {
                     CompoundTag tag = stack.getOrCreateTag();
-                    tag.put("LinkedManager", NbtUtils.writeBlockPos(currentPos));
+                    tag.put("linkedManager", NbtUtils.writeBlockPos(currentPos));
                 }
             }
         }

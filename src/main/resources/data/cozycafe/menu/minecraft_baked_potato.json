@@ -1,7 +1,7 @@
 {
 	"item": "minecraft:baked_potato",
 	"category": "main",
-	"price": 36,
+	"price": 1,
 	"flavors": ["vegan", "hot", "light"],
 	"themes": ["casual"]
 }

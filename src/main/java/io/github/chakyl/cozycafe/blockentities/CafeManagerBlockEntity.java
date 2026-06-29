@@ -374,7 +374,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         if (this.menu == null) {
             this.menu = new ArrayList<>();
         }
-
+        if (this.menu.size() > 28) return false;
         if (!CafeMenuItemRegistry.INSTANCE.isMenuItem(itemToAdd.getItem())) return false;
         ItemStack defaultInstance = itemToAdd.getItem().getDefaultInstance();
         for (ItemStack existingItem : this.menu) {

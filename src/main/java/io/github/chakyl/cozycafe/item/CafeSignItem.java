@@ -1,6 +1,7 @@
 package io.github.chakyl.cozycafe.item;
 
 import io.github.chakyl.cozycafe.blockentities.CafeManagerBlockEntity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -33,7 +34,7 @@ public class CafeSignItem extends BlockItem {
             tag.put("linkedManager", NbtUtils.writeBlockPos(clickedPos));
 
             if (context.getPlayer() != null) {
-                context.getPlayer().sendSystemMessage(Component.literal("Saved cafe manager position to sign item!"));
+                context.getPlayer().sendSystemMessage(Component.translatable("item.cozycafe.cafe_sign.linked").withStyle(ChatFormatting.GREEN));
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide);

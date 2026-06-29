@@ -11,6 +11,8 @@
   "item.cozycafe.serving_plate.served": "Plated %s",
   "item.cozycafe.dirty_serving_plate": "Dirty Serving Plate",
 
+  "item.cozycafe.cafe_sign.linked": "Saved cafe manager position to sign item!",
+
   "entity.cozycafe.customer": "Customer",
 
   "tooltip.cozycafe.cafe_manager": "The heart of your cafe",

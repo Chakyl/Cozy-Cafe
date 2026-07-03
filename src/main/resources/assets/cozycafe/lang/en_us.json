@@ -48,12 +48,12 @@
   "category.cozycafe.dessert": "Dessert",
   "category.cozycafe.drink": "Drink",
 
-  "gui.cozycafe.cafe_manager.edit_menu": "Edit Menu",
-  "gui.cozycafe.cafe_manager.open": "OPEN",
-  "gui.cozycafe.cafe_manager.close": "CLOSE",
+  "gui.cozycafe.cafe_manager.edit_menu": "Edit cafe menu",
+  "gui.cozycafe.cafe_manager.open": "Open cafe",
+  "gui.cozycafe.cafe_manager.close": "Close cafe",
   "gui.cozycafe.cafe_manager.show_area": "Show cafe area",
   "gui.cozycafe.cafe_manager.clear_data": "Clear cafe data (Hold Shift)",
-  "gui.cozycafe.cafe_manager.edit_name": "Edit Cafe Name",
+  "gui.cozycafe.cafe_manager.edit_name": "Edit cafe name",
 
   "gui.cozycafe.menu_selector.invalid": "Can't add!",
   "gui.cozycafe.menu_selector.added": "Added!",

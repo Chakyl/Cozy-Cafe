@@ -43,7 +43,7 @@ import java.util.List;
 import static java.util.Comparator.comparingInt;
 
 public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider {
-    private final boolean EVENT_LOGGING = true;
+    private final boolean EVENT_LOGGING = false;
     // Temporary data, only relevant when cafe open
     private int attemptedCustomers = 0;
     // Persistent Data

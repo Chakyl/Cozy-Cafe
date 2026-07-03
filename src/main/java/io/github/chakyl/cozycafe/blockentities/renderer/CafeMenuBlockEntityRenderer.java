@@ -42,10 +42,21 @@ public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenu
             EntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
             poseStack.mulPose(Axis.YP.rotationDegrees(-renderDispatcher.camera.getYRot()));
 
-            if (blockEntity.getWaitTime() >= WAIT_TIME) {
-                float wiggleStage = (blockEntity.getWaitTime() - WAIT_TIME) / 100.0f;
-                poseStack.mulPose(Axis.ZP.rotationDegrees((float) Math.sin(ticks * (0.2f + (wiggleStage))) * (wiggleStage * 0.8f)));
+            float progress = WAIT_TIME > 0 ? (float) blockEntity.getWaitTime() / WAIT_TIME : 0.0f;
+            if (progress >= 0.5f) {
+                float speedMultiplier = 1.0f;
+                float amplitude = 4.0f;
+
+                if (progress >= 0.85f) {
+                    speedMultiplier = 3.5f;
+                    amplitude = 12.0f;
+                } else if (progress >= 0.7f) {
+                    speedMultiplier = 2.2f;
+                    amplitude = 8.0f;
+                }
+                poseStack.mulPose(Axis.ZP.rotationDegrees((float) Math.sin(ticks * 0.2f * speedMultiplier) * amplitude));
             }
+
             poseStack.scale(1.5f, 1.5f, 1.5f);
             this.itemRenderer.renderStatic(
                     blockEntity.getRequestedItem(),

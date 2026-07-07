@@ -1,7 +1,6 @@
 package io.github.chakyl.cozycafe.blockentities;
 
 import com.mojang.authlib.GameProfile;
-import de.cadentem.quality_food.util.QualityUtils;
 import dev.latvian.mods.kubejs.stages.Stages;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
@@ -45,6 +44,7 @@ import java.util.Locale;
 
 import static io.github.chakyl.cozycafe.tags.CozyTags.PICKLE;
 import static io.github.chakyl.cozycafe.util.PaymentUtils.getCropSellMultiplier;
+import static io.github.chakyl.cozycafe.util.QualityFoods.getQualityPriceIncrease;
 
 public class CafeMenuBlockEntity extends BlockEntity {
     public static int MAX_TRAVEL_TIME = 600;
@@ -92,7 +92,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
                         this.closeMenu();
                         return;
                     } else {
-                        cafeManagerBlockEntity.rollMenuCourse(this);
+                        boolean shouldClose = !this.orderedDessert(this.currentCourse);
+                        if (!shouldClose) cafeManagerBlockEntity.rollMenuCourse(this);
                         this.orderTime = -1;
                         if (this.currentCourse > 1) {
                             if (this.dropItem) {
@@ -105,7 +106,12 @@ public class CafeMenuBlockEntity extends BlockEntity {
                         } else if (currentCourse == 1 && this.dropItem) {
                             pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, new ItemStack(Items.GLASS_BOTTLE)));
                             this.dropItem = false;
-
+                        }
+                        if (shouldClose) {
+                            this.hasCustomer = false;
+                            this.closeMenu();
+                            // TODO: Make customer leave
+                            this.currentCourse = 0;
                         }
                         this.setChangedForRender();
                     }
@@ -193,20 +199,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 resolvedPrice *= 2;
             }
         }
-        if (CozyCafe.QUALITY_FOOD_INSTALLED && QualityUtils.hasQuality(handStack)) {
-            boolean doubled = false;
-            if (CozyCafe.KUBEJS_INSTALLED) {
-                if (Stages.get(pPlayer).has(CozyCafe.CONFIG.quality_bonus_stage.get())) {
-                    doubled = true;
-                }
-            }
-            double mult = switch (QualityUtils.getQuality(handStack)) {
-                case GOLD -> doubled ? 2.0 : 1.5;
-                case DIAMOND -> doubled ? 3.0 : 2.0;
-                case UNDEFINED, IRON -> doubled ? 1.5 : 1.25;
-                default -> 1;
-            };
-            resolvedPrice *= mult;
+        if (CozyCafe.QUALITY_FOOD_INSTALLED) {
+            resolvedPrice = getQualityPriceIncrease(pPlayer, handStack, resolvedPrice);
         }
         resolvedPrice *= getCropSellMultiplier(pPlayer);
         int finalPrice = Mth.floor(resolvedPrice);
@@ -221,6 +215,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
             }
         }
     }
+
+
 
     public void handleClearDirtyIfPossible(BlockPos pPos, Player pPlayer, ItemStack handStack) {
         if (this.getBlockState().getValue(CafeMenuBlock.DIRTY)) {
@@ -274,16 +270,13 @@ public class CafeMenuBlockEntity extends BlockEntity {
     }
 
     public void setCurrentCourse(int currentCourse, boolean setPlate) {
-        if (currentCourse < 3 && orderedDessert(currentCourse)) {
+        if (currentCourse < 3) {
             this.currentCourse = currentCourse;
-            if (setPlate && currentCourse == 2) {
+            if (setPlate && currentCourse > 1) {
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, true), 3);
             }
             this.setChangedForRender();
         } else {
-            if (setPlate && currentCourse == 2) {
-                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, true), 3);
-            }
             this.hasCustomer = false;
             this.closeMenu();
             // TODO: Make customer leave

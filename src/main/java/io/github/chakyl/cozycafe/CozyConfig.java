@@ -43,7 +43,7 @@ public class CozyConfig {
 
         dessertChance = builder
                 .comment("Chance a customer orders a dessert, if the menu has any.")
-                .defineInRange("dessert_chance", 0.25D, 0D, 1D);
+                .defineInRange("dessert_chance", 0.40D, 0D, 1D);
 
         customerWaitTime = builder
                 .comment("How long a customer will wait for their order, in ticks.")
@@ -58,11 +58,11 @@ public class CozyConfig {
                 .defineList("customer_usernames", Arrays.asList("Chakyl", "Nitbe", "MHF_Steve", "MHF_Alex", "MHF_Herobrine", "MHF_Chicken", "MHF_Cow", "MHF_Pig", "MHF_Sheep", "MHF_Squid", "MHF_Villager", "MHF_Ocelot", "MHF_Blaze", "MHF_CaveSpider", "MHF_Creeper", "MHF_Enderman", "MHF_Ghast", "MHF_Golem", "MHF_LavaSlime", "MHF_PigZombie", "MHF_Skeleton", "MHF_Slime", "MHF_Spider", "MHF_Witch", "MHF_Zombie", "MHF_Cake", "MHF_Chest", "MHF_CoconutB", "MHF_CoconutG", "MHF_Melon", "MHF_OakLog", "MHF_Present1", "MHF_Present2", "MHF_Pumpkin", "MHF_TNT", "MHF_TNT2", "MHF_ArrowUp", "MHF_ArrowDown", "MHF_ArrowLeft", "MHF_ArrowRight", "MHF_Exclamation", "MHF_Question"), obj -> obj instanceof String);
 
         // Currency
-        currency_1 = builder.comment("The item to use as a 1 denomination of currency (e.g.: minecraft:emerald)").define("currency_1", "minecraft:emerald");
-        currency_8 = builder.comment("The item to use as a 8 denomination of currency (e.g.: minecraft:emerald)").define("currency_8", "");
-        currency_16 = builder.comment("The item to use as a 16 denomination of currency (e.g.: minecraft:emerald)").define("currency_16", "");
-        currency_64 = builder.comment("The item to use as a 64 denomination of currency (e.g.: minecraft:diamond)").define("currency_64", "minecraft:diamond");
-        currency_512 = builder.comment("The item to use as a 512 denomination of currency (e.g.: minecraft:emerald)").define("currency_512", "");
+        currency_1 = builder.comment("The item to use as a 1 denomination of currency (e.g.: minecraft:emerald)").define("currency_1", "minecraft:gold_nugget");
+        currency_8 = builder.comment("The item to use as a 8 denomination of currency (e.g.: minecraft:emerald)").define("currency_8", "minecraft:gold_ingot");
+        currency_16 = builder.comment("The item to use as a 16 denomination of currency (e.g.: minecraft:emerald)").define("currency_16", "minecraft:emerald");
+        currency_64 = builder.comment("The item to use as a 64 denomination of currency (e.g.: minecraft:diamond)").define("currency_64", "");
+        currency_512 = builder.comment("The item to use as a 512 denomination of currency (e.g.: minecraft:emerald)").define("currency_512", "minecraft:diamond");
         currency_4096 = builder.comment("The item to use as a 4096 denomination of currency (e.g.: minecraft:emerald)").define("currency_4096", "");
 
         numismaticsUtilsPayment = builder.comment("Allows customers to pay to player's bank account directly if Create Numismatics Utils is installed. Set to false if you don't want that to happen.").define("numismatics_utils_payment", true);

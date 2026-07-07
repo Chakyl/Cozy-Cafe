@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static io.github.chakyl.cozycafe.util.QualityFoods.getQualityIncrease;
 import static java.util.Comparator.comparingInt;
 
 public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider {
@@ -430,13 +431,8 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             case MAIN -> 10;
             case DESSERT -> 4;
         };
-        if (CozyCafe.QUALITY_FOOD_INSTALLED && QualityUtils.hasQuality(handStack)) {
-            increase += switch (QualityUtils.getQuality(handStack)) {
-                case GOLD -> 4;
-                case DIAMOND -> 8;
-                case UNDEFINED, IRON -> 2;
-                default -> 1;
-            };
+        if (CozyCafe.QUALITY_FOOD_INSTALLED) {
+            increase = getQualityIncrease(handStack, increase);
         }
         if (waitTimeDiff >= 0.95) increase *= 2;
         if (waitTimeDiff >= 0.75) increase *= 1.5;

@@ -19,13 +19,12 @@ import org.apache.logging.log4j.Logger;
 public class CozyCafe {
     public static final String MODID = "cozycafe";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
+    private static final ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
+    public static final CozyConfig CONFIG = new CozyConfig(CONFIG_BUILDER);
     public static boolean QUALITY_FOOD_INSTALLED = false;
     public static boolean KUBEJS_INSTALLED = false;
     public static boolean NUMISMATICS_INSTALLED = false;
     public static boolean NUMISMATICS_UTILS_INSTALLED = false;
-
-    private static final ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
-    public static final CozyConfig CONFIG = new CozyConfig(CONFIG_BUILDER);
 
     public CozyCafe() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -34,6 +33,7 @@ public class CozyCafe {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CONFIG_BUILDER.build());
         modEventBus.addListener(this::onConfigLoadOrReload);
     }
+
     @SubscribeEvent
     public void setup(FMLCommonSetupEvent e) {
         CafeMenuItemRegistry.INSTANCE.registerToBus();

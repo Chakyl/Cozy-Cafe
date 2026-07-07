@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CafeManagerMenu extends AbstractContainerMenu {
-    private final Player player;
     public final CafeManagerBlockEntity blockEntity;
     private final Level level;
     private List<ItemStack> clientCafeMenu;
@@ -31,13 +30,14 @@ public class CafeManagerMenu extends AbstractContainerMenu {
 
     public CafeManagerMenu(int pContainerId, Inventory pPlayerInventory, BlockEntity entity) {
         super(CozyRegistry.MenuRegistry.CAFE_MANAGER.get(), pContainerId);
-        player = pPlayerInventory.player;
         this.level = pPlayerInventory.player.level();
         blockEntity = ((CafeManagerBlockEntity) entity);
         this.broadcastChanges();
     }
 
-    public void setName(String name) { this.blockEntity.setCafeName(name); }
+    public void setName(String name) {
+        this.blockEntity.setCafeName(name);
+    }
 
     public boolean getIsCafeOpen() {
         if (this.blockEntity.getLevel() != null && this.blockEntity.getLevel().isClientSide()) {

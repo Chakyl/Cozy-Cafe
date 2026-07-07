@@ -6,6 +6,7 @@
   "block.cozycafe.cafe_menu": "Cafe Menu",
   "block.cozycafe.plating_station": "Plating Station",
   "block.cozycafe.cafe_sign": "Cafe Sign",
+  "block.cozycafe.any.cannot_break": "You cannot break this while your Cafe is running!",
 
   "item.cozycafe.serving_plate": "Serving Plate",
   "item.cozycafe.serving_plate.served": "Plated %s",
@@ -15,12 +16,15 @@
 
   "entity.cozycafe.customer": "Customer",
 
-  "tooltip.cozycafe.cafe_manager": "The heart of your cafe",
+  "tooltip.cozycafe.cafe_manager": "Allows you to create and run a Cozy Cafe",
   "tooltip.cozycafe.cafe_manager.cafe_name": "Name: %s",
   "tooltip.cozycafe.cafe_manager.no_reputation": "No reputation yet! Serve more customers!",
   "tooltip.cozycafe.cafe_manager.reputation": "Reputation: %s",
-  "tooltip.cozycafe.cafe_manager.error": "Couldn't open Cafe!",
+  "tooltip.cozycafe.cafe_manager.error": "Couldn't open cafe!",
+  "tooltip.cozycafe.cafe_manager.cannot_edit": "You can't edit the menu while cafe is open!",
 
+  "tooltip.cozycafe.cafe_manager.0": "Place Cafe Menus in the working area of the manager",
+  "tooltip.cozycafe.cafe_manager.1": "Link to a cafe sign before opening",
   "tooltip.always.cozycafe.cafe_sign.0" : "§7Marks where customers will spawn at your cafe.",
   "tooltip.cozycafe.cafe_sign.0" : "§6Shift + Right Click§7 on a Cafe Manager",
   "tooltip.cozycafe.cafe_sign.1" : "§7to link it before placing.",
@@ -38,6 +42,7 @@
   "block.cozycafe.cafe_manager.menu_too_small": "You need at least 3 menu items!",
   "block.cozycafe.cafe_manager.menu_too_small_for_stars": "You need at least 3 additional menu items per star!",
   "block.cozycafe.cafe_manager.already_opened": "You already opened your cafe today! Try again tomorrow!",
+  "block.cozycafe.cafe_manager.nearby_manager": "There's an open Cafe too close to yours!",
 
   "block.cozycafe.cafe_menu.payment": "%s added to bank account",
   "block.cozycafe.cafe_menu.not_plated": "This dish needs to be plated at a Plating Station!",

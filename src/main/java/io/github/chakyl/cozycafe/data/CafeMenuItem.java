@@ -34,20 +34,10 @@ import java.util.List;
 public record CafeMenuItem(Item item, MenuItemCategory category, int price, boolean bowlFood, boolean bottleDrink,
                            List<String> themes,
                            List<String> flavors) implements CodecProvider<CafeMenuItem> {
-    public enum MenuItemCategory {
-        DRINK, MAIN, DESSERT
-    }
     public static final Codec<CafeMenuItem> CODEC = new CafeMenuItemCodec();
 
     public CafeMenuItem(CafeMenuItem other) {
         this(other.item, other.category, other.price, other.bowlFood, other.bottleDrink, other.themes, other.flavors);
-    }
-
-
-    public CafeMenuItem validate(ResourceLocation key) {
-        Preconditions.checkNotNull(this.item, "Invalid item ID!");
-        Preconditions.checkNotNull(this.category, "Invalid category!");
-        return this;
     }
 
     public static boolean dropsBowl(ItemStack stack) {
@@ -64,9 +54,19 @@ public record CafeMenuItem(Item item, MenuItemCategory category, int price, bool
         return stack.hasCraftingRemainingItem() && stack.getCraftingRemainingItem().is(Items.GLASS_BOTTLE);
     }
 
+    public CafeMenuItem validate(ResourceLocation key) {
+        Preconditions.checkNotNull(this.item, "Invalid item ID!");
+        Preconditions.checkNotNull(this.category, "Invalid category!");
+        return this;
+    }
+
     @Override
     public Codec<? extends CafeMenuItem> getCodec() {
         return CODEC;
+    }
+
+    public enum MenuItemCategory {
+        DRINK, MAIN, DESSERT
     }
 
     public static class CafeMenuItemCodec implements Codec<CafeMenuItem> {
@@ -104,7 +104,7 @@ public record CafeMenuItem(Item item, MenuItemCategory category, int price, bool
 
             Item food = Items.AIR;
             if (obj.has("item")) {
-                food = BuiltInRegistries.ITEM.get(new ResourceLocation(GsonHelper.getAsString(obj,"item")));
+                food = BuiltInRegistries.ITEM.get(new ResourceLocation(GsonHelper.getAsString(obj, "item")));
             }
             MenuItemCategory menuItemCategory = MenuItemCategory.MAIN;
             if (obj.has("category")) {

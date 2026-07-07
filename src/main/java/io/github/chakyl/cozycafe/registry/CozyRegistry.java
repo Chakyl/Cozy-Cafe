@@ -50,14 +50,14 @@ import java.util.function.Supplier;
 public final class CozyRegistry {
 
     private static final String MODID = CozyCafe.MODID;
-
-    private static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
+    private static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
     private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
+
     public static void register() {
         BlockRegistry.register();
         BlockEntityRegistry.register();
@@ -70,15 +70,14 @@ public final class CozyRegistry {
 
     public static final class BlockRegistry {
 
-        private static void register() {
-            BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        }
-
         public static final RegistryObject<Block> CAFE_MANAGER = registerWithItem("cafe_manager", () -> new CafeManagerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).noOcclusion().strength(1.5F, 6.0F)), (blockObj) -> ItemRegistry.register("cafe_manager", () -> new CafeManagerItem(blockObj.get(), new Item.Properties())));
-        public static final RegistryObject<Block> CAFE_SIGN = registerWithItem( "cafe_sign", () -> new CafeSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)),  (blockObj) -> ItemRegistry.register("cafe_sign", () -> new CafeSignItem(blockObj.get(), new Item.Properties())));
+        public static final RegistryObject<Block> CAFE_SIGN = registerWithItem("cafe_sign", () -> new CafeSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)), (blockObj) -> ItemRegistry.register("cafe_sign", () -> new CafeSignItem(blockObj.get(), new Item.Properties())));
         public static final RegistryObject<Block> CAFE_MENU = registerWithItem("cafe_menu", () -> new CafeMenuBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)));
         public static final RegistryObject<Block> PLATING_STATION = registerWithItem("plating_station", () -> new PlatingStationBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)));
 
+        private static void register() {
+            BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        }
 
         private static RegistryObject<Block> registerWithItem(final String name, final Supplier<Block> supplier) {
             return registerWithItem(name, supplier, ItemRegistry::registerBlockItem);
@@ -107,11 +106,11 @@ public final class CozyRegistry {
     }
 
     public static final class EntityRegistry {
+        public static final RegistryObject<EntityType<CustomerEntity>> CUSTOMER = ENTITY_TYPES.register("customer", () -> EntityType.Builder.of(CustomerEntity::new, MobCategory.CREATURE).sized(0.6F, 1.8F).build("customer"));
+
         private static void register() {
             ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
-
-        public static final RegistryObject<EntityType<CustomerEntity>> CUSTOMER = ENTITY_TYPES.register("customer", () -> EntityType.Builder.of(CustomerEntity::new, MobCategory.CREATURE).sized(0.6F, 1.8F).build("customer"));
     }
 
     public static final class ParticleRegistry {
@@ -163,14 +162,12 @@ public final class CozyRegistry {
         private static void register() {
             MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
+
         public static final RegistryObject<MenuType<CafeManagerMenu>> CAFE_MANAGER = MENU_TYPES.register("cafe_manager", () -> IForgeMenuType.create(CafeManagerMenu::new));
         public static final RegistryObject<MenuType<MenuSelectorMenu>> MENU_SELECTOR = MENU_TYPES.register("menu_selector", () -> IForgeMenuType.create(MenuSelectorMenu::new));
     }
-    public static final class CreativeTabReg {
 
-        private static void register() {
-            CREATIVE_MODE_TABS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        }
+    public static final class CreativeTabReg {
 
         public static final RegistryObject<CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("tab", () ->
                 CreativeModeTab.builder()
@@ -185,6 +182,10 @@ public final class CozyRegistry {
                         )
                         .build()
         );
+
+        private static void register() {
+            CREATIVE_MODE_TABS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        }
     }
 
 }

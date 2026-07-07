@@ -45,7 +45,7 @@ public class ServingPlateModel implements IDynamicBakedModel {
             BakedModel foodModel = Minecraft.getInstance().getItemRenderer().getModel(food, null, null, 0);
             if (!(foodModel instanceof ServingPlateModel)) {
                 PoseStack poseStack = new PoseStack();
-                poseStack.translate(0.5, 3f/16.0f, 0.5);
+                poseStack.translate(0.5, 3f / 16.0f, 0.5);
                 poseStack.mulPose(Axis.XP.rotationDegrees(90));
                 poseStack.translate(-0.5, -0.5, -0.5);
                 IQuadTransformer transformer = QuadTransformers.applying(new Transformation(poseStack.last().pose()));
@@ -58,23 +58,37 @@ public class ServingPlateModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean useAmbientOcclusion() { return plateModel.useAmbientOcclusion(); }
+    public boolean useAmbientOcclusion() {
+        return plateModel.useAmbientOcclusion();
+    }
 
     @Override
-    public boolean isGui3d() { return plateModel.isGui3d(); }
+    public boolean isGui3d() {
+        return plateModel.isGui3d();
+    }
 
     @Override
-    public boolean usesBlockLight() { return plateModel.usesBlockLight(); }
+    public boolean usesBlockLight() {
+        return plateModel.usesBlockLight();
+    }
 
     @Override
-    public boolean isCustomRenderer() { return false; }
+    public boolean isCustomRenderer() {
+        return false;
+    }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() { return plateModel.getParticleIcon(); }
+    public TextureAtlasSprite getParticleIcon() {
+        return plateModel.getParticleIcon();
+    }
 
     @Override
-    public ItemTransforms getTransforms() { return plateModel.getTransforms(); }
+    public ItemTransforms getTransforms() {
+        return plateModel.getTransforms();
+    }
 
     @Override
-    public ItemOverrides getOverrides() { return ItemOverrides.EMPTY; }
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
+    }
 }

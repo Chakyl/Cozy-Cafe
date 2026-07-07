@@ -15,6 +15,7 @@ import static io.github.chakyl.cozycafe.blocks.CafeSignBlock.OPEN;
 
 public class CafeSignBlockEntity extends BlockEntity {
     private BlockPos linkedManager;
+
     public CafeSignBlockEntity(BlockPos pos, BlockState state) {
         super(CozyRegistry.BlockEntityRegistry.CAFE_SIGN.get(), pos, state);
     }

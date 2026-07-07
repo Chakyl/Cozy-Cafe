@@ -49,6 +49,7 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
         if (item == null) return null;
         return this.menuItemsByID.get(BuiltInRegistries.ITEM.getKey(item).toString());
     }
+
     @Override
     protected void validateItem(ResourceLocation key, CafeMenuItem menuItem) {
         menuItem.validate(key);

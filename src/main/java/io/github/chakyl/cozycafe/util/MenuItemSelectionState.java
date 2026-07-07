@@ -7,17 +7,12 @@ import java.util.stream.Collectors;
 
 public enum MenuItemSelectionState {
     UNSET(0), INVALID(1), VALID(2);
+    static final Map<Integer, MenuItemSelectionState> values = Arrays.stream(MenuItemSelectionState.values()).collect(Collectors.toMap(MenuItemSelectionState::getCode, Function.identity()));
     private final int code;
 
     MenuItemSelectionState(int code) {
         this.code = code;
     }
-
-    public int getCode() {
-        return this.code;
-    }
-
-    static final Map<Integer, MenuItemSelectionState> values = Arrays.stream(MenuItemSelectionState.values()).collect(Collectors.toMap(MenuItemSelectionState::getCode, Function.identity()));
 
     public static MenuItemSelectionState fromCode(int code) {
         MenuItemSelectionState state = values.get(code);
@@ -25,5 +20,9 @@ public enum MenuItemSelectionState {
             return MenuItemSelectionState.UNSET;
         }
         return state;
+    }
+
+    public int getCode() {
+        return this.code;
     }
 }

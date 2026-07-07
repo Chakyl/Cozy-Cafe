@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 public class ServerBoundRemoveMenuItemPacket {
     int index;
+
     public ServerBoundRemoveMenuItemPacket(int index) {
         this.index = index;
     }
@@ -18,7 +19,7 @@ public class ServerBoundRemoveMenuItemPacket {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-            buffer.writeInt(this.index);
+        buffer.writeInt(this.index);
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {

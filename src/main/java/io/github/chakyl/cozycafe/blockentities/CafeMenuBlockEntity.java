@@ -44,13 +44,12 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import static io.github.chakyl.cozycafe.tags.CozyTags.PICKLE;
-import static io.github.chakyl.cozycafe.util.GeneralUtils.formatPrice;
 import static io.github.chakyl.cozycafe.util.PaymentUtils.getCropSellMultiplier;
 
 public class CafeMenuBlockEntity extends BlockEntity {
-    private static int MAX_WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
-    private static int ORDER_TIME =  CozyCafe.CONFIG.customerOrderTime.get();
     public static int MAX_TRAVEL_TIME = 600;
+    private static int MAX_WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
+    private static final int ORDER_TIME = CozyCafe.CONFIG.customerOrderTime.get();
     private int currentCourse = 0;
     private int waitTime = -1;
     private int orderTime = -1;
@@ -64,6 +63,14 @@ public class CafeMenuBlockEntity extends BlockEntity {
 
     public CafeMenuBlockEntity(BlockPos pos, BlockState state) {
         super(CozyRegistry.BlockEntityRegistry.CAFE_MENU.get(), pos, state);
+    }
+
+    public static int getMaxWaitTime() {
+        return MAX_WAIT_TIME;
+    }
+
+    public static void setMaxWaitTime(int maxWaitTime) {
+        MAX_WAIT_TIME = maxWaitTime;
     }
 
     public void tick(Level pLevel, BlockPos pPos, BlockState pState) {
@@ -237,15 +244,6 @@ public class CafeMenuBlockEntity extends BlockEntity {
         return this.getCustomerTravelTime() == -1 && !this.getHasCustomer() && !this.getBlockState().getValue(CafeMenuBlock.DIRTY);
     }
 
-    public static int getMaxWaitTime() {
-        return MAX_WAIT_TIME;
-    }
-
-    public static void setMaxWaitTime(int maxWaitTime) {
-        MAX_WAIT_TIME = maxWaitTime;
-    }
-
-
     public int getCustomerTravelTime() {
         return customerTravelTime;
     }
@@ -266,14 +264,26 @@ public class CafeMenuBlockEntity extends BlockEntity {
         return currentCourse;
     }
 
+    public boolean orderedDessert(int currentCourse) {
+        if (currentCourse != 2) return true;
+        CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
+        if (cafeManagerBlockEntity != null && cafeManagerBlockEntity.onlyHasDesserts()) {
+            return true;
+        }
+        return Math.random() < CozyCafe.CONFIG.dessertChance.get();
+    }
+
     public void setCurrentCourse(int currentCourse, boolean setPlate) {
-        if (currentCourse < 3) {
+        if (currentCourse < 3 && orderedDessert(currentCourse)) {
             this.currentCourse = currentCourse;
-            if (setPlate && currentCourse > 1) {
+            if (setPlate && currentCourse == 2) {
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, true), 3);
             }
             this.setChangedForRender();
         } else {
+            if (setPlate && currentCourse == 2) {
+                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, true), 3);
+            }
             this.hasCustomer = false;
             this.closeMenu();
             // TODO: Make customer leave

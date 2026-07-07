@@ -42,6 +42,7 @@ public class CustomerEntity extends PathfinderMob {
         this.goalSelector.addGoal(1, new NavigateToMenuGoal(this, 0.9f));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.7f));
     }
+
     @Override
     public void tick() {
         super.tick();
@@ -169,10 +170,12 @@ public class CustomerEntity extends PathfinderMob {
             }
         };
     }
+
     public static class NavigateToMenuGoal extends Goal {
         private final CustomerEntity customer;
         private final double speed;
         private int timeToRecalcPath;
+
         public NavigateToMenuGoal(CustomerEntity customer, double speed) {
             this.customer = customer;
             this.speed = speed;
@@ -182,8 +185,7 @@ public class CustomerEntity extends PathfinderMob {
         @Override
         public boolean canUse() {
             BlockPos target = this.customer.getTargetMenuPos();
-            if (target == null) return false;
-            return true;
+            return target != null;
         }
 
         @Override
@@ -197,8 +199,9 @@ public class CustomerEntity extends PathfinderMob {
         public void start() {
             this.timeToRecalcPath = 0;
         }
+
         private boolean canReach(BlockPos target) {
-            return this.customer.distanceToSqr(target.getX(), target.getY(), target.getZ()) <= 4.0D;
+            return this.customer.distanceToSqr(target.getX(), target.getY(), target.getZ()) <= 6.0D;
         }
 
         @Override

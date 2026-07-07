@@ -53,11 +53,11 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
     private static final int SCROLL_BAR_START_X = 155;
     private static final int LIMIT_ICON_START_X = 320;
     private static final int LIMIT_ICON_SIZE = 9;
-    private MenuItemSelectionState lastStatus = MenuItemSelectionState.UNSET;
     int scrollOff;
+    private MenuItemSelectionState lastStatus = MenuItemSelectionState.UNSET;
     private boolean isDragging;
     private List<ItemStack> cafeMenu = new ArrayList<>();
-    private CafeMenuItemButton[] cafeMenuItemButtons = new CafeMenuItemButton[NUMBER_OF_MENU_BUTTONS];
+    private final CafeMenuItemButton[] cafeMenuItemButtons = new CafeMenuItemButton[NUMBER_OF_MENU_BUTTONS];
 
     public MenuSelectorScreen(MenuSelectorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -77,14 +77,6 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
         int topPos = this.getGuiTop();
         int offset = topPos + 22;
 
-        ImageButton clearCafeButton = new ImageButton(leftPos + 13, topPos + this.imageHeight - 29, 15, 15, 176, 32, 16, GUI_LOCATION, 256, 256, (button) -> {
-            if (Screen.hasShiftDown()) {
-                EvilPacketsIHateThem.sendToServer(new ServerBoundClearCafePacket(this.menu.blockEntity.getBlockPos()));
-                this.onClose();
-            }
-        });
-        clearCafeButton.setTooltip(Tooltip.create(Component.translatable("gui.cozycafe.menu_selector.remove")));
-        this.addRenderableWidget(clearCafeButton);
         cafeMenu = this.menu.getCafeMenu();
         for (int l = 0; l < NUMBER_OF_MENU_BUTTONS; ++l) {
             final int slotIndex = l;
@@ -112,7 +104,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
         gfx.blit(GUI_LOCATION, left, top, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
         gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.name"), left + 16, top + 12, 0xFFFFFF, true);
-        gfx.drawString(this.font, Component.literal(this.menu.blockEntity.getMenu().size()  + "/25"), left + 132, top + 12, 0xFFFFFF, true);
+        gfx.drawString(this.font, Component.literal(this.menu.blockEntity.getMenu().size() + "/25"), left + 132, top + 12, 0xFFFFFF, true);
         gfx.drawString(this.font, Component.literal(String.valueOf(this.menu.blockEntity.getStarsFromReputation())), left + 21, top + 95, 0xFFFFFF, true);
         gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.stars_required", Math.max(3, this.menu.blockEntity.getStarsFromReputation() * CozyCafe.CONFIG.menuSizePerStar.get())), left + 44, top + 95, 0xFFFFFF, true);
 
@@ -249,7 +241,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
             return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
         }
     }
-    
+
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         this.isDragging = false;
         int i = (this.width - this.imageWidth) / 2;
@@ -293,6 +285,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
             this.index = pIndex;
             this.visible = false;
         }
+
         public int getIndex() {
             return this.index;
         }

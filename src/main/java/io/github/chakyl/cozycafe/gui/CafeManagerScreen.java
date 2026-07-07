@@ -36,8 +36,8 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
     private static final ResourceLocation GUI_LOCATION = new ResourceLocation(CozyCafe.MODID, "textures/gui/cafe_manager.png");
     private static final int TEXTURE_WIDTH = 256;
     private static final int TEXTURE_HEIGHT = 256;
-    private int shopItem;
     int scrollOff;
+    private int shopItem;
     private boolean isDragging;
     private List<ItemStack> cafeMenu = new ArrayList<>();
     private Component errorMessage = null;
@@ -59,6 +59,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
             case 1 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small");
             case 2 -> Component.translatable("block.cozycafe.cafe_manager.menu_too_small_for_stars");
             case 3 -> Component.translatable("block.cozycafe.cafe_manager.already_opened");
+            case 4 -> Component.translatable("block.cozycafe.cafe_manager.nearby_manager");
             default -> throw new IllegalStateException("Unexpected value: " + errorCode);
         };
         this.errorDisplayTicks = 240;
@@ -74,8 +75,13 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
             if (!CafeManagerScreen.this.menu.getIsCafeOpen() && this.minecraft != null) {
                 EvilPacketsIHateThem.sendToServer(new ServerBoundOpenMenuSelectorMenuPacket(this.menu.blockEntity.getBlockPos()));
             }
-        });
-        editMenuButton.setTooltip(Tooltip.create(Component.translatable("gui.cozycafe.cafe_manager.edit_menu")));
+        }){
+            @Override
+            public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+                super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+                this.setTooltip(Tooltip.create(Component.translatable(CafeManagerScreen.this.menu.getIsCafeOpen() ? "tooltip.cozycafe.cafe_manager.cannot_edit":"gui.cozycafe.cafe_manager.edit_menu")));
+            }
+        };
         this.addRenderableWidget(editMenuButton);
         // hgate this
         this.toggleOpenButton = new ImageButton(leftPos + 56, topPos + 192, 64, 24, 176, 0, 32, GUI_LOCATION, 256, 256, (button) -> {

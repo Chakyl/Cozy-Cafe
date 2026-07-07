@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 public class ServerBoundOpenMenuSelectorMenuPacket {
     private final BlockPos pos;
+
     public ServerBoundOpenMenuSelectorMenuPacket(BlockPos pos) {
         this.pos = pos;
     }
@@ -28,6 +29,7 @@ public class ServerBoundOpenMenuSelectorMenuPacket {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.pos);
     }
+
     public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
 

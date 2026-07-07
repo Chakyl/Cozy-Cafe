@@ -116,7 +116,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         int i = 0;
         for (BlockPos menuPos : availableMenuPositions) {
             if (level.getBlockEntity(menuPos) instanceof CafeMenuBlockEntity cafeMenuBlockEntity && serverLevel.getBlockState(this.linkedSign).is(CozyRegistry.BlockRegistry.CAFE_SIGN.get())) {
-            CustomerEntity customer = CozyRegistry.EntityRegistry.CUSTOMER.get().create(serverLevel);
+                CustomerEntity customer = CozyRegistry.EntityRegistry.CUSTOMER.get().create(serverLevel);
                 if (customer != null) {
                     cafeMenuBlockEntity.setCustomerTravelTime(0);
                     cafeMenuBlockEntity.setCafeManager(pos);
@@ -133,6 +133,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             }
         }
     }
+
     private String rollCustomerSkin() {
         List<? extends String> usernames = CozyCafe.CONFIG.customerUsernames.get();
         if (!usernames.isEmpty()) {
@@ -153,6 +154,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             }
         });
     }
+
     private List<ItemStack> getMenuItemsByCategory(CafeMenuItem.MenuItemCategory category) {
         List<ItemStack> sortedMenuItems = new ArrayList<>();
         for (ItemStack menuItem : this.menu) {
@@ -185,10 +187,10 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             }
         } else if (this.level != null) {
             cafeMenuBlockEntity.setRequestedItem(sortedMenuItems.get(this.level.random.nextInt(sortedMenuItems.size())));
-
         }
 
     }
+
     @Override
     public Component getDisplayName() {
         return Component.translatable("block.cozycafe.cafe_manager");
@@ -239,6 +241,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         int stars = this.getStarsFromReputation();
         return (int) ((stars == 5 ? 40 : ((stars + 1) * 5)) + Mth.randomBetween(this.getLevel().getRandom(), 0, 5));
     }
+
     public BlockPos getLinkedSign() {
         return linkedSign;
     }
@@ -267,11 +270,11 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 0), player);
             return false;
         }
-        if (stars == 0 && this.menu.size() < menuSizePerStar) {
+        if (this.menu == null || stars == 0 && this.menu.size() < menuSizePerStar) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 1), player);
             return false;
         }
-        if (Math.floor((double) this.menu.size() / menuSizePerStar) - 1 < stars) {
+        if (this.menu.size() < menuSizePerStar * stars) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 2), player);
             return false;
         }
@@ -279,7 +282,25 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 3), player);
             return false;
         }
+        if (this.hasNearbyOpenManagers()) {
+            EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 4), player);
+            return false;
+        }
         return true;
+    }
+
+
+    private boolean hasNearbyOpenManagers() {
+        if (this.level == null) return false;
+        for (BlockPos targetPos : BlockPos.betweenClosed(this.worldPosition.offset(-4, -4, -4), this.worldPosition.offset(4, 4, 4))) {
+            if (!targetPos.equals(this.worldPosition)) {
+                if (this.level.getBlockEntity(targetPos) instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
+                    if (cafeManagerBlockEntity.isOpen()) return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void toggleOpen() {
@@ -357,6 +378,16 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         }
         return new ListTag();
     }
+
+    public boolean onlyHasDesserts() {
+        for (ItemStack menuItem : this.menu) {
+            CafeMenuItem.MenuItemCategory category = CafeMenuItemRegistry.INSTANCE.getForItem(menuItem.getItem()).category();
+            if (CafeMenuItemRegistry.INSTANCE.getForItem(menuItem.getItem()).category() != CafeMenuItem.MenuItemCategory.DESSERT)
+                return false;
+        }
+        return true;
+    }
+
     public void sortMenuByCategory() {
         this.menu.sort(comparingInt(item -> {
             CafeMenuItem.MenuItemCategory category = CafeMenuItemRegistry.INSTANCE.getForItem(item.getItem()).category();
@@ -417,6 +448,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     public void handleSuccessfulServe(CafeMenuItem menuItem, ItemStack handStack, double waitTimeDiff) {
         this.handleReputation(menuItem, handStack, waitTimeDiff);
     }
+
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);

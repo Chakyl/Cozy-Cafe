@@ -17,6 +17,21 @@ public class ServingPlateItem extends Item {
         super(properties);
     }
 
+    public static ItemStack createPlatedFood(ItemStack food) {
+        ItemStack platedResult = new ItemStack(CozyRegistry.ItemRegistry.SERVING_PLATE.get());
+        CompoundTag tag = new CompoundTag();
+        tag.put(PLATED_FOOD, food.save(new CompoundTag()));
+        platedResult.setTag(tag);
+        return platedResult;
+    }
+
+    public static ItemStack getStoredFood(ItemStack platedFood) {
+        if (platedFood.hasTag() && platedFood.getTag().contains(PLATED_FOOD)) {
+            return ItemStack.of(platedFood.getTag().getCompound(PLATED_FOOD));
+        }
+        return ItemStack.EMPTY;
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack plateStack = player.getItemInHand(hand);
@@ -48,21 +63,6 @@ public class ServingPlateItem extends Item {
         }
 
         return super.use(level, player, hand);
-    }
-
-    public static ItemStack createPlatedFood(ItemStack food) {
-        ItemStack platedResult = new ItemStack(CozyRegistry.ItemRegistry.SERVING_PLATE.get());
-        CompoundTag tag = new CompoundTag();
-        tag.put(PLATED_FOOD, food.save(new CompoundTag()));
-        platedResult.setTag(tag);
-        return platedResult;
-    }
-
-    public static ItemStack getStoredFood(ItemStack platedFood) {
-        if (platedFood.hasTag() && platedFood.getTag().contains(PLATED_FOOD)) {
-            return ItemStack.of(platedFood.getTag().getCompound(PLATED_FOOD));
-        }
-        return ItemStack.EMPTY;
     }
 
     @Override

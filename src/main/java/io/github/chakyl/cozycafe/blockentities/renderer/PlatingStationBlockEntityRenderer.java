@@ -19,7 +19,8 @@ public class PlatingStationBlockEntityRenderer implements BlockEntityRenderer<Pl
     public PlatingStationBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         this.itemRenderer = context.getItemRenderer();
     }
-    private void renderPlate(ItemStack stack,  PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
+
+    private void renderPlate(ItemStack stack, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
         poseStack.pushPose();
         poseStack.translate(0.5D, 0.65f, 0.5D);
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
@@ -27,6 +28,7 @@ public class PlatingStationBlockEntityRenderer implements BlockEntityRenderer<Pl
         itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, poseStack, bufferSource, null, 0);
         poseStack.popPose();
     }
+
     private void renderFoodItem(ItemStack stack, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
         poseStack.pushPose();
         poseStack.translate(0.5D, 1.19f, 0.5D);
@@ -47,7 +49,7 @@ public class PlatingStationBlockEntityRenderer implements BlockEntityRenderer<Pl
                 renderFoodItem(plateInTheFoodOfEatTheHotFoodOut, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
             }
         } else if (stationItem.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get())) {
-            renderPlate(stationItem,  pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+            renderPlate(stationItem, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
         }
     }
 }

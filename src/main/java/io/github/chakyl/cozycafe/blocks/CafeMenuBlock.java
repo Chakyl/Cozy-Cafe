@@ -29,15 +29,21 @@ import net.minecraftforge.common.util.FakePlayer;
 import javax.annotation.Nullable;
 
 public class CafeMenuBlock extends Block implements EntityBlock {
-    private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty DISH = BooleanProperty.create("dish");
     public static final BooleanProperty DIRTY = BooleanProperty.create("dirty");
+    private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
 
     public CafeMenuBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(DISH, false).setValue(DIRTY, false));
     }
+
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
+        return (BlockEntityTicker<A>) ticker;
+    }
+
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite()).setValue(DISH, false).setValue(DIRTY, false);
@@ -60,17 +66,17 @@ public class CafeMenuBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide  && pHand == InteractionHand.MAIN_HAND) {
+        if (!pLevel.isClientSide && pHand == InteractionHand.MAIN_HAND) {
             if (pPlayer instanceof FakePlayer) return InteractionResult.sidedSuccess(pLevel.isClientSide());
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             ItemStack handStack = pPlayer.getItemInHand(pHand);
             if (entity instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
                 if (!handStack.isEmpty() && cafeMenuBlockEntity.canServe()) {
                     pPlayer.swing(pHand);
-                    cafeMenuBlockEntity.handleServe(pPos, pPlayer,  handStack);
+                    cafeMenuBlockEntity.handleServe(pPos, pPlayer, handStack);
                     return InteractionResult.CONSUME;
                 } else {
-                    cafeMenuBlockEntity.handleClearDirtyIfPossible(pPos, pPlayer,  handStack);
+                    cafeMenuBlockEntity.handleClearDirtyIfPossible(pPos, pPlayer, handStack);
                 }
             } else {
                 throw new IllegalStateException("No Container Provider for Cafe Manager!");
@@ -84,10 +90,5 @@ public class CafeMenuBlock extends Block implements EntityBlock {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, CozyRegistry.BlockEntityRegistry.CAFE_MENU.get(),
                 (pLevel1, pPos, pState1, pBlockEntity) -> pBlockEntity.tick(pLevel1, pPos, pState1));
-    }
-
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
-        return (BlockEntityTicker<A>) ticker;
     }
 }

@@ -10,6 +10,7 @@ public class CozyConfig {
     public final ForgeConfigSpec.IntValue menuSizePerStar;
     public final ForgeConfigSpec.IntValue customerSpawnInterval;
     public final ForgeConfigSpec.DoubleValue groupCustomerChance;
+    public final ForgeConfigSpec.DoubleValue dessertChance;
     public final ForgeConfigSpec.IntValue customerWaitTime;
     public final ForgeConfigSpec.IntValue customerOrderTime;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> customerUsernames;
@@ -28,7 +29,7 @@ public class CozyConfig {
     public CozyConfig(final ForgeConfigSpec.Builder builder) {
         menuSizePerStar = builder
                 .comment("How many menu items are required to open your cafe, per star + 1. Has a very large impact on difficulty!")
-                .defineInRange("menu_size_per_star", 3, 1, 5);
+                .defineInRange("menu_size_per_star", 3, 0, 5);
 
         // Customers and wait times
 
@@ -37,8 +38,12 @@ public class CozyConfig {
                 .defineInRange("customer_spawn_interval", 40, 4, 4096);
 
         groupCustomerChance = builder
-                .comment("Chance an additional customer is added to the currently spawning group of customers. Repeats until a roll is failed or 4 customers are spawned,")
+                .comment("Chance an additional customer is added to the currently spawning group of customers. Repeats until a roll is failed or 4 customers are spawned/")
                 .defineInRange("group_customer_chance", 0.5D, 0D, 1D);
+
+        dessertChance = builder
+                .comment("Chance a customer orders a dessert, if the menu has any.")
+                .defineInRange("dessert_chance", 0.25D, 0D, 1D);
 
         customerWaitTime = builder
                 .comment("How long a customer will wait for their order, in ticks.")

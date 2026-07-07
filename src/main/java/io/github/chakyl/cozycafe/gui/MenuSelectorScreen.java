@@ -49,8 +49,8 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
     private static final int SCROLLER_HEIGHT = 27;
     private static final int SCROLLER_WIDTH = 6;
     private static final int SCROLL_BAR_HEIGHT = MENU_BUTTON_HEIGHT * NUMBER_OF_MENU_BUTTONS;
-    private static final int SCROLL_BAR_TOP_POS_Y = 12;
-    private static final int SCROLL_BAR_START_X = 162;
+    private static final int SCROLL_BAR_TOP_POS_Y = 22;
+    private static final int SCROLL_BAR_START_X = 155;
     private static final int LIMIT_ICON_START_X = 320;
     private static final int LIMIT_ICON_SIZE = 9;
     private MenuItemSelectionState lastStatus = MenuItemSelectionState.UNSET;
@@ -111,18 +111,10 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
         int top = this.getGuiTop();
         gfx.blit(GUI_LOCATION, left, top, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
-//        PoseStack poseStack = gfx.pose();
-//        poseStack.pushPose();
-//        poseStack.translate(left + 42, top + 16, 0);
-//        poseStack.scale(2f, 2f, 1.0f);
-//        gfx.drawString(this.font, Component.translatable("Cafe Sun"), 0, 0, 0x181425, false);
-//        poseStack.popPose();
-//
-//        gfx.drawString(this.font, Component.translatable("gui.cozycafe.cafe_manager.edit_menu"), left + 64, top + 71, 0x181425, false);
-        gfx.drawString(this.font, Component.literal(String.valueOf(this.menu.blockEntity.getStarsFromReputation())), left + 75, top + 185, 0xFFFFFF, false);
-
-        int feedbackIconX = left + 4;
-        int feedbackIconY = top + 58;
+        gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.name"), left + 16, top + 12, 0xFFFFFF, true);
+        gfx.drawString(this.font, Component.literal(this.menu.blockEntity.getMenu().size()  + "/25"), left + 132, top + 12, 0xFFFFFF, true);
+        gfx.drawString(this.font, Component.literal(String.valueOf(this.menu.blockEntity.getStarsFromReputation())), left + 21, top + 95, 0xFFFFFF, true);
+        gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.stars_required", Math.max(3, this.menu.blockEntity.getStarsFromReputation() * CozyCafe.CONFIG.menuSizePerStar.get())), left + 44, top + 95, 0xFFFFFF, true);
 
         MenuItemSelectionState currentStatus = MenuItemSelectionState.fromCode(this.menu.getMenuItemAdditionStatus());
         if (this.cafeMenu != null && !this.cafeMenu.isEmpty()) {
@@ -172,12 +164,16 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
         }
         RenderSystem.enableDepthTest();
         // Menu addition status
+        int feedbackIconX = left + 44;
+        int feedbackIconY = top + 117;
         if (currentStatus == MenuItemSelectionState.VALID) {
-            gfx.blit(GUI_LOCATION, feedbackIconX, feedbackIconY, 8, 176, 8, 8);
-            gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.added"), feedbackIconX + 8 + 2, feedbackIconY + 1, 0x181425, false);
+            gfx.blit(GUI_LOCATION, feedbackIconX - 4, feedbackIconY - 4, 176, 48, 16, 16);
+            gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.added"), feedbackIconX + 12, feedbackIconY, 0xFFFFFF, true);
         } else if (currentStatus == MenuItemSelectionState.INVALID) {
-            gfx.blit(GUI_LOCATION, feedbackIconX, feedbackIconY, 0, 176, 8, 8);
-            gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.invalid"), feedbackIconX + 8 + 2, feedbackIconY + 1, 0x181425, false);
+            gfx.blit(GUI_LOCATION, feedbackIconX - 4, feedbackIconY - 4, 176, 32, 16, 16);
+            gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.invalid"), feedbackIconX + 12, feedbackIconY, 0xFFFFFF, true);
+        } else {
+            gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.place_items"), feedbackIconX, feedbackIconY, 0xFFFFFF, true);
         }
 
 
@@ -202,6 +198,30 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
                 Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
             }
             this.lastStatus = currentStatus;
+        }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+            ItemStack itemStack = this.hoveredSlot.getItem();
+            CafeMenuItem cafeMenuItem = CafeMenuItemRegistry.INSTANCE.getForItem(itemStack.getItem());
+            if (cafeMenuItem != null) {
+                List<Component> tooltipList = new ArrayList<>(getTooltipFromItem(Minecraft.getInstance(), itemStack));
+                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()));
+                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
+                if (cafeMenuItem.bowlFood()) {
+                    tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bowl_food").withStyle(ChatFormatting.GRAY));
+                }
+                if (cafeMenuItem.bottleDrink()) {
+                    tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bottle_drink").withStyle(ChatFormatting.RED));
+                }
+                guiGraphics.renderTooltip(this.font, tooltipList, itemStack.getTooltipImage(), mouseX, mouseY);
+            } else {
+                super.renderTooltip(guiGraphics, mouseX, mouseY);
+            }
+        } else {
+            super.renderTooltip(guiGraphics, mouseX, mouseY);
         }
     }
 

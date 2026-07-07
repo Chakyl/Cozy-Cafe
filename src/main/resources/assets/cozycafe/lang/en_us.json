@@ -48,7 +48,7 @@
   "category.cozycafe.main": "Main",
   "category.cozycafe.dessert": "Dessert",
   "category.cozycafe.drink": "Drink",
-
+  "container.cozycafe.cafe_manager": "Cafe Manager",
   "gui.cozycafe.cafe_manager.edit_menu": "Edit cafe menu",
   "gui.cozycafe.cafe_manager.open": "Open cafe",
   "gui.cozycafe.cafe_manager.close": "Close cafe",
@@ -56,6 +56,7 @@
   "gui.cozycafe.cafe_manager.clear_data": "Clear cafe data (Hold Shift)",
   "gui.cozycafe.cafe_manager.edit_name": "Edit cafe name",
 
+  "gui.cozycafe.menu_selector.name": "Menu",
   "gui.cozycafe.menu_selector.invalid": "Can't add!",
   "gui.cozycafe.menu_selector.added": "Added!",
   "gui.cozycafe.menu_selector.price": "Price: $%s",
@@ -64,5 +65,6 @@
   "gui.cozycafe.menu_selector.remove": "Click to remove",
   "gui.cozycafe.menu_selector.bowl_food": "Bowl food, no plating needed",
   "gui.cozycafe.menu_selector.bottle_drink": "Drops bottle when consumed",
-  "container.cozycafe.cafe_manager": "Cafe Manager"
+  "gui.cozycafe.menu_selector.stars_required": "Minimum menu size: %s",
+  "gui.cozycafe.menu_selector.place_items": "Place item to add"
 }

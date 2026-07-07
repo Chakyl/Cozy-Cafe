@@ -19,6 +19,7 @@
   "tooltip.cozycafe.cafe_manager.cafe_name": "Name: %s",
   "tooltip.cozycafe.cafe_manager.no_reputation": "No reputation yet! Serve more customers!",
   "tooltip.cozycafe.cafe_manager.reputation": "Reputation: %s",
+  "tooltip.cozycafe.cafe_manager.error": "Couldn't open Cafe!",
 
   "tooltip.always.cozycafe.cafe_sign.0" : "§7Marks where customers will spawn at your cafe.",
   "tooltip.cozycafe.cafe_sign.0" : "§6Shift + Right Click§7 on a Cafe Manager",
@@ -34,8 +35,8 @@
   "tooltip.cozycafe.dirty_serving_plate.0" : "§6Hold Right Click§7 on a sponge or sink block to clean",
 
   "block.cozycafe.cafe_manager.no_sign": "You need to link a Cafe Sign to this Cafe Manager",
-  "block.cozycafe.cafe_manager.menu_too_small": "You need at least 5 menu items!",
-  "block.cozycafe.cafe_manager.menu_too_small_for_stars": "You need at least 5 additional menu items per star!",
+  "block.cozycafe.cafe_manager.menu_too_small": "You need at least 3 menu items!",
+  "block.cozycafe.cafe_manager.menu_too_small_for_stars": "You need at least 3 additional menu items per star!",
   "block.cozycafe.cafe_manager.already_opened": "You already opened your cafe today! Try again tomorrow!",
 
   "block.cozycafe.cafe_menu.payment": "%s added to bank account",
@@ -57,8 +58,9 @@
 
   "gui.cozycafe.menu_selector.invalid": "Can't add!",
   "gui.cozycafe.menu_selector.added": "Added!",
-  "gui.cozycafe.menu_selector.price": "Price: %s",
+  "gui.cozycafe.menu_selector.price": "Price: $%s",
   "gui.cozycafe.menu_selector.item_category": "Category: %s",
+  "gui.cozycafe.menu_selector.inline_price": "$%s",
   "gui.cozycafe.menu_selector.remove": "Click to remove",
   "gui.cozycafe.menu_selector.bowl_food": "Bowl food, no plating needed",
   "gui.cozycafe.menu_selector.bottle_drink": "Drops bottle when consumed",

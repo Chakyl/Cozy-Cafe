@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "meadow"
+		}
+	],
+	"item": "meadow:roasted_ham",
+	"category": "main",
+	"price": 19,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

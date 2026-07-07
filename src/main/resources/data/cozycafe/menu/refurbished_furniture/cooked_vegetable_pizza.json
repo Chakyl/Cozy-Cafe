@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "refurbished_furniture"
+		}
+	],
+	"item": "refurbished_furniture:cooked_vegetable_pizza",
+	"category": "main",
+	"price": 64,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

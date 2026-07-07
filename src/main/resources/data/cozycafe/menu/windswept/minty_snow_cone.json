@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "windswept"
+		}
+	],
+	"item": "windswept:minty_snow_cone",
+	"category": "dessert",
+	"price": 5,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

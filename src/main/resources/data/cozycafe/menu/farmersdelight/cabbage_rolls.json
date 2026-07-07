@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:cabbage_rolls",
+	"category": "main",
+	"price": 18,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

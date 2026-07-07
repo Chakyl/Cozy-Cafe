@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:grilled_salmon",
+	"category": "main",
+	"price": 19,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "atmospheric"
+		}
+	],
+	"item": "atmospheric:candied_orange_slices",
+	"category": "dessert",
+	"price": 17,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

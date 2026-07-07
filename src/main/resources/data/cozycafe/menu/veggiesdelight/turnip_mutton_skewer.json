@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:turnip_mutton_skewer",
+	"category": "main",
+	"price": 11,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "windswept"
+		}
+	],
+	"item": "windswept:lavender_tea",
+	"category": "drink",
+	"price": 10,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

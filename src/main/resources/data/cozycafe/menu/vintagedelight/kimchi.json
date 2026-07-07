@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:kimchi",
+	"category": "main",
+	"price": 27,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

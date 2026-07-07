@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "unusualfishmod"
+		}
+	],
+	"item": "unusualfishmod:strange_broth",
+	"category": "main",
+	"price": 21,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

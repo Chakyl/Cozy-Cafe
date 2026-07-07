@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:surstromming",
+	"category": "main",
+	"price": 18,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

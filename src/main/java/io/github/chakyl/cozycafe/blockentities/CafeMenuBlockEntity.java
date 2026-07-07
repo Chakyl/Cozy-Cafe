@@ -44,6 +44,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import static io.github.chakyl.cozycafe.tags.CozyTags.PICKLE;
+import static io.github.chakyl.cozycafe.util.GeneralUtils.formatPrice;
 import static io.github.chakyl.cozycafe.util.PaymentUtils.getCropSellMultiplier;
 
 public class CafeMenuBlockEntity extends BlockEntity {
@@ -212,8 +213,6 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 }
             }
         }
-        pPlayer.sendSystemMessage(Component.literal("Base Price: " + cafeMenuItem.price()));
-        pPlayer.sendSystemMessage(Component.literal("After Bonuses: " + finalPrice));
     }
 
     public void handleClearDirtyIfPossible(BlockPos pPos, Player pPlayer, ItemStack handStack) {

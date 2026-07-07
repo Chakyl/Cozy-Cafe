@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:chocolate_jam",
+	"category": "dessert",
+	"price": 21,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

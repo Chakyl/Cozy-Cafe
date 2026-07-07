@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:cheese_pasta",
+	"category": "main",
+	"price": 28,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

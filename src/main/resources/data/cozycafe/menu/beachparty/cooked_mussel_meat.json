@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "beachparty"
+		}
+	],
+	"item": "beachparty:cooked_mussel_meat",
+	"category": "main",
+	"price": 3,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

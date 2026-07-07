@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:omelet",
+	"category": "main",
+	"price": 8,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

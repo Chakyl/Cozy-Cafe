@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "create"
+		}
+	],
+	"item": "create:bar_of_chocolate",
+	"category": "dessert",
+	"price": 5,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

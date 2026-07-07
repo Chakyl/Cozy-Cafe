@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:roasted_vegetables",
+	"category": "main",
+	"price": 60,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

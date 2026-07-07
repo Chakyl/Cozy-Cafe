@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:surf_and_turf",
+	"category": "main",
+	"price": 13,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

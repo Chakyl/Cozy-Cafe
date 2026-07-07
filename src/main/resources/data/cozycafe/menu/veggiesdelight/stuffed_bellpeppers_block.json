@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:stuffed_bellpeppers_block",
+	"category": "main",
+	"price": 37,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

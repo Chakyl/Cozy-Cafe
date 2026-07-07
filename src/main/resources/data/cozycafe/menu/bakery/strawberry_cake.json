@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:strawberry_cake",
+	"category": "dessert",
+	"price": 24,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

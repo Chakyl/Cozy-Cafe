@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "windswept"
+		}
+	],
+	"item": "windswept:pinecone_jam_bottle",
+	"category": "drink",
+	"price": 64,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "herbalbrews"
+		}
+	],
+	"item": "herbalbrews:dried_green_tea",
+	"category": "drink",
+	"price": 15,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

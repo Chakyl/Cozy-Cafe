@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "windswept"
+		}
+	],
+	"item": "windswept:roasted_chestnut_crate",
+	"category": "main",
+	"price": 3,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

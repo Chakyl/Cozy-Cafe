@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "wildernature"
+		}
+	],
+	"item": "wildernature:cooked_venison",
+	"category": "main",
+	"price": 9,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

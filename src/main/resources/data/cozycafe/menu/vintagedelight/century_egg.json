@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:century_egg",
+	"category": "main",
+	"price": 51,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

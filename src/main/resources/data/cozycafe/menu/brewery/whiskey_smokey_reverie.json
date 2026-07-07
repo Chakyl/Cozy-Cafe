@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:whiskey_smokey_reverie",
+	"category": "drink",
+	"price": 40,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

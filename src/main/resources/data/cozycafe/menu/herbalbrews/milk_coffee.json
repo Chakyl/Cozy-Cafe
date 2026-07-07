@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "herbalbrews"
+		}
+	],
+	"item": "herbalbrews:milk_coffee",
+	"category": "drink",
+	"price": 14,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

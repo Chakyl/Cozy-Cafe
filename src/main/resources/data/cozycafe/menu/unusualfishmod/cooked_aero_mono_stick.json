@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "unusualfishmod"
+		}
+	],
+	"item": "unusualfishmod:cooked_aero_mono_stick",
+	"category": "main",
+	"price": 36,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

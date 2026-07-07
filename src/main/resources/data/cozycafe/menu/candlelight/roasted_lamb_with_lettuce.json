@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:roasted_lamb_with_lettuce",
+	"category": "main",
+	"price": 48,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:stuffed_zucchini_boat",
+	"category": "main",
+	"price": 47,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

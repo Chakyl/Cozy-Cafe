@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:beer_haley",
+	"category": "drink",
+	"price": 18,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

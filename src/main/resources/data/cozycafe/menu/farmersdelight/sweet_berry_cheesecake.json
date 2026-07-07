@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:sweet_berry_cheesecake",
+	"category": "dessert",
+	"price": 64,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

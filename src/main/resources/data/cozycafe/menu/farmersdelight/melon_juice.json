@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:melon_juice",
+	"category": "drink",
+	"price": 37,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

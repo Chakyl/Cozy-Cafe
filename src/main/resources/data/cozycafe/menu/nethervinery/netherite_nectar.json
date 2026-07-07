@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "nethervinery"
+		}
+	],
+	"item": "nethervinery:netherite_nectar",
+	"category": "drink",
+	"price": 64,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

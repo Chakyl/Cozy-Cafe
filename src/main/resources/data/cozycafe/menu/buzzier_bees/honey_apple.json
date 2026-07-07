@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "buzzier_bees"
+		}
+	],
+	"item": "buzzier_bees:honey_apple",
+	"category": "main",
+	"price": 27,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

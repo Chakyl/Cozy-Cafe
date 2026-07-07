@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "wildernature"
+		}
+	],
+	"item": "wildernature:cooked_cassowary_meat",
+	"category": "main",
+	"price": 17,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

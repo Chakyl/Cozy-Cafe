@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "atmospheric"
+		}
+	],
+	"item": "atmospheric:passion_fruit_sorbet",
+	"category": "dessert",
+	"price": 24,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

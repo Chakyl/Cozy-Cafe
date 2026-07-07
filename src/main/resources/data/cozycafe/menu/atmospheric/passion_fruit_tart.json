@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "atmospheric"
+		}
+	],
+	"item": "atmospheric:passion_fruit_tart",
+	"category": "dessert",
+	"price": 22,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

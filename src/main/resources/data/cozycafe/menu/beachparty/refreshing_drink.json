@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "beachparty"
+		}
+	],
+	"item": "beachparty:refreshing_drink",
+	"category": "drink",
+	"price": 32,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

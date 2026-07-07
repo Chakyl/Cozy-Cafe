@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "atmospheric"
+		}
+	],
+	"item": "atmospheric:orange_sorbet",
+	"category": "dessert",
+	"price": 19,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

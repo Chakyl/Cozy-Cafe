@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:harvest_plate",
+	"category": "main",
+	"price": 9,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

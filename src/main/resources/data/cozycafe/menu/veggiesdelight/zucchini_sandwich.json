@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:zucchini_sandwich",
+	"category": "main",
+	"price": 23,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

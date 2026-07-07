@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:strawberry_jam",
+	"category": "dessert",
+	"price": 5,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

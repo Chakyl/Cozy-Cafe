@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:glow_berry_custard",
+	"category": "main",
+	"price": 54,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

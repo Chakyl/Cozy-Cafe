@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:farmers_bread",
+	"category": "main",
+	"price": 5,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

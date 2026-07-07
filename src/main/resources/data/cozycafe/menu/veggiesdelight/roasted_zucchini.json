@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:roasted_zucchini",
+	"category": "main",
+	"price": 14,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

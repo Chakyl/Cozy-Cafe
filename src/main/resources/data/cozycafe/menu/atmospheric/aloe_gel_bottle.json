@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "atmospheric"
+		}
+	],
+	"item": "atmospheric:aloe_gel_bottle",
+	"category": "drink",
+	"price": 22,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

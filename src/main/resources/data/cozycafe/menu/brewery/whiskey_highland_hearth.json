@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:whiskey_highland_hearth",
+	"category": "drink",
+	"price": 47,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

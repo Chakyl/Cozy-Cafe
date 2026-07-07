@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:cooked_tropical_fish",
+	"category": "main",
+	"price": 14,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

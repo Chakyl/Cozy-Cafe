@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "aquaculture"
+		}
+	],
+	"item": "aquaculture:fish_fillet_cooked",
+	"category": "main",
+	"price": 2,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

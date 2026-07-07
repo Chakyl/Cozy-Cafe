@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:garlic_rice_with_cauliflower",
+	"category": "main",
+	"price": 37,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:fried_chicken",
+	"category": "main",
+	"price": 29,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

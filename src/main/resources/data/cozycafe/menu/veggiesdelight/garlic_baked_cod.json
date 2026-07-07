@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:garlic_baked_cod",
+	"category": "main",
+	"price": 11,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

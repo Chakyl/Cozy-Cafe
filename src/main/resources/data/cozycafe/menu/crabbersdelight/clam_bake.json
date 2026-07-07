@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:clam_bake",
+	"category": "main",
+	"price": 29,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "netherdepthsupgrade"
+		}
+	],
+	"item": "netherdepthsupgrade:nether_rice_roll_medley_block",
+	"category": "main",
+	"price": 64,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

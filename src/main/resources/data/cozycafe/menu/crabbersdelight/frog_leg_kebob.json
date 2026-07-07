@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:frog_leg_kebob",
+	"category": "main",
+	"price": 26,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

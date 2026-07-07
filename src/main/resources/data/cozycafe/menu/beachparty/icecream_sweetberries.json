@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "beachparty"
+		}
+	],
+	"item": "beachparty:icecream_sweetberries",
+	"category": "drink",
+	"price": 3,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

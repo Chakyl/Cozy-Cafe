@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "meadow"
+		}
+	],
+	"item": "meadow:cheese_sandwich",
+	"category": "main",
+	"price": 2,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

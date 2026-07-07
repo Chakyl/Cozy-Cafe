@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "nethervinery"
+		}
+	],
+	"item": "nethervinery:blazewine_pinot",
+	"category": "drink",
+	"price": 64,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

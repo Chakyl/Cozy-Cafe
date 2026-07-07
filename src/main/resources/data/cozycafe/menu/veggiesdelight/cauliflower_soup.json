@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:cauliflower_soup",
+	"category": "main",
+	"price": 21,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

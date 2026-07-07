@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "netherdepthsupgrade"
+		}
+	],
+	"item": "netherdepthsupgrade:baked_searing_cod_stew",
+	"category": "main",
+	"price": 64,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

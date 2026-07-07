@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "meadow"
+		}
+	],
+	"item": "meadow:sausage_with_cheese",
+	"category": "main",
+	"price": 42,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:mixed_salad",
+	"category": "main",
+	"price": 13,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

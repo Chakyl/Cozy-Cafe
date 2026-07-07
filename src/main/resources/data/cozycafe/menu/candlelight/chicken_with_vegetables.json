@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:chicken_with_vegetables",
+	"category": "main",
+	"price": 54,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

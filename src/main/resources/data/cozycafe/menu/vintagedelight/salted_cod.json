@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:salted_cod",
+	"category": "main",
+	"price": 3,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

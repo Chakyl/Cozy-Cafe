@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "supplementaries"
+		}
+	],
+	"item": "supplementaries:lumisene_bottle",
+	"category": "drink",
+	"price": 9,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

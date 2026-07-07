@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "atmospheric"
+		}
+	],
+	"item": "atmospheric:currant_muffin",
+	"category": "dessert",
+	"price": 6,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

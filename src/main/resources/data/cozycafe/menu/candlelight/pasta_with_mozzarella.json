@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:pasta_with_mozzarella",
+	"category": "main",
+	"price": 24,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

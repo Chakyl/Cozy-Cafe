@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:beer_wheat",
+	"category": "drink",
+	"price": 35,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "herbalbrews"
+		}
+	],
+	"item": "herbalbrews:hibiscus_tea",
+	"category": "drink",
+	"price": 2,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

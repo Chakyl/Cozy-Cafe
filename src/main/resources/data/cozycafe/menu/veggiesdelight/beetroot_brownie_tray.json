@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:beetroot_brownie_tray",
+	"category": "main",
+	"price": 25,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

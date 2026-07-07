@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:garlic_bread",
+	"category": "main",
+	"price": 12,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

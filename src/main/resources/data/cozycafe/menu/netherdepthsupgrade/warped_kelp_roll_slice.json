@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "netherdepthsupgrade"
+		}
+	],
+	"item": "netherdepthsupgrade:warped_kelp_roll_slice",
+	"category": "main",
+	"price": 6,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:stuffed_rabbit",
+	"category": "main",
+	"price": 37,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

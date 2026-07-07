@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:melon_popsicle",
+	"category": "main",
+	"price": 9,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

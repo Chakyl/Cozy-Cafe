@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:cauliflower_burger",
+	"category": "main",
+	"price": 28,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

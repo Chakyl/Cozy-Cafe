@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:pb_j",
+	"category": "main",
+	"price": 36,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

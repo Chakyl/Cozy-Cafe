@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:clam_chowder",
+	"category": "main",
+	"price": 42,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

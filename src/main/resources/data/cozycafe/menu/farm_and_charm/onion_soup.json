@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:onion_soup",
+	"category": "main",
+	"price": 8,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

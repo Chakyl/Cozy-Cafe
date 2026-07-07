@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:rice_and_vegetables",
+	"category": "main",
+	"price": 55,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

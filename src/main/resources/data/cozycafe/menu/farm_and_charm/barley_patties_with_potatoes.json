@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:barley_patties_with_potatoes",
+	"category": "main",
+	"price": 30,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

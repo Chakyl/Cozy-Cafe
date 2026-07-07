@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:pickled_pitcher_pod",
+	"category": "main",
+	"price": 24,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

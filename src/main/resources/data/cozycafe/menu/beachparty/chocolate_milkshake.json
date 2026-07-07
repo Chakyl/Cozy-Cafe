@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "beachparty"
+		}
+	],
+	"item": "beachparty:chocolate_milkshake",
+	"category": "drink",
+	"price": 10,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

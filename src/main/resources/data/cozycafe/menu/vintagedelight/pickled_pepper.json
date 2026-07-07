@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:pickled_pepper",
+	"category": "main",
+	"price": 14,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

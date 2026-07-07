@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "meadow"
+		}
+	],
+	"item": "meadow:cheese_stick",
+	"category": "main",
+	"price": 7,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

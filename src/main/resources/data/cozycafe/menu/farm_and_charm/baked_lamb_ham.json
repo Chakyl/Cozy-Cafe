@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:baked_lamb_ham",
+	"category": "main",
+	"price": 15,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

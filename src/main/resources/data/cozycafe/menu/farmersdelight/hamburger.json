@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:hamburger",
+	"category": "main",
+	"price": 27,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

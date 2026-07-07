@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "refurbished_furniture"
+		}
+	],
+	"item": "refurbished_furniture:sweet_berry_jam_toast",
+	"category": "dessert",
+	"price": 4,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

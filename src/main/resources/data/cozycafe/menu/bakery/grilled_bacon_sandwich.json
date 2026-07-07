@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:grilled_bacon_sandwich",
+	"category": "main",
+	"price": 21,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

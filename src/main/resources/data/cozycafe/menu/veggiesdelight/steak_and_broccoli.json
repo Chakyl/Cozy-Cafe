@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:steak_and_broccoli",
+	"category": "main",
+	"price": 29,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

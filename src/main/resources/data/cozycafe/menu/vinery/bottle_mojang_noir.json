@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vinery"
+		}
+	],
+	"item": "vinery:bottle_mojang_noir",
+	"category": "drink",
+	"price": 60,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

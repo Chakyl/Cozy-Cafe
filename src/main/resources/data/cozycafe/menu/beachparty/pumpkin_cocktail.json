@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "beachparty"
+		}
+	],
+	"item": "beachparty:pumpkin_cocktail",
+	"category": "drink",
+	"price": 17,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

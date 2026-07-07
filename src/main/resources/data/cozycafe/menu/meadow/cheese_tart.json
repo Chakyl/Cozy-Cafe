@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "meadow"
+		}
+	],
+	"item": "meadow:cheese_tart",
+	"category": "dessert",
+	"price": 9,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

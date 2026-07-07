@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:squid_ink_pasta",
+	"category": "main",
+	"price": 41,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

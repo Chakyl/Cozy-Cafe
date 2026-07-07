@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:pork_knuckle",
+	"category": "main",
+	"price": 60,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

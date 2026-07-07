@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "buzzier_bees"
+		}
+	],
+	"item": "buzzier_bees:crystallized_honey_block",
+	"category": "main",
+	"price": 5,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

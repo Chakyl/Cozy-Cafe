@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "herbalbrews"
+		}
+	],
+	"item": "herbalbrews:hazelnut_coffee",
+	"category": "drink",
+	"price": 11,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

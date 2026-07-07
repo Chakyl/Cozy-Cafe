@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:chocolate_truffle",
+	"category": "dessert",
+	"price": 2,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

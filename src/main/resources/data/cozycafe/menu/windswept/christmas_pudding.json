@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "windswept"
+		}
+	],
+	"item": "windswept:christmas_pudding",
+	"category": "dessert",
+	"price": 40,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

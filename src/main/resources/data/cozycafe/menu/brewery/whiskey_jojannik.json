@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:whiskey_jojannik",
+	"category": "drink",
+	"price": 14,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

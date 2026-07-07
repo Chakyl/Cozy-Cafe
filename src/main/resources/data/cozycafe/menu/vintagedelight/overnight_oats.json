@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:overnight_oats",
+	"category": "main",
+	"price": 45,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

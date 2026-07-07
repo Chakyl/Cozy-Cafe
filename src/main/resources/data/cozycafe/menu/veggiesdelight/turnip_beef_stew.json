@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:turnip_beef_stew",
+	"category": "main",
+	"price": 19,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

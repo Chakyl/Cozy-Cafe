@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:sea_pickle_juice",
+	"category": "drink",
+	"price": 1,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

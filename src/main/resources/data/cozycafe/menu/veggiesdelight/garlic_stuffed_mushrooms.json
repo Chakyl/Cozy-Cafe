@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:garlic_stuffed_mushrooms",
+	"category": "main",
+	"price": 25,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

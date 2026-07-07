@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:pickled_beetroot",
+	"category": "main",
+	"price": 10,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

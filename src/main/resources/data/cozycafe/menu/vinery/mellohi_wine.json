@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vinery"
+		}
+	],
+	"item": "vinery:mellohi_wine",
+	"category": "drink",
+	"price": 64,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

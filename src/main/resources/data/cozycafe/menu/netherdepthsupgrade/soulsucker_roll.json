@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "netherdepthsupgrade"
+		}
+	],
+	"item": "netherdepthsupgrade:soulsucker_roll",
+	"category": "main",
+	"price": 64,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:simple_tomato_soup",
+	"category": "main",
+	"price": 14,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

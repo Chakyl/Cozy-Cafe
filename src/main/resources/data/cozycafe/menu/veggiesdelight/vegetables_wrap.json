@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:vegetables_wrap",
+	"category": "main",
+	"price": 34,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

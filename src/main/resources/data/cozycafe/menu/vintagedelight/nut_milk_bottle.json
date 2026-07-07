@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:nut_milk_bottle",
+	"category": "drink",
+	"price": 13,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

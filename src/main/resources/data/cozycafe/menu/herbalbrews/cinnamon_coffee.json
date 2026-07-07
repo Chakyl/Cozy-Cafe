@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "herbalbrews"
+		}
+	],
+	"item": "herbalbrews:cinnamon_coffee",
+	"category": "drink",
+	"price": 17,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

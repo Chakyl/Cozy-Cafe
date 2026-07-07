@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:oatmeal_cookie",
+	"category": "dessert",
+	"price": 2,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

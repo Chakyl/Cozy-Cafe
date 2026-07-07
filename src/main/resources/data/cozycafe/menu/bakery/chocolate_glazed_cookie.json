@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:chocolate_glazed_cookie",
+	"category": "dessert",
+	"price": 27,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

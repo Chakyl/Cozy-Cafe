@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "aquaculture"
+		}
+	],
+	"item": "aquaculture:turtle_soup",
+	"category": "main",
+	"price": 49,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

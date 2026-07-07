@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:chocolate_tart",
+	"category": "dessert",
+	"price": 12,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

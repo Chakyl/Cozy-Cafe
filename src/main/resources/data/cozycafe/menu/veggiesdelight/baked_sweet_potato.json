@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:baked_sweet_potato",
+	"category": "dessert",
+	"price": 4,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "windswept"
+		}
+	],
+	"item": "windswept:ginger_tea",
+	"category": "drink",
+	"price": 16,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -28,7 +28,7 @@ public class CozyConfig {
     public CozyConfig(final ForgeConfigSpec.Builder builder) {
         menuSizePerStar = builder
                 .comment("How many menu items are required to open your cafe, per star + 1. Has a very large impact on difficulty!")
-                .defineInRange("menu_size_per_star", 3, 1, 256);
+                .defineInRange("menu_size_per_star", 3, 1, 5);
 
         // Customers and wait times
 

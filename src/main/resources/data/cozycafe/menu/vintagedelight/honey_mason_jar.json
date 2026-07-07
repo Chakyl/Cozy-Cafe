@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:honey_mason_jar",
+	"category": "main",
+	"price": 4,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

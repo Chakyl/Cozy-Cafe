@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:fried_rice",
+	"category": "main",
+	"price": 21,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

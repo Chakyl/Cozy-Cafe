@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "autumnity"
+		}
+	],
+	"item": "autumnity:cooked_turkey_piece",
+	"category": "dessert",
+	"price": 1,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

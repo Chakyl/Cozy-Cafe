@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "windswept"
+		}
+	],
+	"item": "windswept:goat_stew",
+	"category": "main",
+	"price": 48,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

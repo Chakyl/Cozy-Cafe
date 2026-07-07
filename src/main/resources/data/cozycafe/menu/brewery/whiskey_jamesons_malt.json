@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:whiskey_jamesons_malt",
+	"category": "drink",
+	"price": 27,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

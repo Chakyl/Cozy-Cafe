@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:apple_cupcake",
+	"category": "dessert",
+	"price": 4,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

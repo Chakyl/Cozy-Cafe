@@ -41,7 +41,7 @@ public class MenuSelectorMenu extends AbstractContainerMenu {
         blockEntity = ((CafeManagerBlockEntity) entity);
         this.addDataSlot(menuItemAdditionStatus);
         menuItemAdditionStatus.set(MenuItemSelectionState.UNSET.getCode());
-        this.addSlot(new Slot(new SimpleContainer(1), 0, 26, 71) {
+        this.addSlot(new Slot(new SimpleContainer(1), 0, 22, 113) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
@@ -55,11 +55,11 @@ public class MenuSelectorMenu extends AbstractContainerMenu {
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 8 + j * 18, 94 + i * 18));
+                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 12 + j * 17, 140 + i * 17));
             }
         }
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(pPlayerInventory, i, 8 + i * 18, 152));
+            this.addSlot(new Slot(pPlayerInventory, i, 12 + i * 17, 196));
         }
         this.broadcastChanges();
     }

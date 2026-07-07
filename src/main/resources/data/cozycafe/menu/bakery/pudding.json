@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:pudding",
+	"category": "dessert",
+	"price": 25,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

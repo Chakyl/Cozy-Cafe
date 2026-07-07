@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:vegetable_sandwich",
+	"category": "main",
+	"price": 7,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

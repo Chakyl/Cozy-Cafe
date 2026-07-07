@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:chocolate_nut_granola_bar",
+	"category": "dessert",
+	"price": 7,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

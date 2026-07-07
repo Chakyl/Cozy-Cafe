@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:cauliflower_kuku",
+	"category": "main",
+	"price": 44,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

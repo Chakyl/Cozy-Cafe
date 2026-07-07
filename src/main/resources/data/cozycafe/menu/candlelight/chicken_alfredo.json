@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:chicken_alfredo",
+	"category": "main",
+	"price": 42,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

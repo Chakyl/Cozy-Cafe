@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:cooked_cod",
+	"category": "main",
+	"price": 54,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

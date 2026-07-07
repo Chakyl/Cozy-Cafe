@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "nethervinery"
+		}
+	],
+	"item": "nethervinery:ghastly_grenache",
+	"category": "drink",
+	"price": 60,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

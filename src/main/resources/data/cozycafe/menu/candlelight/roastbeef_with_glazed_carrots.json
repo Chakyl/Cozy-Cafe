@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:roastbeef_with_glazed_carrots",
+	"category": "main",
+	"price": 27,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

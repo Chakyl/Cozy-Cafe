@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:chocolate_gateau",
+	"category": "dessert",
+	"price": 13,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

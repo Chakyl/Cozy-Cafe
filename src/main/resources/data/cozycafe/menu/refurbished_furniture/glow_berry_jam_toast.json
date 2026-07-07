@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "refurbished_furniture"
+		}
+	],
+	"item": "refurbished_furniture:glow_berry_jam_toast",
+	"category": "dessert",
+	"price": 9,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

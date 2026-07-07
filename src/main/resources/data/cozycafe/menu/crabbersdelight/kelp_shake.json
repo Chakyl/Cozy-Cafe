@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:kelp_shake",
+	"category": "main",
+	"price": 1,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

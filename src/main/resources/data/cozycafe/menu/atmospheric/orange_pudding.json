@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "atmospheric"
+		}
+	],
+	"item": "atmospheric:orange_pudding",
+	"category": "dessert",
+	"price": 41,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

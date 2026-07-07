@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:deluxe_burger",
+	"category": "main",
+	"price": 56,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

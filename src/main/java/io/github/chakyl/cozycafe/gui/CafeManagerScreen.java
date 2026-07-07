@@ -8,6 +8,7 @@ import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.network.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
@@ -15,6 +16,8 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +26,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.github.chakyl.cozycafe.util.GeneralUtils.formatPrice;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -66,7 +71,7 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         int topPos = this.getGuiTop();
         cafeMenu = this.menu.getCafeMenu();
         ImageButton editMenuButton = new ImageButton(leftPos + 20, topPos + 36, 17, 15, 224, 80, 16, GUI_LOCATION, 256, 256, (button) -> {
-            if (this.minecraft != null) {
+            if (!CafeManagerScreen.this.menu.getIsCafeOpen() && this.minecraft != null) {
                 EvilPacketsIHateThem.sendToServer(new ServerBoundOpenMenuSelectorMenuPacket(this.menu.blockEntity.getBlockPos()));
             }
         });
@@ -215,9 +220,6 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                 this.hoveredItemToRender = hoveredItem;
             }
         }
-        if (this.errorMessage != null) {
-            gfx.drawWordWrap(this.font, this.errorMessage, left + 14, top + 155, 160, 0xFF5555);
-        }
     }
 
     @Override
@@ -226,11 +228,14 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        if (this.errorMessage != null) {
+            pGuiGraphics.renderComponentTooltip(this.font, wrapErrorText(this.font, this.errorMessage), this.leftPos + 11, this.topPos + 156);
+        }
         if (!this.hoveredItemToRender.isEmpty()) {
             CafeMenuItem cafeMenuItem = CafeMenuItemRegistry.INSTANCE.getForItem(this.hoveredItemToRender.getItem());
             if (cafeMenuItem != null) {
                 List<Component> tooltipList = new ArrayList<>(getTooltipFromItem(Minecraft.getInstance(), this.hoveredItemToRender));
-                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()));
+                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", formatPrice(cafeMenuItem.price())));
                 tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
 
                 if (cafeMenuItem.bowlFood()) {
@@ -239,9 +244,24 @@ public class CafeManagerScreen extends AbstractContainerScreen<CafeManagerMenu> 
                 if (cafeMenuItem.bottleDrink()) {
                     tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bottle_drink").withStyle(ChatFormatting.RED));
                 }
-
                 pGuiGraphics.renderTooltip(this.font, tooltipList, this.hoveredItemToRender.getTooltipImage(), pMouseX, pMouseY);
             }
         }
+    }
+
+    private List<Component> wrapErrorText(Font font, Component component) {
+        List<Component> errorComps = new ArrayList<>();
+        List<FormattedText> lines = font.getSplitter().splitLines(component, 148, Style.EMPTY);
+
+        errorComps.add(Component.translatable("tooltip.cozycafe.cafe_manager.error").withStyle(ChatFormatting.RED));
+        for (FormattedText line : lines) {
+            if (line instanceof Component comp) {
+                errorComps.add(comp);
+            } else {
+                errorComps.add(Component.literal(line.getString()));
+            }
+        }
+
+        return errorComps;
     }
 }

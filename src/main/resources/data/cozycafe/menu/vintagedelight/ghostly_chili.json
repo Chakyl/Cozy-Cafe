@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:ghostly_chili",
+	"category": "main",
+	"price": 51,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

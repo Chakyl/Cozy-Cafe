@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:fish_stick",
+	"category": "main",
+	"price": 22,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

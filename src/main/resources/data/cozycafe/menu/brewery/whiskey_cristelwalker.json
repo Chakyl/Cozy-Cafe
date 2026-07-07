@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:whiskey_cristelwalker",
+	"category": "drink",
+	"price": 33,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

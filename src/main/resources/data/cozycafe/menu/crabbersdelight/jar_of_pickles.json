@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "crabbersdelight"
+		}
+	],
+	"item": "crabbersdelight:jar_of_pickles",
+	"category": "main",
+	"price": 1,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

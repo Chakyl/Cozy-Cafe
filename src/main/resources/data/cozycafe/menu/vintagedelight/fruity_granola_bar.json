@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "vintagedelight"
+		}
+	],
+	"item": "vintagedelight:fruity_granola_bar",
+	"category": "main",
+	"price": 4,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

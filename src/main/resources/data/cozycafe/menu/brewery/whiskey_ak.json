@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "brewery"
+		}
+	],
+	"item": "brewery:whiskey_ak",
+	"category": "drink",
+	"price": 36,
+	"product_type": "artisan",
+	"flavors": [],
+	"themes": []
+}

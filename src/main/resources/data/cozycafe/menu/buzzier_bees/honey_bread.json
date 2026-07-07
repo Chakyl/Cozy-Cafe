@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "buzzier_bees"
+		}
+	],
+	"item": "buzzier_bees:honey_bread",
+	"category": "main",
+	"price": 4,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

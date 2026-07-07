@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farm_and_charm"
+		}
+	],
+	"item": "farm_and_charm:oat_pancake",
+	"category": "dessert",
+	"price": 32,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

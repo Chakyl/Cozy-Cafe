@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"item": "farmersdelight:vegetable_soup",
+	"category": "main",
+	"price": 36,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

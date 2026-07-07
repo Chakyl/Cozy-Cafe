@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "create"
+		}
+	],
+	"item": "create:builders_tea",
+	"category": "drink",
+	"price": 62,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

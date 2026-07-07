@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:fermented_garlic_honey",
+	"category": "main",
+	"price": 59,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:grilled_salmon_sandwich",
+	"category": "main",
+	"price": 12,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

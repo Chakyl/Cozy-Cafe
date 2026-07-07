@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "unusualfishmod"
+		}
+	],
+	"item": "unusualfishmod:weird_goldfish",
+	"category": "main",
+	"price": 11,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

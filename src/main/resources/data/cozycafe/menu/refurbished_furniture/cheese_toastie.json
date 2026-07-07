@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "refurbished_furniture"
+		}
+	],
+	"item": "refurbished_furniture:cheese_toastie",
+	"category": "main",
+	"price": 3,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

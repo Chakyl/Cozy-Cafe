@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "candlelight"
+		}
+	],
+	"item": "candlelight:pasta_with_lettuce",
+	"category": "main",
+	"price": 33,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

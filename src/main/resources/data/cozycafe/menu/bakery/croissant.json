@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "bakery"
+		}
+	],
+	"item": "bakery:croissant",
+	"category": "main",
+	"price": 1,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

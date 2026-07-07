@@ -1,0 +1,14 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "veggiesdelight"
+		}
+	],
+	"item": "veggiesdelight:dandelion_and_eggs",
+	"category": "main",
+	"price": 10,
+	"product_type": "farmer",
+	"flavors": [],
+	"themes": []
+}

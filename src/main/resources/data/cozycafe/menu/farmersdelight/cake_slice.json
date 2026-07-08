@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "herbalbrews"
+			"modid": "farmersdelight"
 		}
 	],
-	"item": "herbalbrews:dried_oolong_tea",
-	"category": "drink",
-	"price": 64,
+	"item": "farmersdelight:cake_slice",
+	"category": "dessert",
+	"price": 11,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

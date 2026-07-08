@@ -23,6 +23,8 @@ public class CozyConfig {
     public final ForgeConfigSpec.ConfigValue<String> currency_4096;
 
     public final ForgeConfigSpec.BooleanValue numismaticsUtilsPayment;
+    public final ForgeConfigSpec.BooleanValue dailyLimit;
+    public final ForgeConfigSpec.BooleanValue platingRequired;
     public final ForgeConfigSpec.ConfigValue<String> quality_bonus_stage;
     public final ForgeConfigSpec.ConfigValue<String> pickle_bonus_stage;
 
@@ -66,6 +68,8 @@ public class CozyConfig {
         currency_4096 = builder.comment("The item to use as a 4096 denomination of currency (e.g.: minecraft:emerald)").define("currency_4096", "");
 
         numismaticsUtilsPayment = builder.comment("Allows customers to pay to player's bank account directly if Create Numismatics Utils is installed. Set to false if you don't want that to happen.").define("numismatics_utils_payment", true);
+        dailyLimit = builder.comment("When enabled, limits cafe opening to once per Minecraft day.").define("daily_limit", true);
+        platingRequired = builder.comment("When enabled, main dishes that aren't in bowls will need to be plated using a Plating Station before serving.").define("plating_required", true);
         // Stage Config, mainly for SSV
         quality_bonus_stage = builder
                 .comment("Requires KubeJs and Quality Food. The stage name with the following impact: Quality impacts of non-fish prices are doubled. Can be added to the player using the command e.g, /kubejs stages add playerName the_quality_of_the_earth")

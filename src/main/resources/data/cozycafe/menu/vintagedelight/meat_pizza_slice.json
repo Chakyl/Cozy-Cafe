@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "farmersdelight"
+			"modid": "vintagedelight"
 		}
 	],
-	"item": "farmersdelight:honey_glazed_ham_block",
-	"category": "dessert",
-	"price": 42,
+	"item": "vintagedelight:meat_pizza_slice",
+	"category": "main",
+	"price": 13,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "herbalbrews"
+			"modid": "veggiesdelight"
 		}
 	],
-	"item": "herbalbrews:dried_black_tea",
-	"category": "drink",
-	"price": 64,
+	"item": "veggiesdelight:sweet_potato_pie_slice",
+	"category": "dessert",
+	"price": 21,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

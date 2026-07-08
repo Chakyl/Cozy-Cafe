@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "farmersdelight"
+			"modid": "create_central_kitchen"
 		}
 	],
-	"item": "farmersdelight:honey_glazed_ham_block",
+	"item": "create_central_kitchen:pumpkin_pie_slice",
 	"category": "dessert",
-	"price": 42,
+	"price": 4,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

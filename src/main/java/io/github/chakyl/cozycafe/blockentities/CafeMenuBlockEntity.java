@@ -9,6 +9,8 @@ import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
+import io.github.chakyl.cozycafe.util.CustomerEntityUtils;
+import io.github.chakyl.cozycafe.util.CustomerTarget;
 import io.github.chakyl.cozycafe.util.PaymentUtils;
 import io.github.chakyl.numismaticsutils.utils.CurioUtils;
 import io.netty.util.internal.StringUtil;
@@ -43,7 +45,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import static io.github.chakyl.cozycafe.tags.CozyTags.PICKLE;
-import static io.github.chakyl.cozycafe.util.PaymentUtils.getCropSellMultiplier;
+import static io.github.chakyl.cozycafe.util.PaymentUtils.getMultAttributeMultiplier;
 import static io.github.chakyl.cozycafe.util.QualityFoods.getQualityPriceIncrease;
 
 public class CafeMenuBlockEntity extends BlockEntity {
@@ -58,6 +60,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
     private int customerTravelTime = -1;
     private BlockPos cafeManager;
     private ItemStack requestedItem = ItemStack.EMPTY;
+    private ItemStack eatingItem = ItemStack.EMPTY;
     private String customerSkin = "";
     private GameProfile gameProfile;
 
@@ -89,29 +92,30 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 } else if (this.orderTime == ORDER_TIME) {
                     CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
                     if (cafeManagerBlockEntity == null) {
-                        this.closeMenu();
+                        this.closeMenu(true);
                         return;
                     } else {
-                        boolean shouldClose = !this.orderedDessert(this.currentCourse);
+                        boolean shouldClose = this.currentCourse > 2 || !this.orderedDessert(this.currentCourse);
                         if (!shouldClose) cafeManagerBlockEntity.rollMenuCourse(this);
                         this.orderTime = -1;
-                        if (this.currentCourse > 1) {
+                        if (this.currentCourse == 2) {
                             if (this.dropItem) {
                                 pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, new ItemStack(Items.BOWL)));
                                 this.dropItem = false;
                                 this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DISH, false), 3);
                             } else {
-                                this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DIRTY, true), 3);
+                                if (CozyCafe.CONFIG.platingRequired.get()) {
+                                    this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DIRTY, true), 3);
+                                } else {
+                                    this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DISH, false), 3);
+                                }
                             }
                         } else if (currentCourse == 1 && this.dropItem) {
                             pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, new ItemStack(Items.GLASS_BOTTLE)));
                             this.dropItem = false;
                         }
                         if (shouldClose) {
-                            this.hasCustomer = false;
-                            this.closeMenu();
-                            // TODO: Make customer leave
-                            this.currentCourse = 0;
+                            this.closeMenu(true);
                         }
                         this.setChangedForRender();
                     }
@@ -124,7 +128,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 } else {
                     if (this.waitTime == MAX_WAIT_TIME) {
                         getCafeManager(pLevel);
-                        this.closeMenu();
+                        this.closeMenu(false);
                     } else {
                         this.waitTime++;
                         this.setChanged();
@@ -154,7 +158,11 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 } else if (handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem())) {
                     success = true;
                 } else if (handStack.is(requestedItem.getItem())) {
-                    pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.not_plated").withStyle(ChatFormatting.RED), true);
+                    if (CozyCafe.CONFIG.platingRequired.get()) {
+                        pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.not_plated").withStyle(ChatFormatting.RED), true);
+                    } else {
+                        success = true;
+                    }
                 }
                 if (!success) {
                     pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
@@ -167,6 +175,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
             if (!pPlayer.isCreative()) handStack.shrink(1);
             this.orderTime = 0;
             this.setCurrentCourse(this.currentCourse + 1, true);
+            this.setEatingItem(this.requestedItem.copy());
             this.setRequestedItem(ItemStack.EMPTY);
             ((ServerLevel) level).sendParticles(
                     ParticleTypes.HAPPY_VILLAGER,
@@ -202,7 +211,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
         if (CozyCafe.QUALITY_FOOD_INSTALLED) {
             resolvedPrice = getQualityPriceIncrease(pPlayer, handStack, resolvedPrice);
         }
-        resolvedPrice *= getCropSellMultiplier(pPlayer);
+        resolvedPrice *= getMultAttributeMultiplier(pPlayer, cafeMenuItem);
         int finalPrice = Mth.floor(resolvedPrice);
         if (CozyCafe.CONFIG.numismaticsUtilsPayment.get() && CozyCafe.NUMISMATICS_UTILS_INSTALLED) {
             CurioUtils.depositIntoPersonalOrCurio(this.level, pPlayer, finalPrice);
@@ -215,7 +224,6 @@ public class CafeMenuBlockEntity extends BlockEntity {
             }
         }
     }
-
 
 
     public void handleClearDirtyIfPossible(BlockPos pPos, Player pPlayer, ItemStack handStack) {
@@ -266,40 +274,44 @@ public class CafeMenuBlockEntity extends BlockEntity {
         if (cafeManagerBlockEntity != null && cafeManagerBlockEntity.onlyHasDesserts()) {
             return true;
         }
-        return Math.random() < CozyCafe.CONFIG.dessertChance.get();
+        return Math.random() < 1;
     }
 
     public void setCurrentCourse(int currentCourse, boolean setPlate) {
-        if (currentCourse < 3) {
+        if (currentCourse <= 3) {
             this.currentCourse = currentCourse;
-            if (setPlate && currentCourse > 1) {
+            if (setPlate && currentCourse == 2) {
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, true), 3);
             }
             this.setChangedForRender();
-        } else {
-            this.hasCustomer = false;
-            this.closeMenu();
-            // TODO: Make customer leave
-            this.currentCourse = 0;
         }
     }
 
-    public void closeMenu() {
+    public void closeMenu(boolean isGentleClose) {
         if (this.hasCustomer) {
+            CustomerEntity customer = CozyRegistry.EntityRegistry.CUSTOMER.get().create(this.level);
+            if (customer != null) {
+                CustomerEntityUtils.spawnCustomerAndTarget(this.worldPosition.relative(this.getBlockState().getValue(CafeMenuBlock.FACING)), (ServerLevel) this.level, this.customerSkin, this.getCafeManager(this.level).getLinkedSign().below(), customer, CustomerTarget.SIGN);
+            }
+        }
+        if (!isGentleClose) {
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
                 cafeManagerBlockEntity.decreaseReputation(50);
             }
         }
+        this.hasCustomer = false;
         this.level.setBlock(this.worldPosition, this.getBlockState().setValue(CafeMenuBlock.DISH, false), 3);
         this.waitTime = -1;
+
         this.orderTime = -1;
         this.customerTravelTime = -1;
         this.currentCourse = 0;
         this.hasCustomer = false;
         this.customerSkin = "";
         this.gameProfile = null;
-        this.setRequestedItem(ItemStack.EMPTY);
+        this.requestedItem = ItemStack.EMPTY;
+        this.eatingItem = ItemStack.EMPTY;
         this.setChangedForRender();
     }
 
@@ -310,8 +322,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 customerEntity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK);
             }
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
-            if (cafeManagerBlockEntity == null || !cafeManagerBlockEntity.isOpen()) {
-                this.closeMenu();
+            if (cafeManagerBlockEntity == null) {
+                this.closeMenu(true);
                 return;
             }
             this.hasCustomer = true;
@@ -330,7 +342,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
     }
 
     public ItemStack getRequestedItem() {
-        return requestedItem;
+        return this.requestedItem;
     }
 
     public void setRequestedItem(ItemStack requestedItem) {
@@ -338,6 +350,14 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.setChangedForRender();
     }
 
+    public ItemStack getEatingItem() {
+        return this.eatingItem;
+    }
+
+    public void setEatingItem(ItemStack eatingItem) {
+        this.eatingItem = eatingItem;
+        this.setChangedForRender();
+    }
     public boolean getHasCustomer() {
         return this.hasCustomer;
     }
@@ -397,6 +417,9 @@ public class CafeMenuBlockEntity extends BlockEntity {
         if (!this.requestedItem.isEmpty()) {
             tag.put("requestedItem", this.requestedItem.save(new CompoundTag()));
         }
+        if (!this.eatingItem.isEmpty()) {
+            tag.put("eatingItem", this.eatingItem.save(new CompoundTag()));
+        }
         tag.putString("customerSkin", this.customerSkin);
         if (this.gameProfile != null) {
             tag.put("customerProfile", NbtUtils.writeGameProfile(new CompoundTag(), this.gameProfile));
@@ -421,6 +444,11 @@ public class CafeMenuBlockEntity extends BlockEntity {
             this.requestedItem = ItemStack.of(tag.getCompound("requestedItem"));
         } else {
             this.requestedItem = ItemStack.EMPTY;
+        }
+        if (tag.contains("eatingItem")) {
+            this.eatingItem = ItemStack.of(tag.getCompound("eatingItem"));
+        } else {
+            this.eatingItem = ItemStack.EMPTY;
         }
         this.customerSkin = tag.getString("customerSkin");
         if (tag.contains("customerProfile")) {
@@ -447,4 +475,5 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.load(tag);
 
     }
+
 }

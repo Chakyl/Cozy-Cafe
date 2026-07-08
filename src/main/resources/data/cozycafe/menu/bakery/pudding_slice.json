@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "herbalbrews"
+			"modid": "bakery"
 		}
 	],
-	"item": "herbalbrews:hazelnut_coffee",
-	"category": "drink",
-	"price": 11,
+	"item": "bakery:pudding_slice",
+	"category": "dessert",
+	"price": 6,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

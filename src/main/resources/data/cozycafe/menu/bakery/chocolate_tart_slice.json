@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "farmersdelight"
+			"modid": "bakery"
 		}
 	],
-	"item": "farmersdelight:honey_glazed_ham_block",
+	"item": "bakery:chocolate_tart_slice",
 	"category": "dessert",
-	"price": 42,
+	"price": 3,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

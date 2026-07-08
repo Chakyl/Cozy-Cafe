@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "herbalbrews"
+			"modid": "pamhc2trees"
 		}
 	],
-	"item": "herbalbrews:chai_tea",
-	"category": "drink",
-	"price": 64,
+	"item": "pamhc2trees:roastedhazelnutitem",
+	"category": "main",
+	"price": 6,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

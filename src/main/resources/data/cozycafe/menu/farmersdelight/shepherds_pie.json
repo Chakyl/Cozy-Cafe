@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "herbalbrews"
+			"modid": "farmersdelight"
 		}
 	],
-	"item": "herbalbrews:dried_green_tea",
-	"category": "drink",
-	"price": 15,
+	"item": "farmersdelight:shepherds_pie",
+	"category": "dessert",
+	"price": 11,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

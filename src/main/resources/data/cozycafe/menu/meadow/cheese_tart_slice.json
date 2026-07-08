@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "farmersdelight"
+			"modid": "meadow"
 		}
 	],
-	"item": "farmersdelight:honey_glazed_ham_block",
+	"item": "meadow:cheese_tart_slice",
 	"category": "dessert",
-	"price": 42,
+	"price": 2,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

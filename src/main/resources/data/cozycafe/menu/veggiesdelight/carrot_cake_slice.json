@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "herbalbrews"
+			"modid": "veggiesdelight"
 		}
 	],
-	"item": "herbalbrews:cinnamon_coffee",
-	"category": "drink",
-	"price": 17,
+	"item": "veggiesdelight:carrot_cake_slice",
+	"category": "dessert",
+	"price": 6,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

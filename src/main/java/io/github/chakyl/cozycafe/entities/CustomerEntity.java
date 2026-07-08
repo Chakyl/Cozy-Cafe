@@ -27,9 +27,10 @@ import net.minecraft.world.level.pathfinder.*;
 import java.util.EnumSet;
 
 public class CustomerEntity extends PathfinderMob {
-    private static final EntityDataAccessor<CompoundTag> SKIN_PROFILE = SynchedEntityData.defineId(CustomerEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    public static final EntityDataAccessor<CompoundTag> SKIN_PROFILE = SynchedEntityData.defineId(CustomerEntity.class, EntityDataSerializers.COMPOUND_TAG);
     private GameProfile cachedProfile = null;
     private BlockPos targetMenuPos;
+    private BlockPos targetSignPos;
     private int travelTime = 0;
 
     public CustomerEntity(EntityType<? extends PathfinderMob> type, Level level) {
@@ -39,8 +40,9 @@ public class CustomerEntity extends PathfinderMob {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new NavigateToMenuGoal(this, 0.9f));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.7f));
+        this.goalSelector.addGoal(1, new NavigateToSignGoal(this, 0.9f));
+        this.goalSelector.addGoal(2, new NavigateToMenuGoal(this, 0.9f));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 0.7f));
     }
 
     @Override
@@ -53,28 +55,6 @@ public class CustomerEntity extends PathfinderMob {
             }
         }
     }
-
-    public void setCustomerSkinFromUsername(String name) {
-        if (StringUtil.isNullOrEmpty(name) || this.level().isClientSide()) return;
-
-        MinecraftServer server = this.level().getServer();
-        if (server == null) return;
-
-        GameProfileCache cache = server.getProfileCache();
-        if (cache != null) {
-            cache.getAsync(name, profile -> {
-                if (profile != null && profile.isPresent()) {
-                    Util.backgroundExecutor().execute(() -> {
-                        GameProfile filledProfile = server.getSessionService().fillProfileProperties(profile.get(), true);
-                        server.execute(() -> {
-                            this.entityData.set(SKIN_PROFILE, NbtUtils.writeGameProfile(new CompoundTag(), filledProfile));
-                        });
-                    });
-                }
-            });
-        }
-    }
-
 
     public GameProfile getOrCreateProfile() {
         return this.cachedProfile;
@@ -101,6 +81,14 @@ public class CustomerEntity extends PathfinderMob {
         this.targetMenuPos = pos;
     }
 
+    public BlockPos getTargetSignPos() {
+        return this.targetSignPos;
+    }
+
+    public void setTargetSignPos(BlockPos pos) {
+        this.targetSignPos = pos;
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -113,6 +101,9 @@ public class CustomerEntity extends PathfinderMob {
         if (this.targetMenuPos != null) {
             nbt.put("targetMenuPos", NbtUtils.writeBlockPos(this.targetMenuPos));
         }
+        if (this.targetSignPos != null) {
+            nbt.put("targetSignPos", NbtUtils.writeBlockPos(this.targetSignPos));
+        }
         nbt.putInt("travelTime", this.travelTime);
         nbt.put("customerProfile", this.entityData.get(SKIN_PROFILE));
     }
@@ -122,6 +113,9 @@ public class CustomerEntity extends PathfinderMob {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("targetMenuPos")) {
             this.targetMenuPos = NbtUtils.readBlockPos(nbt.getCompound("targetMenuPos"));
+        }
+        if (nbt.contains("targetSignPos")) {
+            this.targetSignPos = NbtUtils.readBlockPos(nbt.getCompound("targetSignPos"));
         }
         this.travelTime = nbt.getInt("travelTime");
         if (nbt.contains("customerProfile")) {
@@ -169,6 +163,61 @@ public class CustomerEntity extends PathfinderMob {
                 return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
             }
         };
+    }
+
+
+    public static class NavigateToSignGoal extends Goal {
+        private final CustomerEntity customer;
+        private final double speed;
+        private int timeToRecalcPath;
+
+        public NavigateToSignGoal(CustomerEntity customer, double speed) {
+            this.customer = customer;
+            this.speed = speed;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.customer.getTargetSignPos() != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.customer.getTargetSignPos() != null && !this.customer.getNavigation().isDone();
+        }
+
+        @Override
+        public void start() {
+            this.timeToRecalcPath = 0;
+        }
+
+        private boolean canReach(BlockPos target) {
+            return this.customer.distanceToSqr(target.getX() + 0.5, target.getY(), target.getZ() + 0.5) <= 4.0D;
+        }
+
+        @Override
+        public void tick() {
+            BlockPos target = this.customer.getTargetSignPos();
+            if (target == null) return;
+
+            if (--this.timeToRecalcPath <= 0) {
+                this.timeToRecalcPath = 10 + this.customer.getRandom().nextInt(10);
+
+                BlockPos floorTarget = target.below();
+                Path path = this.customer.getNavigation().createPath(floorTarget, 1);
+
+                if (path != null) {
+                    this.customer.getNavigation().moveTo(path, this.speed);
+                } else {
+                    this.customer.getNavigation().moveTo(floorTarget.getX() + 0.5, floorTarget.getY(), floorTarget.getZ() + 0.5, this.speed);
+                }
+            }
+
+            if (this.canReach(target)) {
+                this.customer.discard();
+            }
+        }
     }
 
     public static class NavigateToMenuGoal extends Goal {

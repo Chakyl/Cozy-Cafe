@@ -2,12 +2,12 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "farmersdelight"
+			"modid": "snowyspirit"
 		}
 	],
-	"item": "farmersdelight:honey_glazed_ham_block",
+	"item": "snowyspirit:gingerbread_cookie",
 	"category": "dessert",
-	"price": 42,
+	"price": 1,
 	"product_type": "farmer",
 	"flavors": [],
 	"themes": []

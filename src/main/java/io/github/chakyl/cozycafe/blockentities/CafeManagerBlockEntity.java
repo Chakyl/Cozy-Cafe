@@ -1,6 +1,5 @@
 package io.github.chakyl.cozycafe.blockentities;
 
-import de.cadentem.quality_food.util.QualityUtils;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blocks.CafeManagerBlock;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
@@ -10,6 +9,8 @@ import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.network.ClientBoundCafeCannotOpenPacket;
 import io.github.chakyl.cozycafe.network.EvilPacketsIHateThem;
 import io.github.chakyl.cozycafe.registry.CozyRegistry;
+import io.github.chakyl.cozycafe.util.CustomerEntityUtils;
+import io.github.chakyl.cozycafe.util.CustomerTarget;
 import io.github.chakyl.cozycafe.util.GeneralUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,12 +72,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             }
 
             if ((level.getGameTime() % (20 * ((long) CozyCafe.CONFIG.customerSpawnInterval.get() * (1 - (Math.max(0, this.reputation - 1) / 5000))))) == 0) {
-                if (this.dayLastOpened != GeneralUtils.getDay(this.level)) {
-                    if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Force-Closing Cafe due to reaching next day");
-                    this.setOpen(!open, false);
-                } else {
-                    assignCustomersInArea(level, pos, state);
-                }
+                assignCustomersInArea(level, pos, state);
             }
         }
     }
@@ -121,13 +117,10 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
                 if (customer != null) {
                     cafeMenuBlockEntity.setCustomerTravelTime(0);
                     cafeMenuBlockEntity.setCafeManager(pos);
-                    customer.moveTo(this.linkedSign.getX() + 0.5, this.linkedSign.getY(), this.linkedSign.getZ() + 0.5, serverLevel.random.nextFloat() * 360.0F, 0.0F);
-                    serverLevel.addFreshEntity(customer);
-                    customer.setTargetMenuPos(menuPos);
                     String skinUsername = rollCustomerSkin();
-                    customer.setCustomerSkinFromUsername(skinUsername);
                     cafeMenuBlockEntity.setCustomerSkinFromUsername(skinUsername);
-                    this.attemptedCustomers++;
+                    CustomerEntityUtils.spawnCustomerAndTarget(this.linkedSign.below(), serverLevel, skinUsername, menuPos, customer, CustomerTarget.MENU);
+                    if (CozyCafe.CONFIG.dailyLimit.get()) this.attemptedCustomers++;
                     i++;
                     if (i == 4 || serverLevel.random.nextFloat() < CozyCafe.CONFIG.groupCustomerChance.get()) break;
                 }
@@ -150,7 +143,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             if (!scannedState.isAir() && scannedState.is(CozyRegistry.BlockRegistry.CAFE_MENU.get())) {
                 BlockEntity entity = level.getBlockEntity(scannedPos);
                 if (entity instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
-                    cafeMenuBlockEntity.closeMenu();
+                    cafeMenuBlockEntity.closeMenu(true);
                 }
             }
         });
@@ -279,7 +272,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 2), player);
             return false;
         }
-        if (this.dayLastOpened == GeneralUtils.getDay(this.level)) {
+        if (CozyCafe.CONFIG.dailyLimit.get() && this.dayLastOpened == GeneralUtils.getDay(this.level)) {
             EvilPacketsIHateThem.sendToPlayer(new ClientBoundCafeCannotOpenPacket((byte) 3), player);
             return false;
         }

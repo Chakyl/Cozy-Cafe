@@ -14,13 +14,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBottle;
+import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBowl;
 
 
 /**
@@ -41,19 +42,6 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
         this(other.item, other.category, other.multAttribute, other.price, other.bowlFood, other.bottleDrink, other.themes, other.flavors);
     }
 
-    public static boolean dropsBowl(ItemStack stack) {
-        if (stack.isEmpty()) return false;
-
-        if (stack.getItem() instanceof BowlFoodItem) return true;
-
-        return stack.hasCraftingRemainingItem() && stack.getCraftingRemainingItem().is(Items.BOWL);
-    }
-
-    public static boolean dropsBottle(ItemStack stack) {
-        if (stack.isEmpty()) return false;
-
-        return stack.hasCraftingRemainingItem() && stack.getCraftingRemainingItem().is(Items.GLASS_BOTTLE);
-    }
 
     public CafeMenuItem validate(ResourceLocation key) {
         Preconditions.checkNotNull(this.item, "Invalid item ID!");

@@ -2,16 +2,12 @@ package io.github.chakyl.cozycafe.entities;
 
 import com.mojang.authlib.GameProfile;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
-import io.netty.util.internal.StringUtil;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;

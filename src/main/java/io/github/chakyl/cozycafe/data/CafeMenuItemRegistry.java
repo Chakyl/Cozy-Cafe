@@ -1,22 +1,29 @@
 package io.github.chakyl.cozycafe.data;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import dev.shadowsoffire.placebo.reload.DynamicRegistry;
 import io.github.chakyl.cozycafe.CozyCafe;
+import io.github.chakyl.cozycafe.tags.CozyTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBottle;
+import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBowl;
 
 public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
 
     public static final CafeMenuItemRegistry INSTANCE = new CafeMenuItemRegistry();
-
     private Map<String, CafeMenuItem> menuItemsByID = new HashMap<>();
 
     public CafeMenuItemRegistry() {
@@ -40,6 +47,58 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
         this.menuItemsByID = ImmutableMap.copyOf(this.menuItemsByID);
     }
 
+    private static final String[] DENIED_KEYWORDS = {"raw", "rotten", "poisonous", "spider_eye"};
+
+    @Override
+    public Map<ResourceLocation, JsonElement> prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+        if (!CozyCafe.CONFIG.dynamicMenuItems.get()) return super.prepare(pResourceManager, pProfiler);
+        Map<ResourceLocation, JsonElement> loadedResources = new HashMap<>(super.prepare(pResourceManager, pProfiler));
+        CozyCafe.LOGGER.info("[COZYCAFE] Beginning Dynamic Menu Items");
+        /**
+         * Autogeneration is denied in these cirucmstatnces:
+         * - Config turned off
+         * - Isn't edible
+         * - has bad word
+         * - Is in the cozycafe:not_served tag
+         */
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (item == Items.AIR || !item.isEdible()) continue;
+            if (item.getDefaultInstance().is(CozyTags.NOT_SERVED)) continue;
+            ResourceLocation itemRL = BuiltInRegistries.ITEM.getKey(item);
+            String itemPath = itemRL.getPath();
+            if (Arrays.stream(DENIED_KEYWORDS).anyMatch(itemPath::contains)) continue;
+            ResourceLocation virtualRegistryKey = new ResourceLocation(CozyCafe.MODID, itemRL.getNamespace() + "/" + itemPath);
+            if (loadedResources.containsKey(virtualRegistryKey)) continue;
+            String menuItemCategory = determineCategoryByKeywords(itemPath);
+            JsonObject virtualJson = new JsonObject();
+            virtualJson.addProperty("item", itemRL.toString());
+            virtualJson.addProperty("category", menuItemCategory);
+            if (menuItemCategory.equals("main") && dropsBowl(item.getDefaultInstance())) {
+                virtualJson.addProperty("bowl_food", true);
+            }
+            if (menuItemCategory.equals("drink") && dropsBottle(item.getDefaultInstance())) {
+                virtualJson.addProperty("bottle_Drink", true);
+            }
+            virtualJson.addProperty("mult_attribute", "");
+            virtualJson.add("themes", new JsonArray());
+            virtualJson.add("flavors", new JsonArray());
+
+            loadedResources.put(virtualRegistryKey, virtualJson);
+        }
+        CozyCafe.LOGGER.info("[COZYCAFE] Dynamic Menu Registration complete");
+        return loadedResources;
+    }
+
+    private static final String[] DRINK_KEYWORDS = {"drink", "juice", "soda", "tea", "coffee", "smoothie", "cider", "milkshake", "beer", "wine"};
+
+    private static final String[] DESSERT_KEYWORDS = {"dessert", "cake", "cookie", "pie", "donut", "icecream", "ice_cream", "pastry", "sweet", "candy", "chocolate", "pudding"};
+
+    private String determineCategoryByKeywords(String path) {
+        if (Arrays.stream(DRINK_KEYWORDS).anyMatch(path::contains)) return "drink";
+        if (Arrays.stream(DESSERT_KEYWORDS).anyMatch(path::contains)) return "dessert";
+        return "main";
+    }
+
     public boolean isMenuItem(Item item) {
         if (item == null) return false;
         return this.menuItemsByID.get(BuiltInRegistries.ITEM.getKey(item).toString()) != null;
@@ -59,11 +118,6 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
             throw new UnsupportedOperationException(String.format(msg, key, this.getKey(this.menuItemsByID.get(itemId)), itemId));
         }
         this.menuItemsByID.put(itemId, menuItem);
-    }
-
-    @Override
-    public Map<ResourceLocation, JsonElement> prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
-        return super.prepare(pResourceManager, pProfiler);
     }
 
 }

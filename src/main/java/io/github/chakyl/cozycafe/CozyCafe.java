@@ -25,6 +25,7 @@ public class CozyCafe {
     public static boolean KUBEJS_INSTALLED = false;
     public static boolean NUMISMATICS_INSTALLED = false;
     public static boolean NUMISMATICS_UTILS_INSTALLED = false;
+    public static boolean EMI_INSTALLED = false;
 
     public CozyCafe() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

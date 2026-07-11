@@ -149,6 +149,7 @@ dependencies {
     implementation fg.deobf("curse.maven:placebo-283644:6274231")
     // JEI
     implementation fg.deobf("curse.maven:jei-238222:6075247")
+    implementation fg.deobf("curse.maven:emi-580555:6420945")
     // Quality food:
     implementation fg.deobf("curse.maven:quality-food-973932:7618171")
     // KubeJS

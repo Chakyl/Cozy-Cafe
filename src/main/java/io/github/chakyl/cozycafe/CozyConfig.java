@@ -25,6 +25,7 @@ public class CozyConfig {
     public final ForgeConfigSpec.BooleanValue numismaticsUtilsPayment;
     public final ForgeConfigSpec.BooleanValue dailyLimit;
     public final ForgeConfigSpec.BooleanValue platingRequired;
+    public final ForgeConfigSpec.BooleanValue dynamicMenuItems;
     public final ForgeConfigSpec.ConfigValue<String> quality_bonus_stage;
     public final ForgeConfigSpec.ConfigValue<String> pickle_bonus_stage;
 
@@ -57,7 +58,7 @@ public class CozyConfig {
 
         customerUsernames = builder
                 .comment("List of Minecraft usernames whose skins will be used for spawning customers.")
-                .defineList("customer_usernames", Arrays.asList("Chakyl", "Nitbe", "MHF_Steve", "MHF_Alex", "MHF_Herobrine", "MHF_Chicken", "MHF_Cow", "MHF_Pig", "MHF_Sheep", "MHF_Squid", "MHF_Villager", "MHF_Ocelot", "MHF_Blaze", "MHF_CaveSpider", "MHF_Creeper", "MHF_Enderman", "MHF_Ghast", "MHF_Golem", "MHF_LavaSlime", "MHF_PigZombie", "MHF_Skeleton", "MHF_Slime", "MHF_Spider", "MHF_Witch", "MHF_Zombie", "MHF_Cake", "MHF_Chest", "MHF_CoconutB", "MHF_CoconutG", "MHF_Melon", "MHF_OakLog", "MHF_Present1", "MHF_Present2", "MHF_Pumpkin", "MHF_TNT", "MHF_TNT2", "MHF_ArrowUp", "MHF_ArrowDown", "MHF_ArrowLeft", "MHF_ArrowRight", "MHF_Exclamation", "MHF_Question"), obj -> obj instanceof String);
+                .defineList("customer_usernames", Arrays.asList("Chakyl", "Nitbe", "MHF_Steve", "MHF_Alex", "MHF_Herobrine", "MHF_Chicken", "MHF_Cow", "MHF_Pig", "MHF_Sheep", "MHF_Squid", "MHF_Villager", "MHF_Ocelot", "MHF_Blaze", "MHF_CaveSpider", "MHF_Creeper", "MHF_Enderman", "MHF_Ghast", "MHF_Golem", "MHF_LavaSlime", "MHF_PigZombie", "MHF_Skeleton", "MHF_Slime", "MHF_Spider", "MHF_Witch", "MHF_Zombie", "MHF_Cake", "MHF_Chest", "MHF_Melon", "MHF_OakLog", "MHF_Present1", "MHF_Present2", "MHF_Pumpkin", "MHF_TNT", "MHF_TNT2", "MHF_ArrowUp", "MHF_ArrowDown", "MHF_ArrowLeft", "MHF_ArrowRight", "MHF_Exclamation", "MHF_Question"), obj -> obj instanceof String);
 
         // Currency
         currency_1 = builder.comment("The item to use as a 1 denomination of currency (e.g.: minecraft:emerald)").define("currency_1", "minecraft:gold_nugget");
@@ -70,6 +71,8 @@ public class CozyConfig {
         numismaticsUtilsPayment = builder.comment("Allows customers to pay to player's bank account directly if Create Numismatics Utils is installed. Set to false if you don't want that to happen.").define("numismatics_utils_payment", true);
         dailyLimit = builder.comment("When enabled, limits cafe opening to once per Minecraft day.").define("daily_limit", true);
         platingRequired = builder.comment("When enabled, main dishes that aren't in bowls will need to be plated using a Plating Station before serving.").define("plating_required", true);
+        dynamicMenuItems = builder.comment("When enabled, items from all mods will be registered as menu items if they're edible and do not have the tag cozycafe:not_served. Turn off if you want more control over the menu.").define("dynamic_menu_items", true);
+
         // Stage Config, mainly for SSV
         quality_bonus_stage = builder
                 .comment("Requires KubeJs and Quality Food. The stage name with the following impact: Quality impacts of non-fish prices are doubled. Can be added to the player using the command e.g, /kubejs stages add playerName the_quality_of_the_earth")

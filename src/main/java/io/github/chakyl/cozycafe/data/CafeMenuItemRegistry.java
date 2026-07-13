@@ -8,11 +8,15 @@ import dev.shadowsoffire.placebo.reload.DynamicRegistry;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.tags.CozyTags;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -69,7 +73,7 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
             if (Arrays.stream(DENIED_KEYWORDS).anyMatch(itemPath::contains)) continue;
             ResourceLocation virtualRegistryKey = new ResourceLocation(CozyCafe.MODID, itemRL.getNamespace() + "/" + itemPath);
             if (loadedResources.containsKey(virtualRegistryKey)) continue;
-            String menuItemCategory = determineCategoryByKeywords(itemPath);
+            String menuItemCategory = determineCategoryByTagsKeywords(itemPath);
             JsonObject virtualJson = new JsonObject();
             virtualJson.addProperty("item", itemRL.toString());
             virtualJson.addProperty("category", menuItemCategory);
@@ -77,7 +81,7 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
                 virtualJson.addProperty("bowl_food", true);
             }
             if (menuItemCategory.equals("drink") && dropsBottle(item.getDefaultInstance())) {
-                virtualJson.addProperty("bottle_Drink", true);
+                virtualJson.addProperty("bottle_drink", true);
             }
             virtualJson.addProperty("mult_attribute", "");
             virtualJson.add("themes", new JsonArray());
@@ -93,7 +97,7 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
 
     private static final String[] DESSERT_KEYWORDS = {"dessert", "cake", "cookie", "pie", "donut", "icecream", "ice_cream", "pastry", "sweet", "candy", "chocolate", "pudding"};
 
-    private String determineCategoryByKeywords(String path) {
+    private String determineCategoryByTagsKeywords(String path) {
         if (Arrays.stream(DRINK_KEYWORDS).anyMatch(path::contains)) return "drink";
         if (Arrays.stream(DESSERT_KEYWORDS).anyMatch(path::contains)) return "dessert";
         return "main";

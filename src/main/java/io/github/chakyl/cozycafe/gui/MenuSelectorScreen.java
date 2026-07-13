@@ -101,7 +101,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
         gfx.blit(GUI_LOCATION, left, top, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
         gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.name"), left + 16, top + 12, 0xFFFFFF, true);
-        gfx.drawString(this.font, Component.literal(this.menu.blockEntity.getMenu().size() + "/25"), left + 132, top + 12, 0xFFFFFF, true);
+        gfx.drawString(this.font, Component.literal((this.menu.blockEntity.getMenu() == null ? "0" : this.menu.blockEntity.getMenu().size()) + "/25"), left + 132, top + 12, 0xFFFFFF, true);
         gfx.drawString(this.font, Component.literal(String.valueOf(this.menu.blockEntity.getStarsFromReputation())), left + 21, top + 95, 0xFFFFFF, true);
         gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.stars_required", Math.max(3, this.menu.blockEntity.getStarsFromReputation() * CozyCafe.CONFIG.menuSizePerStar.get())), left + 44, top + 95, 0xFFFFFF, true);
 
@@ -156,7 +156,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
         int feedbackIconX = left + 44;
         int feedbackIconY = top + 117;
         if (currentStatus == MenuItemSelectionState.VALID) {
-            gfx.blit(GUI_LOCATION, feedbackIconX - 4, feedbackIconY - 4, 176, 48, 16, 16);
+            gfx.blit(GUI_LOCATION, feedbackIconX - 4, feedbackIconY - 4, 192, 32, 16, 16);
             gfx.drawString(this.font, Component.translatable("gui.cozycafe.menu_selector.added"), feedbackIconX + 12, feedbackIconY, 0xFFFFFF, true);
         } else if (currentStatus == MenuItemSelectionState.INVALID) {
             gfx.blit(GUI_LOCATION, feedbackIconX - 4, feedbackIconY - 4, 176, 32, 16, 16);

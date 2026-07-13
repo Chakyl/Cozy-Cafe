@@ -152,20 +152,20 @@ public class CafeMenuBlockEntity extends BlockEntity {
         if (isMain || handStack.is(requestedItem.getItem())) {
             if (isMain) {
                 boolean success = false;
-                if (menuItem.bowlFood()) {
-                    success = true;
-                    this.dropItem = true;
-                } else if (handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem())) {
+                if (handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem())) {
                     success = true;
                 } else if (handStack.is(requestedItem.getItem())) {
-                    if (CozyCafe.CONFIG.platingRequired.get()) {
+                    if (CozyCafe.CONFIG.platingRequired.get() && !menuItem.bowlFood()) {
                         pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.not_plated").withStyle(ChatFormatting.RED), true);
                     } else {
+                        if (menuItem.bowlFood()) {
+                            this.dropItem = true;
+                        }
                         success = true;
                     }
                 }
                 if (!success) {
-                    pPlayer.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1.0F, 1.0F);
+                    pPlayer.level().playSound(null,  pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.NOTE_BLOCK_BASS.get(),  SoundSource.PLAYERS,1.0F, 1.0F);
                     return;
                 }
             }
@@ -271,10 +271,11 @@ public class CafeMenuBlockEntity extends BlockEntity {
     public boolean orderedDessert(int currentCourse) {
         if (currentCourse != 2) return true;
         CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
+        if (cafeManagerBlockEntity != null && !cafeManagerBlockEntity.hasFoodType(CafeMenuItem.MenuItemCategory.DESSERT)) return false;
         if (cafeManagerBlockEntity != null && cafeManagerBlockEntity.onlyHasDesserts()) {
             return true;
         }
-        return Math.random() < 1;
+        return Math.random() < CozyCafe.CONFIG.dessertChance.get();
     }
 
     public void setCurrentCourse(int currentCourse, boolean setPlate) {
@@ -358,6 +359,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.eatingItem = eatingItem;
         this.setChangedForRender();
     }
+
     public boolean getHasCustomer() {
         return this.hasCustomer;
     }

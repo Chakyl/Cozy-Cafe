@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -26,17 +27,16 @@ public class CafeSignItem extends BlockItem {
         BlockEntity clickedBlockEntity = level.getBlockEntity(clickedPos);
 
         if (clickedBlockEntity instanceof CafeManagerBlockEntity) {
-            if (level.isClientSide) {
-                return InteractionResult.SUCCESS;
-            }
-            ItemStack stack = context.getItemInHand();
-            CompoundTag tag = stack.getOrCreateTag();
-            tag.put("linkedManager", NbtUtils.writeBlockPos(clickedPos));
+            if (!level.isClientSide) {
+                context.getItemInHand().getOrCreateTag().put("linkedManager", NbtUtils.writeBlockPos(clickedPos));
 
-            if (context.getPlayer() != null) {
-                context.getPlayer().sendSystemMessage(Component.translatable("item.cozycafe.cafe_sign.linked").withStyle(ChatFormatting.GREEN));
+                if (context.getPlayer() != null) {
+                    context.getPlayer().sendSystemMessage( Component.translatable("item.cozycafe.cafe_sign.linked").withStyle(ChatFormatting.GREEN));
+                    if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
+                        serverPlayer.containerMenu.broadcastChanges();
+                    }
+                }
             }
-
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
 

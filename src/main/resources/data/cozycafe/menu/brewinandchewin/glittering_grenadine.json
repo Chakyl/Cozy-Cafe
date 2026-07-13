@@ -1,0 +1,15 @@
+{
+	"conditions": [
+      {
+        "type": "forge:mod_loaded",
+        "modid": "brewinandchewin"
+      }
+    ],
+	"item": "brewinandchewin:glittering_grenadine",
+	"category": "drink",
+	"price": 22,
+	"bottle_drink": true,
+	"product_type": "shippingbin:wood_sell_multiplier",
+	"flavors": [],
+	"themes": []
+}

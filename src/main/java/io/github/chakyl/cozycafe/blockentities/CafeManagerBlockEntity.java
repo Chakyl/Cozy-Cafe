@@ -372,10 +372,15 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         }
         return new ListTag();
     }
-
+    public boolean hasFoodType(CafeMenuItem.MenuItemCategory category) {
+        for (ItemStack menuItem : this.menu) {
+            if (CafeMenuItemRegistry.INSTANCE.getForItem(menuItem.getItem()).category() == category)
+                return true;
+        }
+        return false;
+    }
     public boolean onlyHasDesserts() {
         for (ItemStack menuItem : this.menu) {
-            CafeMenuItem.MenuItemCategory category = CafeMenuItemRegistry.INSTANCE.getForItem(menuItem.getItem()).category();
             if (CafeMenuItemRegistry.INSTANCE.getForItem(menuItem.getItem()).category() != CafeMenuItem.MenuItemCategory.DESSERT)
                 return false;
         }

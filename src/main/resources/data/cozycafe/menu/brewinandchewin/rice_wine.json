@@ -1,0 +1,15 @@
+{
+	"conditions": [
+      {
+        "type": "forge:mod_loaded",
+        "modid": "brewinandchewin"
+      }
+    ],
+	"item": "brewinandchewin:rice_wine",
+	"category": "drink",
+	"price": 7,
+	"bottle_drink": true,
+	"product_type": "shippingbin:wood_sell_multiplier",
+	"flavors": [],
+	"themes": []
+}

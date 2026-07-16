@@ -33,13 +33,14 @@ import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBowl;
  * @param themes
  * @param flavors
  */
-public record CafeMenuItem(Item item, MenuItemCategory category, String multAttribute, int price, boolean bowlFood, boolean bottleDrink,
+public record CafeMenuItem(Item item, MenuItemCategory category, String multAttribute, int price, boolean bowlFood,
+                           Item bowl, boolean bottleDrink, Item bottle,
                            List<String> themes,
                            List<String> flavors) implements CodecProvider<CafeMenuItem> {
     public static final Codec<CafeMenuItem> CODEC = new CafeMenuItemCodec();
 
     public CafeMenuItem(CafeMenuItem other) {
-        this(other.item, other.category, other.multAttribute, other.price, other.bowlFood, other.bottleDrink, other.themes, other.flavors);
+        this(other.item, other.category, other.multAttribute, other.price, other.bowlFood, other.bowl, other.bottleDrink, other.bottle, other.themes, other.flavors);
     }
 
 
@@ -73,7 +74,9 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
             obj.addProperty("mult_attribute", input.multAttribute);
             obj.addProperty("price", input.price);
             obj.addProperty("bowl_food", input.bowlFood);
+            obj.addProperty("bowl", BuiltInRegistries.ITEM.getKey(input.bowl).toString());
             obj.addProperty("bottle_drink", input.bottleDrink);
+            obj.addProperty("bottle", BuiltInRegistries.ITEM.getKey(input.bottle).toString());
             JsonArray themes = new JsonArray();
             obj.add("themes", themes);
             for (String theme : input.themes) {
@@ -125,6 +128,10 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
                     bowlFood = dropsBowl(food.getDefaultInstance());
                 }
             }
+            Item bowl = Items.BOWL;
+            if (obj.has("bowl")) {
+                bowl = BuiltInRegistries.ITEM.get(new ResourceLocation(GsonHelper.getAsString(obj, "bowl")));
+            }
             boolean bottleDrink = false;
             if (menuItemCategory == MenuItemCategory.DRINK) {
                 if (obj.has("bottle_drink")) {
@@ -132,6 +139,10 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
                 } else {
                     bottleDrink = dropsBottle(food.getDefaultInstance());
                 }
+            }
+            Item bottle = Items.GLASS_BOTTLE;
+            if (obj.has("bottle")) {
+                bottle = BuiltInRegistries.ITEM.get(new ResourceLocation(GsonHelper.getAsString(obj, "bottle")));
             }
             List<String> themes = new ArrayList<>();
             if (obj.has("themes")) {
@@ -145,7 +156,7 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
                     flavors.add(String.valueOf(json).replace("\"", ""));
                 }
             }
-            return DataResult.success(Pair.of(new CafeMenuItem(food, menuItemCategory, multAttribute, price, bowlFood, bottleDrink, themes, flavors), input));
+            return DataResult.success(Pair.of(new CafeMenuItem(food, menuItemCategory, multAttribute, price, bowlFood, bowl, bottleDrink, bottle, themes, flavors), input));
         }
 
     }

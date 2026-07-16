@@ -10,5 +10,7 @@
 	"price": 54,
 	"product_type": "artisan",
 	"flavors": [],
-	"themes": []
+	"themes": [],
+	"bottle_drink": true,
+	"bottle": "vinery:wine_bottle"
 }

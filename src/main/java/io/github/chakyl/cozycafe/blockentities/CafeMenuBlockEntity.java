@@ -55,7 +55,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
     private int currentCourse = 0;
     private int waitTime = -1;
     private int orderTime = -1;
-    private boolean dropItem = false;
+    private ItemStack droppedItem = ItemStack.EMPTY;
     private boolean hasCustomer = false;
     private int customerTravelTime = -1;
     private BlockPos cafeManager;
@@ -99,9 +99,9 @@ public class CafeMenuBlockEntity extends BlockEntity {
                         if (!shouldClose) cafeManagerBlockEntity.rollMenuCourse(this);
                         this.orderTime = -1;
                         if (this.currentCourse == 2) {
-                            if (this.dropItem) {
-                                pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, new ItemStack(Items.BOWL)));
-                                this.dropItem = false;
+                            if (!this.droppedItem.isEmpty()) {
+                                pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, this.droppedItem));
+                                this.droppedItem = ItemStack.EMPTY;
                                 this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DISH, false), 3);
                             } else {
                                 if (CozyCafe.CONFIG.platingRequired.get()) {
@@ -110,9 +110,9 @@ public class CafeMenuBlockEntity extends BlockEntity {
                                     this.level.setBlock(this.worldPosition, pState.setValue(CafeMenuBlock.DISH, false), 3);
                                 }
                             }
-                        } else if (currentCourse == 1 && this.dropItem) {
-                            pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, new ItemStack(Items.GLASS_BOTTLE)));
-                            this.dropItem = false;
+                        } else if (currentCourse == 1 && !this.droppedItem.isEmpty()) {
+                            pLevel.addFreshEntity(new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, this.droppedItem));
+                            this.droppedItem = ItemStack.EMPTY;
                         }
                         if (shouldClose) {
                             this.closeMenu(true);
@@ -159,7 +159,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                         pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.not_plated").withStyle(ChatFormatting.RED), true);
                     } else {
                         if (menuItem.bowlFood()) {
-                            this.dropItem = true;
+                            this.droppedItem = menuItem.bowl().getDefaultInstance().copy();
                         }
                         success = true;
                     }
@@ -170,7 +170,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                 }
             }
             if (menuItem.bottleDrink()) {
-                this.dropItem = true;
+                this.droppedItem  = menuItem.bottle().getDefaultInstance().copy();
             }
             if (!pPlayer.isCreative()) handStack.shrink(1);
             this.orderTime = 0;
@@ -410,7 +410,9 @@ public class CafeMenuBlockEntity extends BlockEntity {
         tag.putInt("waitTime", this.waitTime);
         tag.putInt("orderTime", this.orderTime);
         tag.putInt("customerTravelTime", this.customerTravelTime);
-        tag.putBoolean("dropItem", this.dropItem);
+        if (!this.droppedItem.isEmpty()) {
+            tag.put("droppedItem", this.droppedItem.save(new CompoundTag()));
+        }
         tag.putBoolean("hasCustomer", this.hasCustomer);
         if (this.cafeManager != null) {
             tag.put("cafeManager", NbtUtils.writeBlockPos(this.cafeManager));
@@ -436,7 +438,11 @@ public class CafeMenuBlockEntity extends BlockEntity {
         this.orderTime = tag.getInt("orderTime");
         this.customerTravelTime = tag.getInt("customerTravelTime");
         this.hasCustomer = tag.getBoolean("hasCustomer");
-        this.dropItem = tag.getBoolean("dropItem");
+        if (tag.contains("droppedItem")) {
+            this.droppedItem = ItemStack.of(tag.getCompound("droppedItem"));
+        } else {
+            this.requestedItem = ItemStack.EMPTY;
+        }
         if (tag.contains("cafeManager")) {
             this.cafeManager = NbtUtils.readBlockPos(tag.getCompound("cafeManager"));
         } else {

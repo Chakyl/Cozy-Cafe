@@ -9,6 +9,7 @@
 	"category": "drink",
 	"price": 7,
 	"bottle_drink": true,
+	"bottle": "brewinandchewin:tankard",
 	"product_type": "shippingbin:wood_sell_multiplier",
 	"flavors": [],
 	"themes": []

@@ -149,10 +149,12 @@ public class CafeMenuBlockEntity extends BlockEntity {
     public void handleServe(BlockPos pPos, Player pPlayer, ItemStack handStack) {
         CafeMenuItem menuItem = CafeMenuItemRegistry.INSTANCE.getForItem(requestedItem.getItem());
         boolean isMain = menuItem.category() == CafeMenuItem.MenuItemCategory.MAIN;
+        ItemStack resolvedStack = handStack.copy();
         if (isMain || handStack.is(requestedItem.getItem())) {
             if (isMain) {
                 boolean success = false;
                 if (handStack.is(CozyRegistry.ItemRegistry.SERVING_PLATE.get()) && ServingPlateItem.getStoredFood(handStack).is(requestedItem.getItem())) {
+                    resolvedStack = ServingPlateItem.getStoredFood(handStack).copy();
                     success = true;
                 } else if (handStack.is(requestedItem.getItem())) {
                     if (CozyCafe.CONFIG.platingRequired.get() && !menuItem.bowlFood()) {
@@ -185,10 +187,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     1.0
             );
             pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.NOTE_BLOCK_CHIME.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            this.handlePayment(pPos, pPlayer, menuItem, handStack);
+            this.handlePayment(pPos, pPlayer, menuItem, resolvedStack);
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
-                cafeManagerBlockEntity.handleSuccessfulServe(menuItem, handStack, (double) MAX_WAIT_TIME / this.waitTime);
+                cafeManagerBlockEntity.handleSuccessfulServe(menuItem, resolvedStack, (double) MAX_WAIT_TIME / this.waitTime);
             }
             this.waitTime = -1;
             this.setChanged();

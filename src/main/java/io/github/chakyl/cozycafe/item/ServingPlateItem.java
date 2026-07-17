@@ -43,7 +43,7 @@ public class ServingPlateItem extends Item {
                         player.drop(storedFood, false);
                     }
 
-                    if (plateStack.getCount() > 1) {
+                    if (plateStack.getCount() >= 1) {
                         plateStack.shrink(1);
 
                     } else {

@@ -419,7 +419,11 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public void removeFromMenu(int index) {
-        if (index < this.menu.size()) this.menu.remove(index);
+        if (index < this.menu.size()) {
+            this.menu.remove(index);
+            this.setChanged();
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        }
     }
 
 

@@ -28,6 +28,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         generateBlockTagsWood(CozyRegistry.BlockRegistry.PLATING_STATION);
         generateBlockTags(CozyRegistry.BlockRegistry.CAFE_SIGN);
         generateBlockTagsWood(CozyRegistry.BlockRegistry.CAFE_SIGN);
+        generateBlockTagsWood(CozyRegistry.BlockRegistry.CAFE_MENU);
 
 
     }

@@ -95,7 +95,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                         this.closeMenu(true);
                         return;
                     } else {
-                        boolean shouldClose = this.currentCourse > 2 || !this.orderedDessert(this.currentCourse);
+                        boolean shouldClose = this.currentCourse > 2 || !this.orderedDessert(this.currentCourse) || this.currentCourse == 1 && (!cafeManagerBlockEntity.hasFoodType(CafeMenuItem.MenuItemCategory.MAIN) && !cafeManagerBlockEntity.hasFoodType(CafeMenuItem.MenuItemCategory.DESSERT));
                         if (!shouldClose) cafeManagerBlockEntity.rollMenuCourse(this);
                         this.orderTime = -1;
                         if (this.currentCourse == 2) {

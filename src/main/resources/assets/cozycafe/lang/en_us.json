@@ -34,7 +34,7 @@
   "tooltip.cozycafe.plating_station.2" : "§6Right Click§7 with an empty hand to take plate",
   "tooltip.cozycafe.cafe_menu.0" : "§7Place in the working area of your Cafe Manager.",
   "tooltip.always.cozycafe.serving_plate.0" : "§7Used to serve mains using a Plating Station",
-  "tooltip.cozycafe.serving_plate.0" : "§6RShift + Right Click§7 to remove the current held item",
+  "tooltip.cozycafe.serving_plate.0" : "§6Shift + Right Click§7 to remove the current held item",
   "tooltip.always.cozycafe.dirty_serving_plate.0" : "§7Left by happy customers after eating!",
   "tooltip.cozycafe.dirty_serving_plate.0" : "§6Hold Right Click§7 on a sponge or sink block to clean",
 

@@ -1,5 +1,8 @@
 package io.github.chakyl.cozycafe.util;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
 
 public class GeneralUtils {
@@ -36,5 +39,15 @@ public class GeneralUtils {
             out.append(number, i * 3 + start, i * 3 + start + 3);
         }
         return out.toString();
+    }
+
+    public static boolean isSlimSkin(GameProfile profile) {
+        if (profile == null) {
+            return false;
+        }
+
+        MinecraftProfileTexture skin = Minecraft.getInstance().getSkinManager().getInsecureSkinInformation(profile).get(MinecraftProfileTexture.Type.SKIN);
+
+        return skin != null && "slim".equals(skin.getMetadata("model"));
     }
 }

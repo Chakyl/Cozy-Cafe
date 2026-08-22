@@ -7,6 +7,7 @@ import com.mojang.math.Axis;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
+import io.github.chakyl.cozycafe.util.GeneralUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -25,11 +26,15 @@ import net.minecraft.world.item.ItemDisplayContext;
 public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenuBlockEntity> {
     private static final int WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
     private final ItemRenderer itemRenderer;
-    private final PlayerModel<?> playerModel;
+
+    private final PlayerModel<?> wideModel;
+    private final PlayerModel<?> slimModel;
 
     public CafeMenuBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         this.itemRenderer = context.getItemRenderer();
-        this.playerModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false);
+
+        this.wideModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false);
+        this.slimModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
     }
 
     @Override
@@ -104,6 +109,9 @@ public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenu
         }
         if (blockEntity.getHasCustomer()) {
             poseStack.pushPose();
+
+            PlayerModel<?> playerModel = GeneralUtils.hasSlimSkin(blockEntity.getGameProfile()) ? slimModel : wideModel;
+
             Direction facing = blockEntity.getBlockState().getValue(CafeMenuBlock.FACING);
             poseStack.translate(0.5F + facing.getStepX(), 1.7F, 0.5F + facing.getStepZ());
             poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));

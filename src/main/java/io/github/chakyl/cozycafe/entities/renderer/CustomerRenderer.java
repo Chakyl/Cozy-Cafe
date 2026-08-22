@@ -40,7 +40,7 @@ public class CustomerRenderer extends MobRenderer<CustomerEntity, PlayerModel<Cu
 
     @Override
     public void render(CustomerEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
-        this.model = GeneralUtils.isSlimSkin(pEntity.getOrCreateProfile()) ? this.slimModel : this.wideModel;
+        this.model = GeneralUtils.hasSlimSkin(pEntity.getOrCreateProfile()) ? this.slimModel : this.wideModel;
 
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }

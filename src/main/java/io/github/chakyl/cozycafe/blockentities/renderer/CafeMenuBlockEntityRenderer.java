@@ -110,7 +110,7 @@ public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenu
         if (blockEntity.getHasCustomer()) {
             poseStack.pushPose();
 
-            PlayerModel<?> playerModel = GeneralUtils.isSlimSkin(blockEntity.getGameProfile()) ? slimModel : wideModel;
+            PlayerModel<?> playerModel = GeneralUtils.hasSlimSkin(blockEntity.getGameProfile()) ? slimModel : wideModel;
 
             Direction facing = blockEntity.getBlockState().getValue(CafeMenuBlock.FACING);
             poseStack.translate(0.5F + facing.getStepX(), 1.7F, 0.5F + facing.getStepZ());

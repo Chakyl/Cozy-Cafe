@@ -41,7 +41,7 @@ public class GeneralUtils {
         return out.toString();
     }
 
-    public static boolean isSlimSkin(GameProfile profile) {
+    public static boolean hasSlimSkin(GameProfile profile) {
         if (profile == null) {
             return false;
         }

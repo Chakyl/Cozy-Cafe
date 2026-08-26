@@ -12,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -73,6 +74,9 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
             String menuItemCategory = determineCategoryByTagsKeywords(itemPath);
             JsonObject virtualJson = new JsonObject();
             virtualJson.addProperty("item", itemRL.toString());
+            FoodProperties foodProps = item.getDefaultInstance().get(DataComponents.FOOD);
+            int autoPrice = Math.max(1, Math.round(foodProps.nutrition() + foodProps.saturation() * 3));
+            virtualJson.addProperty("price", autoPrice);
             virtualJson.addProperty("category", menuItemCategory);
             if (menuItemCategory.equals("main") && dropsBowl(item.getDefaultInstance())) {
                 virtualJson.addProperty("bowl_food", true);

@@ -1,0 +1,33 @@
+{
+  "theme_id": "fancy",
+  "theme_name": {
+    "translate": "theme.cozycafe.fancy"
+  },
+  "modifier": {
+    "modifier_id": "fancy",
+    "modifier_name": {
+      "translate": "theme.cozycafe.fancy"
+    },
+    "modifier_icon": "minecraft:gold_ingot",
+    "type": "theme",
+    "modifier_actions": {
+      "tip": {
+        "value": 0.25,
+        "action": "multiply"
+      },
+      "price": {
+        "value": 2,
+        "action": "multiply"
+      },
+      "patience": {
+        "value": 0.75,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 0.75,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 5
+}

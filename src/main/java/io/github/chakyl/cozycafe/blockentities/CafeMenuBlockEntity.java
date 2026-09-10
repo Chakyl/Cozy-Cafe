@@ -4,12 +4,16 @@ import dev.latvian.mods.kubejs.core.PlayerKJS;
 import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.CozyRegistry;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
+import io.github.chakyl.cozycafe.cafemodifiers.CafeModifiers;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
+import io.github.chakyl.cozycafe.data.CafeModifier;
+import io.github.chakyl.cozycafe.data.CafeTheme;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import io.github.chakyl.cozycafe.util.CustomerEntityUtils;
 import io.github.chakyl.cozycafe.util.CustomerTarget;
+import io.github.chakyl.cozycafe.util.ModifierUtils;
 import io.github.chakyl.cozycafe.util.PaymentUtils;
 import io.github.chakyl.numismaticsutils.utils.CurioUtils;
 import io.netty.util.internal.StringUtil;
@@ -46,8 +50,8 @@ import static io.github.chakyl.cozycafe.util.QualityFoods.getQualityPriceIncreas
 
 public class CafeMenuBlockEntity extends BlockEntity {
     public static int MAX_TRAVEL_TIME = 600;
-    private static int MAX_WAIT_TIME = CozyCafe.CONFIG.customerWaitTime.get();
     private static final int ORDER_TIME = CozyCafe.CONFIG.customerOrderTime.get();
+    private static Integer maxWaitTime;
     private int currentCourse = 0;
     private int waitTime = -1;
     private int orderTime = -1;
@@ -65,15 +69,35 @@ public class CafeMenuBlockEntity extends BlockEntity {
     }
 
     public static int getMaxWaitTime() {
-        return MAX_WAIT_TIME;
+        return maxWaitTime;
     }
 
     public static void setMaxWaitTime(int maxWaitTime) {
-        MAX_WAIT_TIME = maxWaitTime;
+        CafeMenuBlockEntity.maxWaitTime = maxWaitTime;
+    }
+
+    private int getWaitTimeFromModifiers(int initialWaitTIme) {
+        int resolvedWaitTime = initialWaitTIme;
+        CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.getLevel());
+        if (cafeManagerBlockEntity == null) return initialWaitTIme;
+        if (cafeManagerBlockEntity.getCafeModifiers() != null) {
+            for (CafeModifier cafeModifier : cafeManagerBlockEntity.getCafeModifiers()) {
+                resolvedWaitTime = ModifierUtils.getModifierResolvedWaitTimes(cafeModifier, resolvedWaitTime);
+            }
+        }
+        if (cafeManagerBlockEntity.getActiveTheme() != null) {
+            if (cafeManagerBlockEntity.getActiveTheme().modifier() != null) {
+                resolvedWaitTime = ModifierUtils.getModifierResolvedWaitTimes(cafeManagerBlockEntity.getActiveTheme().modifier(), resolvedWaitTime);
+            }
+        }
+        return (int) (double) resolvedWaitTime;
     }
 
     public void tick(Level pLevel, BlockPos pPos, BlockState pState) {
         if (!pLevel.isClientSide()) {
+            if (this.hasCustomer && maxWaitTime == null) {
+                maxWaitTime = getWaitTimeFromModifiers(CozyCafe.CONFIG.customerWaitTime.get());
+            }
             if (this.customerTravelTime > -1 && this.customerTravelTime < MAX_TRAVEL_TIME) {
                 this.customerTravelTime++;
                 this.setChanged();
@@ -124,7 +148,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     this.waitTime = 0;
                     this.setChangedForRender();
                 } else {
-                    if (this.waitTime == MAX_WAIT_TIME) {
+                    if (this.waitTime == maxWaitTime) {
                         getCafeManager(pLevel);
                         this.closeMenu(false);
                     } else {
@@ -185,10 +209,10 @@ public class CafeMenuBlockEntity extends BlockEntity {
                     1.0
             );
             pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            this.handlePayment(pPos, pPlayer, menuItem, resolvedStack);
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
-                cafeManagerBlockEntity.handleSuccessfulServe(menuItem, resolvedStack, (double) MAX_WAIT_TIME / this.waitTime);
+                cafeManagerBlockEntity.handleSuccessfulServe(menuItem, resolvedStack, (double) maxWaitTime / this.waitTime);
+                this.handlePayment(pPos, pPlayer, cafeManagerBlockEntity, menuItem, resolvedStack);
             }
             this.waitTime = -1;
             this.setChanged();
@@ -197,12 +221,26 @@ public class CafeMenuBlockEntity extends BlockEntity {
         }
     }
 
-    public void handlePayment(BlockPos pPos, Player pPlayer, CafeMenuItem cafeMenuItem, ItemStack handStack) {
-        double resolvedPrice = cafeMenuItem.price();
-        if (this.waitTime < MAX_WAIT_TIME) {
-            // In theory this would make your mult start at 2x and then slowly reduce to 1 for service speed
-            resolvedPrice *= (2 - ((double) this.waitTime / MAX_WAIT_TIME));
+    private int getPriceFromModifiers(int initialPrice, CafeMenuItem menuItem, CafeModifiers cafeModifiers, CafeTheme activeTheme, Boolean tipPhase) {
+        int resolvedPrice = initialPrice;
+        if (cafeModifiers != null) {
+            for (CafeModifier cafeModifier : cafeModifiers) {
+                resolvedPrice = ModifierUtils.getModifierResolvedPrice(menuItem, tipPhase, cafeModifier, resolvedPrice);
+            }
         }
+        if (activeTheme != null) {
+            if (activeTheme.modifier() != null) {
+                resolvedPrice = ModifierUtils.getModifierResolvedPrice(menuItem, tipPhase, activeTheme.modifier(), resolvedPrice);
+            }
+            if (menuItem.themes().contains(activeTheme.themeId())) resolvedPrice /= 2;
+
+        }
+        return (int) Math.floor(resolvedPrice);
+    }
+
+    public void handlePayment(BlockPos pPos, Player pPlayer, CafeManagerBlockEntity cafeManagerBlockEntity, CafeMenuItem cafeMenuItem, ItemStack handStack) {
+        double resolvedPrice = cafeMenuItem.price();
+
         if (CozyCafe.KUBEJS_INSTALLED) {
             if (cafeMenuItem.item().getDefaultInstance().is(PICKLE) && ((PlayerKJS) pPlayer).kjs$getStages().has(CozyCafe.CONFIG.pickle_bonus_stage.get())) {
                 resolvedPrice *= 2;
@@ -210,6 +248,13 @@ public class CafeMenuBlockEntity extends BlockEntity {
         }
         if (CozyCafe.QUALITY_FOOD_INSTALLED) {
             resolvedPrice = getQualityPriceIncrease(pPlayer, handStack, resolvedPrice);
+        }
+        resolvedPrice = getPriceFromModifiers((int) Math.floor(resolvedPrice), cafeMenuItem, cafeManagerBlockEntity.getCafeModifiers(), cafeManagerBlockEntity.getActiveTheme(), false);
+        if (this.waitTime < maxWaitTime) {
+            // In theory this would make your mult start at 2x and then slowly reduce to 1 for service speed
+            int tip = (int) Math.floor(resolvedPrice * (2 - ((double) this.waitTime / maxWaitTime)));
+            tip = getPriceFromModifiers(tip, cafeMenuItem, cafeManagerBlockEntity.getCafeModifiers(), cafeManagerBlockEntity.getActiveTheme(), true);
+            resolvedPrice += tip;
         }
         resolvedPrice *= getMultAttributeMultiplier(pPlayer, cafeMenuItem);
         int finalPrice = Mth.floor(resolvedPrice);

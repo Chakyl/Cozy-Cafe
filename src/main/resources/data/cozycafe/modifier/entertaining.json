@@ -1,0 +1,14 @@
+{
+    "modifier_id": "entertaining",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.entertaining"
+    },
+    "modifier_icon": "minecraft:music_disc_13",
+    "max_modifier_count": 1,
+    "modifier_actions": {
+        "patience": {
+            "value": 1.05,
+            "action": "multiply"
+        }
+    }
+}

@@ -1,0 +1,34 @@
+{
+  "theme_id": "fast_food",
+  "theme_name": {
+    "translate": "theme.cozycafe.fast_food"
+  },
+  "modifier": {
+    "modifier_id": "fast_food",
+    "modifier_name": {
+      "translate": "theme.cozycafe.fast_food"
+    },
+    "modifier_icon": "minecraft:iron_boots",
+    "type": "theme",
+
+    "modifier_actions": {
+      "tip": {
+        "value": 0,
+        "action": "multiply"
+      },
+      "price": {
+        "value": 0.75,
+        "action": "multiply"
+      },
+      "patience": {
+        "value": 0.5,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 2.5,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 5
+}

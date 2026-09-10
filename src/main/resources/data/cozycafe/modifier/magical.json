@@ -1,0 +1,14 @@
+{
+    "modifier_id": "magical",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.magical"
+    },
+    "modifier_icon": "minecraft:amethyst_cluster",
+    "max_modifier_count": 3,
+    "modifier_actions": {
+        "customer_impact": {
+            "value": 1,
+            "action": "add"
+        }
+    }
+}

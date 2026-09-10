@@ -1,0 +1,36 @@
+{
+  "theme_id": "bar",
+  "theme_name": {
+    "translate": "theme.cozycafe.bar"
+  },
+  "modifier": {
+    "modifier_id": "bakery",
+    "modifier_name": {
+      "translate": "theme.cozycafe.bar"
+    },
+    "flavors_impacted": [
+      "alcoholic"
+    ],
+    "modifier_icon": "minecraft:bucket",
+    "type": "theme",
+    "modifier_actions": {
+      "tip": {
+        "value": 2.5,
+        "action": "multiply"
+      },
+      "price": {
+        "value": 0.5,
+        "action": "multiply"
+      },
+      "patience": {
+        "value": 0.25,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 1.25,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 10
+}

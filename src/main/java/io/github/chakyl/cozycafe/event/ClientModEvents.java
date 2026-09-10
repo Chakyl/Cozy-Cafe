@@ -8,6 +8,7 @@ import io.github.chakyl.cozycafe.client.SkinCache;
 import io.github.chakyl.cozycafe.client.model.ServingPlateItemOverrides;
 import io.github.chakyl.cozycafe.entities.renderer.CustomerRenderer;
 import io.github.chakyl.cozycafe.gui.CafeManagerScreen;
+import io.github.chakyl.cozycafe.gui.CafeStatsScreen;
 import io.github.chakyl.cozycafe.gui.MenuSelectorScreen;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.resources.model.BakedModel;
@@ -32,6 +33,7 @@ public class ClientModEvents {
     public static void registerMenuScreens(RegisterMenuScreensEvent event) {
         event.register(CozyRegistry.MenuRegistry.CAFE_MANAGER.value(), CafeManagerScreen::new);
         event.register(CozyRegistry.MenuRegistry.MENU_SELECTOR.value(), MenuSelectorScreen::new);
+        event.register(CozyRegistry.MenuRegistry.CAFE_STATS.value(), CafeStatsScreen::new);
     }
 
     @SubscribeEvent

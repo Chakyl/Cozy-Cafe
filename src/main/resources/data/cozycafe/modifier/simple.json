@@ -1,0 +1,18 @@
+{
+    "modifier_id": "simple",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.simple"
+    },
+    "modifier_icon": "minecraft:paper",
+    "max_modifier_count": 8,
+    "modifier_actions": {
+        "tip": {
+            "value": -4,
+            "action": "add"
+        },
+        "customer_impact": {
+            "value": 1,
+            "action": "add"
+        }
+    }
+}

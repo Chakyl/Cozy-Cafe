@@ -1,0 +1,22 @@
+{
+    "modifier_id": "spooky",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.spooky"
+    },
+    "modifier_icon": "minecraft:carved_pumpkin",
+    "flavors_impacted": [
+        "chocolate",
+        "sweet"
+    ],
+    "max_modifier_count": 3,
+    "modifier_actions": {
+        "price": {
+            "value": 1.02,
+            "action": "multiply"
+        },
+        "patience": {
+            "value": -40,
+            "action": "add"
+        }
+    }
+}

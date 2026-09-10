@@ -1,0 +1,18 @@
+{
+    "modifier_id": "gaudy",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.gaudy"
+    },
+    "modifier_icon": "minecraft:gold_block",
+    "max_modifier_count": 3,
+    "modifier_actions": {
+        "price": {
+            "value": 4,
+            "action": "add"
+        },
+        "patience": {
+            "value": -20,
+            "action": "add"
+        }
+    }
+}

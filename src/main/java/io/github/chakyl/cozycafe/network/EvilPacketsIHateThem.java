@@ -21,6 +21,12 @@ public class EvilPacketsIHateThem {
         );
 
         registrar.playToServer(
+                ServerBoundOpenMenuStatsMenuPacket.TYPE,
+                ServerBoundOpenMenuStatsMenuPacket.STREAM_CODEC,
+                ServerBoundOpenMenuStatsMenuPacket::handle
+        );
+
+        registrar.playToServer(
                 ServerBoundOpenCafeManagerMenuPacket.TYPE,
                 ServerBoundOpenCafeManagerMenuPacket.STREAM_CODEC,
                 ServerBoundOpenCafeManagerMenuPacket::handle
@@ -45,9 +51,9 @@ public class EvilPacketsIHateThem {
         );
 
         registrar.playToServer(
-                ServerBoundShowCafeAreaPacket.TYPE,
-                ServerBoundShowCafeAreaPacket.STREAM_CODEC,
-                ServerBoundShowCafeAreaPacket::handle
+                ServerBoundToggleCafeAreaPacket.TYPE,
+                ServerBoundToggleCafeAreaPacket.STREAM_CODEC,
+                ServerBoundToggleCafeAreaPacket::handle
         );
 
         registrar.playToServer(
@@ -67,7 +73,6 @@ public class EvilPacketsIHateThem {
                 ClientBoundCafeCannotOpenPacket.STREAM_CODEC,
                 ClientBoundCafeCannotOpenPacket::handle
         );
-
 
     }
 

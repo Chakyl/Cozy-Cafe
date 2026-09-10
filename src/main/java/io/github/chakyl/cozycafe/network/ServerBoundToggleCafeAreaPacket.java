@@ -12,28 +12,28 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import static io.github.chakyl.cozycafe.CozyCafe.loc;
 
-public record ServerBoundShowCafeAreaPacket(BlockPos pos) implements CustomPacketPayload {
-    public static final Type<ServerBoundShowCafeAreaPacket> TYPE = new Type<>(loc("show_cafe_area"));
+public record ServerBoundToggleCafeAreaPacket(BlockPos pos) implements CustomPacketPayload {
+    public static final Type<ServerBoundToggleCafeAreaPacket> TYPE = new Type<>(loc("show_cafe_area"));
 
-    public static final StreamCodec<FriendlyByteBuf, ServerBoundShowCafeAreaPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ServerBoundToggleCafeAreaPacket> STREAM_CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC,
-            ServerBoundShowCafeAreaPacket::pos,
-            ServerBoundShowCafeAreaPacket::new
+            ServerBoundToggleCafeAreaPacket::pos,
+            ServerBoundToggleCafeAreaPacket::new
     );
 
     @Override
-    public Type<ServerBoundShowCafeAreaPacket> type() {
+    public Type<ServerBoundToggleCafeAreaPacket> type() {
         return TYPE;
     }
 
-    public static void handle(ServerBoundShowCafeAreaPacket packet, IPayloadContext context) {
+    public static void handle(ServerBoundToggleCafeAreaPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer player) {
                 ServerLevel level = player.serverLevel();
                 if (level.isLoaded(packet.pos())) {
                     BlockEntity cafeManager = level.getBlockEntity(packet.pos());
                     if (cafeManager instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
-                        cafeManagerBlockEntity.showCafeArea();
+                        cafeManagerBlockEntity.toggleCafeArea();
                     }
                 }
             }

@@ -1,6 +1,9 @@
 package io.github.chakyl.cozycafe;
 
+import io.github.chakyl.cozycafe.cafemodifiers.CafeModifiers;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
+import io.github.chakyl.cozycafe.data.CafeModifierRegistry;
+import io.github.chakyl.cozycafe.data.CafeThemeRegistry;
 import io.github.chakyl.cozycafe.util.PaymentUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -37,6 +40,8 @@ public class CozyCafe {
     @SubscribeEvent
     public void setup(FMLCommonSetupEvent e) {
         CafeMenuItemRegistry.INSTANCE.registerToBus();
+        CafeModifierRegistry.INSTANCE.registerToBus();
+        CafeThemeRegistry.INSTANCE.registerToBus();
     }
 
     public static ResourceLocation loc(String path) {

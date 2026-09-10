@@ -1,0 +1,33 @@
+{
+  "theme_id": "diner",
+  "theme_name": {
+    "translate": "theme.cozycafe.diner"
+  },
+  "modifier": {
+    "modifier_id": "diner",
+    "modifier_name": {
+      "translate": "theme.cozycafe.diner"
+    },
+    "modifier_icon": "minecraft:egg",
+    "type": "theme",
+    "modifier_actions": {
+      "tip": {
+        "value": 1.75,
+        "action": "multiply"
+      },
+      "price": {
+        "value": 0.75,
+        "action": "multiply"
+      },
+      "patience": {
+        "value": 0.25,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 1.75,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 10
+}

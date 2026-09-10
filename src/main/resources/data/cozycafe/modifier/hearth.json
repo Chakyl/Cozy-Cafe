@@ -1,0 +1,17 @@
+{
+    "modifier_id": "hearth",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.hearth"
+    },
+    "modifier_icon": "minecraft:campfire",
+    "flavors_impacted": [
+        "hot"
+    ],
+    "max_modifier_count": 4,
+    "modifier_actions": {
+        "tip": {
+            "value": 20,
+            "action": "add"
+        }
+    }
+}

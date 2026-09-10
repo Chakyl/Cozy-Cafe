@@ -1,0 +1,29 @@
+{
+  "theme_id": "casual",
+  "theme_name": {
+    "translate": "theme.cozycafe.casual"
+  },
+  "modifier": {
+    "modifier_id": "casual",
+    "modifier_name": {
+      "translate": "theme.cozycafe.casual"
+    },
+    "modifier_icon": "minecraft:red_bed",
+    "type": "theme",
+    "modifier_actions": {
+      "tip": {
+        "value": 1.25,
+        "action": "multiply"
+      },
+      "patience": {
+        "value": 1.2,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 0.8,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 5
+}

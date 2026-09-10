@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.142'
     id 'idea'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -36,6 +37,12 @@ repositories {
         }
     }
     maven {
+        url "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
         name = 'GeckoLib'
         url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         content {
@@ -43,6 +50,7 @@ repositories {
             includeGroup("com.eliotlash.mclib")
         }
     }
+    mavenCentral()
 }
 
 base {
@@ -168,8 +176,8 @@ dependencies {
     implementation "curse.maven:create-328085:7963363"
     implementation "curse.maven:curios-309927:6529130"
     // LibTooltips
-    jarJar(implementation("curse.maven:libtooltips-1370245:8369025"))
-
+    jarJar(implementation("maven.modrinth:libtooltips:2.3.1-NEOFORGE-1.21.1"))
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -224,4 +232,7 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+kotlin {
+    jvmToolchain(21)
 }

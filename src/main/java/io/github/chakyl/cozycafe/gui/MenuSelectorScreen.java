@@ -24,12 +24,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.github.chakyl.cozycafe.CozyCafe.loc;
 import static io.github.chakyl.cozycafe.util.GeneralUtils.formatPrice;
+import static io.github.chakyl.cozycafe.util.GeneralUtils.getMenuItemTooltip;
 
 @OnlyIn(Dist.CLIENT)
 public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu> {
@@ -121,17 +124,8 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
                     int priceOffset = 16;
                     gfx.drawString(this.font, priceStr, l + TRADE_BUTTON_WIDTH - font.width(priceStr) - priceOffset, j1 + 4, 16777215, true);
 
-
                     if (pMouseX >= l && pMouseX < l + TRADE_BUTTON_WIDTH - priceOffset && pMouseY >= j1 && pMouseY < j1 + MENU_BUTTON_HEIGHT) {
-                        List<Component> tooltipList = new ArrayList<>(getTooltipFromItem(Minecraft.getInstance(), cafeMenuItem.item().getDefaultInstance()));
-                        tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", formatPrice(cafeMenuItem.price())));
-                        tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
-                        if (cafeMenuItem.bowlFood()) {
-                            tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bowl_food").withStyle(ChatFormatting.GRAY));
-                        }
-                        if (cafeMenuItem.bottleDrink()) {
-                            tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bottle_drink").withStyle(ChatFormatting.RED));
-                        }
+                        final List<Component> tooltipList = getMenuItemTooltip(cafeMenuItem.item().getDefaultInstance(), cafeMenuItem);
                         gfx.renderTooltip(this.font, tooltipList, cafeMenuItem.item().getDefaultInstance().getTooltipImage(), pMouseX, pMouseY);
                     }
 
@@ -196,15 +190,7 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
             ItemStack itemStack = this.hoveredSlot.getItem();
             CafeMenuItem cafeMenuItem = CafeMenuItemRegistry.INSTANCE.getForItem(itemStack.getItem());
             if (cafeMenuItem != null) {
-                List<Component> tooltipList = new ArrayList<>(getTooltipFromItem(Minecraft.getInstance(), itemStack));
-                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.price", cafeMenuItem.price()));
-                tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.item_category", Component.translatable("category.cozycafe." + cafeMenuItem.category().toString().toLowerCase()).getString()).withStyle(ChatFormatting.GRAY));
-                if (cafeMenuItem.bowlFood()) {
-                    tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bowl_food").withStyle(ChatFormatting.GRAY));
-                }
-                if (cafeMenuItem.bottleDrink()) {
-                    tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.bottle_drink").withStyle(ChatFormatting.RED));
-                }
+                final List<Component> tooltipList = getMenuItemTooltip(itemStack, cafeMenuItem);
                 guiGraphics.renderTooltip(this.font, tooltipList, itemStack.getTooltipImage(), mouseX, mouseY);
             } else {
                 super.renderTooltip(guiGraphics, mouseX, mouseY);
@@ -213,6 +199,8 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
             super.renderTooltip(guiGraphics, mouseX, mouseY);
         }
     }
+
+
 
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
         int i = this.cafeMenu.size();
@@ -308,7 +296,6 @@ public class MenuSelectorScreen extends AbstractContainerScreen<MenuSelectorMenu
                 tooltipList.add(cafeMenuItem.item().getDefaultInstance().getHoverName());
                 tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.remove").withStyle(ChatFormatting.RED));
 
-                // TODO: 1.1 - Flavors and themes
                 pGuiGraphics.renderTooltip(MenuSelectorScreen.this.font, tooltipList, Items.ACACIA_FENCE.getDefaultInstance().getTooltipImage(), pMouseX, pMouseY);
 
             }

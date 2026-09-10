@@ -56,6 +56,10 @@ public class CafeManagerMenu extends AbstractContainerMenu {
         return this.blockEntity.getCafeName();
     }
 
+    public boolean isShowingArea() {
+        return this.blockEntity.isShowingArea();
+    }
+
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),

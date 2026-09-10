@@ -1,0 +1,22 @@
+{
+    "modifier_id": "treehugger",
+    "modifier_icon": "minecraft:oak_sapling",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.treehugger"
+    },
+    "max_modifier_count": 4,
+    "flavors_impacted": [
+        "vegetarian",
+        "vegan"
+    ],
+    "modifier_actions": {
+        "tip": {
+            "value": 4,
+            "action": "add"
+        },
+        "price": {
+            "value": -4,
+            "action": "add"
+        }
+    }
+}

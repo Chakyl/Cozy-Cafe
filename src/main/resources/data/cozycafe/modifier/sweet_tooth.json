@@ -1,0 +1,22 @@
+{
+    "modifier_id": "sweet_tooth",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.sweet_tooth"
+    },
+    "modifier_icon": "minecraft:cake",
+    "flavors_impacted": [
+        "sweet",
+        "bread"
+    ],
+    "max_modifier_count": 3,
+    "modifier_actions": {
+        "price": {
+            "value": 1.1,
+            "action": "multiply"
+        },
+        "patience": {
+            "value": -20,
+            "action": "add"
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "modifier_id": "romantic",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.romantic"
+    },
+    "modifier_icon": "minecraft:red_candle",
+    "max_modifier_count": 5,
+    "modifier_actions": {
+        "tip": {
+            "value": 1.05,
+            "action": "multiply"
+        },
+        "patience": {
+            "value": 30,
+            "action": "add"
+        }
+    }
+}

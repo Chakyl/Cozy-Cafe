@@ -1,0 +1,35 @@
+{
+  "theme_id": "bakery",
+  "theme_name": {
+    "translate": "theme.cozycafe.bakery"
+  },
+  "modifier": {
+    "modifier_id": "bakery",
+    "modifier_name": {
+      "translate": "theme.cozycafe.bakery"
+    },
+    "flavors_impacted": [
+      "bread",
+      "chocolate",
+      "sweet",
+      "coffee"
+    ],
+    "modifier_icon": "minecraft:bread",
+    "type": "theme",
+    "modifier_actions": {
+      "tip": {
+        "value": 1.25,
+        "action": "multiply"
+      },
+      "patience": {
+        "value": 1.2,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 1.5,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 10
+}

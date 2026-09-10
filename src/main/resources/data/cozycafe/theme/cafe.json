@@ -1,0 +1,38 @@
+{
+  "theme_id": "cafe",
+  "theme_name": {
+    "translate": "theme.cozycafe.cafe"
+  },
+  "modifier": {
+    "modifier_id": "cafe",
+    "modifier_name": {
+      "translate": "theme.cozycafe.cafe"
+    },
+    "flavors_impacted": [
+      "sweet",
+      "chocolate",
+      "coffee"
+    ],
+    "modifier_icon": "minecraft:bread",
+    "type": "theme",
+    "modifier_actions": {
+      "tip": {
+        "value": 1.5,
+        "action": "multiply"
+      },
+      "price": {
+        "value": 0.75,
+        "action": "multiply"
+      },
+      "patience": {
+        "value": 1.95,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 1.75,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 10
+}

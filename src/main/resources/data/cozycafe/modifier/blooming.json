@@ -1,0 +1,14 @@
+{
+    "modifier_id": "blooming",
+    "modifier_icon": "minecraft:sunflower",
+    "modifier_name": {
+        "translate": "modifier.cozycafe.blooming"
+    },
+    "max_modifier_count": 4,
+    "modifier_actions": {
+        "patience": {
+            "value": 20,
+            "action": "add"
+        }
+    }
+}

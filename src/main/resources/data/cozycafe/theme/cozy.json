@@ -1,0 +1,25 @@
+{
+  "theme_id": "cozy",
+  "theme_name": {
+    "translate": "theme.cozycafe.cozy"
+  },
+  "modifier": {
+    "modifier_id": "cozy",
+    "modifier_name": {
+      "translate": "theme.cozycafe.cozy"
+    },
+    "modifier_icon": "minecraft:campfire",
+    "type": "theme",
+    "modifier_actions": {
+      "patience": {
+        "value": 2,
+        "action": "multiply"
+      },
+      "customer_impact": {
+        "value": 0.78,
+        "action": "multiply"
+      }
+    }
+  },
+  "min_decor_items": 5
+}

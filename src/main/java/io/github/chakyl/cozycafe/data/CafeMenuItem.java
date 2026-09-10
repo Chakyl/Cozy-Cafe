@@ -10,8 +10,12 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.Tags;
 
-import java.util.List;
+import java.util.*;
+
+import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBottle;
+import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBowl;
 
 /**
  * @param item
@@ -29,13 +33,13 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
     public static final Codec<CafeMenuItem> CODEC = RecordCodecBuilder.create(inst -> inst
             .group(
                     BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(CafeMenuItem::item),
-                    Codec.STRING.optionalFieldOf("category", "default").xmap(
+                    Codec.STRING.optionalFieldOf("category", ",main").xmap(
                             s -> switch (s.toLowerCase()) {
                                 case "dessert" -> MenuItemCategory.DESSERT;
                                 case "drink" -> MenuItemCategory.DRINK;
                                 default -> MenuItemCategory.MAIN;
                             },
-                            style -> switch (style) {
+                            menuItemCategory -> switch (menuItemCategory) {
                                 case DESSERT -> "dessert";
                                 case DRINK -> "drink";
                                 default -> "main";
@@ -43,17 +47,23 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
                     ).forGetter(CafeMenuItem::category),
                     Codec.STRING.optionalFieldOf("mult_attribute", "").forGetter(CafeMenuItem::multAttribute),
                     Codec.intRange(1, Integer.MAX_VALUE).fieldOf("price").orElse(-1).forGetter(CafeMenuItem::price),
-                    Codec.BOOL.optionalFieldOf("bowl_food", false).forGetter(CafeMenuItem::bowlFood),
+                    Codec.BOOL.optionalFieldOf("bowl_food").forGetter(CMI -> Optional.of(CMI.bowlFood())),
                     BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bowl", Items.BOWL).forGetter(CafeMenuItem::bowl),
-                    Codec.BOOL.optionalFieldOf("bottle_drink", false).forGetter(CafeMenuItem::bottleDrink),
+                    Codec.BOOL.optionalFieldOf("bottle_drink").forGetter(CMI -> Optional.of(CMI.bottleDrink())),
                     BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle", Items.GLASS_BOTTLE).forGetter(CafeMenuItem::bottle),
-                    Codec.STRING.listOf().optionalFieldOf("themes", List.of()).forGetter(CafeMenuItem::themes),
-                    Codec.STRING.listOf().optionalFieldOf("flavors", List.of()).forGetter(CafeMenuItem::flavors)
+                    Codec.STRING.listOf().optionalFieldOf("themes").forGetter(CMI -> CMI.themes().isEmpty() ? Optional.empty() : Optional.of(CMI.themes())),
+                    Codec.STRING.listOf().optionalFieldOf("flavors").forGetter(CMI -> CMI.flavors().isEmpty() ? Optional.empty() : Optional.of(CMI.flavors()))
             )
             .apply(inst, (item, category, multAttribute, price, bowlFood, bowl, bottleDrink, bottle, themes, flavors) -> {
-                int finalPrice = price == -1 ? getGeneratedPrice(item.getDefaultInstance()) : price;
-                return new CafeMenuItem(item, category, multAttribute, finalPrice, bowlFood, bowl, bottleDrink, bottle, themes, flavors);
+                ItemStack defaultInstance = item.getDefaultInstance();
+                int resolvedPrice = price == -1 ? getGeneratedPrice(defaultInstance) : price;
+                boolean resolvedBottleDrink = bottleDrink.orElseGet(() -> category == MenuItemCategory.DRINK && dropsBottle(defaultInstance));
+                boolean resolvedBowlFood = bowlFood.orElseGet(() -> dropsBowl(defaultInstance));
+                List<String> resolvedThemes = addTagBasedThemes(defaultInstance, themes.orElse(List.of()));
+                List<String> resolvedFlavors = addTagBasedFlavors(defaultInstance, flavors.orElse(List.of()));
+                return new CafeMenuItem(item, category, multAttribute, resolvedPrice, resolvedBowlFood, bowl, resolvedBottleDrink, bottle, resolvedThemes, resolvedFlavors);
             }));
+
 
     public CafeMenuItem(CafeMenuItem other) {
         this(other.item, other.category, other.multAttribute, other.price, other.bowlFood, other.bowl, other.bottleDrink, other.bottle, other.themes, other.flavors);
@@ -64,6 +74,60 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
         Preconditions.checkNotNull(this.item, "Invalid item ID!");
         Preconditions.checkNotNull(this.category, "Invalid category!");
         return this;
+    }
+
+    private static List<String> addTagBasedFlavors(ItemStack item, List<String> flavors) {
+        Set<String> newFlavors = new LinkedHashSet<>(flavors);
+        if (item.is(Tags.Items.FOODS_COOKED_MEAT)) {
+            newFlavors.add("meat");
+            newFlavors.add("hot");
+        }
+        if (item.is(Tags.Items.FOODS_COOKED_FISH)) {
+            newFlavors.add("seafood");
+            newFlavors.add("hot");
+        }
+        if (item.is(Tags.Items.FOODS_BREAD)) {
+            newFlavors.add("bread");
+        }
+        if (item.is(Tags.Items.FOODS_GOLDEN)) {
+            newFlavors.add("metallic");
+        }
+        if (item.is(Tags.Items.FOODS_SOUP)) {
+            newFlavors.add("hot");
+            newFlavors.add("cold");
+        }
+        if (item.is(Tags.Items.FOODS_VEGETABLE)) {
+            newFlavors.add("vegan");
+        }
+        if (item.is(Tags.Items.FOODS_PIE)) {
+            newFlavors.add("sweet");
+            newFlavors.add("hot");
+        }
+        if (item.is(Tags.Items.FOODS_CANDY)) {
+            newFlavors.add("sweet");
+        }
+        if (item.is(Tags.Items.FOODS_BERRY) || item.is(Tags.Items.FOODS_FRUIT) || item.is(Tags.Items.DRINKS_JUICE)) {
+            newFlavors.add("fruity");
+        }
+        return new ArrayList<>(newFlavors);
+    }
+
+    private static List<String> addTagBasedThemes(ItemStack item, List<String> themes) {
+        Set<String> newThemes = new LinkedHashSet<>(themes);
+        if (item.is(Tags.Items.FOODS_COOKED_MEAT) || item.is(Tags.Items.FOODS_COOKED_FISH) || item.is(Tags.Items.FOODS_GOLDEN)) {
+            newThemes.add("fancy");
+        }
+        if (item.is(Tags.Items.FOODS_BREAD) || item.is(Tags.Items.FOODS_PIE)) {
+            newThemes.add("bakery");
+            newThemes.add("casual");
+        }
+        if ( item.is(Tags.Items.FOODS_PIE)) {
+            newThemes.add("diner");
+        }
+        if (item.is(Tags.Items.FOODS_CANDY)) {
+            newThemes.add("fast_food");
+        }
+        return new ArrayList<>(newThemes);
     }
 
     private static int getGeneratedPrice(ItemStack food) {

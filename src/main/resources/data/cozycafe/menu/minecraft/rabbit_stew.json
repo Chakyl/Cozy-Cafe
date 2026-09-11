@@ -2,6 +2,5 @@
 	"item": "minecraft:rabbit_stew",
 	"category": "main",
 	"price": 20,
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

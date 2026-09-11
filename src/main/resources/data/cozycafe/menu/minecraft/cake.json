@@ -2,6 +2,5 @@
 	"item": "minecraft:cake",
 	"category": "dessert",
 	"price": 8,
-	"flavors": ["sweet"],
-	"themes": ["casual", "fancy"]
+	"flavors": ["sweet"]
 }

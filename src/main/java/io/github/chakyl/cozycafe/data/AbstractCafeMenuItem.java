@@ -23,8 +23,6 @@ public sealed interface AbstractCafeMenuItem extends CodecProvider<CafeMenuItem>
 
     Item bottle();
 
-    List<String> themes();
-
     List<String> flavors();
 
 }

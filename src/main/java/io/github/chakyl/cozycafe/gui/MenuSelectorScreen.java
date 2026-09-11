@@ -3,6 +3,7 @@ package io.github.chakyl.cozycafe.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.chakyl.cozycafe.CozyCafe;
+import io.github.chakyl.cozycafe.CozyRegistry;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.network.EvilPacketsIHateThem;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

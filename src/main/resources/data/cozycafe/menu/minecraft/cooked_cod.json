@@ -2,6 +2,5 @@
 	"item": "minecraft:cooked_cod",
 	"category": "main",
 	"price": 8,
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

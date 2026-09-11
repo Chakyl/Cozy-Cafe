@@ -9,6 +9,5 @@
 	"category": "drink",
 	"price": 60,
 	"product_type": "artisan",
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

@@ -2,6 +2,5 @@
 	"item": "minecraft:mushroom_stew",
 	"category": "main",
 	"price": 12,
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

@@ -9,6 +9,5 @@
 	"category": "dessert",
 	"price": 12,
 	"product_type": "farmer",
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

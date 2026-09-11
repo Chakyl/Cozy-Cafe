@@ -232,7 +232,7 @@ public class CafeMenuBlockEntity extends BlockEntity {
             if (activeTheme.modifier() != null) {
                 resolvedPrice = ModifierUtils.getModifierResolvedPrice(menuItem, tipPhase, activeTheme.modifier(), resolvedPrice);
             }
-            if (menuItem.themes().contains(activeTheme.themeId())) resolvedPrice /= 2;
+            if (activeTheme.modifier() != null && !activeTheme.modifier().flavorsImpacted().isEmpty() && activeTheme.modifier().canAffectDish(menuItem)) resolvedPrice /= 2;
 
         }
         return (int) Math.floor(resolvedPrice);

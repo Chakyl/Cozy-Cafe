@@ -23,12 +23,10 @@ import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBowl;
  * @param price
  * @param bowlFood
  * @param bottleDrink
- * @param themes
  * @param flavors
  */
 public record CafeMenuItem(Item item, MenuItemCategory category, String multAttribute, int price, boolean bowlFood,
                            Item bowl, boolean bottleDrink, Item bottle,
-                           List<String> themes,
                            List<String> flavors) implements AbstractCafeMenuItem {
     public static final Codec<CafeMenuItem> CODEC = RecordCodecBuilder.create(inst -> inst
             .group(
@@ -51,22 +49,20 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
                     BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bowl", Items.BOWL).forGetter(CafeMenuItem::bowl),
                     Codec.BOOL.optionalFieldOf("bottle_drink").forGetter(CMI -> Optional.of(CMI.bottleDrink())),
                     BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle", Items.GLASS_BOTTLE).forGetter(CafeMenuItem::bottle),
-                    Codec.STRING.listOf().optionalFieldOf("themes").forGetter(CMI -> CMI.themes().isEmpty() ? Optional.empty() : Optional.of(CMI.themes())),
                     Codec.STRING.listOf().optionalFieldOf("flavors").forGetter(CMI -> CMI.flavors().isEmpty() ? Optional.empty() : Optional.of(CMI.flavors()))
             )
-            .apply(inst, (item, category, multAttribute, price, bowlFood, bowl, bottleDrink, bottle, themes, flavors) -> {
+            .apply(inst, (item, category, multAttribute, price, bowlFood, bowl, bottleDrink, bottle, flavors) -> {
                 ItemStack defaultInstance = item.getDefaultInstance();
                 int resolvedPrice = price == -1 ? getGeneratedPrice(defaultInstance) : price;
                 boolean resolvedBottleDrink = bottleDrink.orElseGet(() -> category == MenuItemCategory.DRINK && dropsBottle(defaultInstance));
                 boolean resolvedBowlFood = bowlFood.orElseGet(() -> dropsBowl(defaultInstance));
-                List<String> resolvedThemes = addTagBasedThemes(defaultInstance, themes.orElse(List.of()));
                 List<String> resolvedFlavors = addTagBasedFlavors(defaultInstance, flavors.orElse(List.of()));
-                return new CafeMenuItem(item, category, multAttribute, resolvedPrice, resolvedBowlFood, bowl, resolvedBottleDrink, bottle, resolvedThemes, resolvedFlavors);
+                return new CafeMenuItem(item, category, multAttribute, resolvedPrice, resolvedBowlFood, bowl, resolvedBottleDrink, bottle, resolvedFlavors);
             }));
 
 
     public CafeMenuItem(CafeMenuItem other) {
-        this(other.item, other.category, other.multAttribute, other.price, other.bowlFood, other.bowl, other.bottleDrink, other.bottle, other.themes, other.flavors);
+        this(other.item, other.category, other.multAttribute, other.price, other.bowlFood, other.bowl, other.bottleDrink, other.bottle, other.flavors);
     }
 
 
@@ -110,24 +106,6 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
             newFlavors.add("fruity");
         }
         return new ArrayList<>(newFlavors);
-    }
-
-    private static List<String> addTagBasedThemes(ItemStack item, List<String> themes) {
-        Set<String> newThemes = new LinkedHashSet<>(themes);
-        if (item.is(Tags.Items.FOODS_COOKED_MEAT) || item.is(Tags.Items.FOODS_COOKED_FISH) || item.is(Tags.Items.FOODS_GOLDEN)) {
-            newThemes.add("fancy");
-        }
-        if (item.is(Tags.Items.FOODS_BREAD) || item.is(Tags.Items.FOODS_PIE)) {
-            newThemes.add("bakery");
-            newThemes.add("casual");
-        }
-        if ( item.is(Tags.Items.FOODS_PIE)) {
-            newThemes.add("diner");
-        }
-        if (item.is(Tags.Items.FOODS_CANDY)) {
-            newThemes.add("fast_food");
-        }
-        return new ArrayList<>(newThemes);
     }
 
     private static int getGeneratedPrice(ItemStack food) {

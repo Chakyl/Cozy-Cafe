@@ -2,6 +2,5 @@
 	"item": "minecraft:popped_chorus_fruit",
 	"category": "dessert",
 	"price": 3,
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

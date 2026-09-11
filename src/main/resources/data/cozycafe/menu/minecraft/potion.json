@@ -3,6 +3,5 @@
   "category": "drink",
   "bottle_drink": true,
   "price": 1,
-  "flavors": [],
-  "themes": ["casual", "fancy"]
+  "flavors": []
 }

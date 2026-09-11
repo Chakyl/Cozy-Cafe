@@ -2,6 +2,5 @@
 	"item": "minecraft:cooked_porkchop",
 	"category": "main",
 	"price": 4,
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

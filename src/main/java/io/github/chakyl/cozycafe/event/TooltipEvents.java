@@ -32,7 +32,7 @@ import static io.github.chakyl.cozycafe.util.ModifierUtils.*;
 public class TooltipEvents {
     @SubscribeEvent
     public static void decorTooltipEvent(ItemTooltipEvent event) {
-        if (event.getEntity().getItemInHand(InteractionHand.OFF_HAND).getItem() != CozyRegistry.ItemRegistry.CAFE_CATALOG.get())
+        if (event.getEntity() == null || !event.getEntity().isLocalPlayer() || event.getEntity().getItemInHand(InteractionHand.OFF_HAND).getItem() != CozyRegistry.ItemRegistry.CAFE_CATALOG.get())
             return;
         List<Component> comp = event.getToolTip();
         ItemStack stack = event.getItemStack();
@@ -62,7 +62,7 @@ public class TooltipEvents {
 
     @SubscribeEvent
     public static void menuItemTooltipEvent(ItemTooltipEvent event) {
-        if (event.getEntity().getItemInHand(InteractionHand.OFF_HAND).getItem() != CozyRegistry.ItemRegistry.CAFE_CATALOG.get())
+        if (event.getEntity() == null || !event.getEntity().isLocalPlayer() || event.getEntity().getItemInHand(InteractionHand.OFF_HAND).getItem() != CozyRegistry.ItemRegistry.CAFE_CATALOG.get())
             return;
         List<Component> comp = event.getToolTip();
         ItemStack stack = event.getItemStack();

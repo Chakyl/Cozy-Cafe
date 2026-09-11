@@ -10,7 +10,6 @@
 	"price": 33,
 	"product_type": "artisan",
 	"flavors": [],
-	"themes": [],
 	"bottle_drink": true,
 	"bottle": "brewery:beer_mug"
 }

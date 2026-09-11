@@ -3,6 +3,7 @@ package io.github.chakyl.cozycafe.util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import io.github.chakyl.cozycafe.CozyRegistry;
 import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -66,6 +68,7 @@ public class GeneralUtils {
     }
 
     public static @NotNull List<Component> getMenuItemTooltip(ItemStack itemStack, CafeMenuItem cafeMenuItem) {
+        if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getItemInHand(InteractionHand.OFF_HAND).getItem() == CozyRegistry.ItemRegistry.CAFE_CATALOG.get()) return getTooltipFromItem(Minecraft.getInstance(), itemStack);
         return getMenuItemTooltip(getTooltipFromItem(Minecraft.getInstance(), itemStack), itemStack, cafeMenuItem);
     }
 
@@ -75,11 +78,6 @@ public class GeneralUtils {
         if (!cafeMenuItem.flavors().isEmpty()) {
             tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.flavors", cafeMenuItem.flavors().stream()
                     .map(flavor -> Component.translatable("flavor.cozycafe." + flavor).getString())
-                    .collect(Collectors.joining(", "))).withStyle(ChatFormatting.GRAY));
-        }
-        if (!cafeMenuItem.themes().isEmpty()) {
-            tooltipList.add(Component.translatable("gui.cozycafe.menu_selector.themes", cafeMenuItem.themes().stream()
-                    .map(flavor -> Component.translatable("theme.cozycafe." + flavor).getString())
                     .collect(Collectors.joining(", "))).withStyle(ChatFormatting.GRAY));
         }
         if (cafeMenuItem.bowlFood()) {

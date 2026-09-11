@@ -9,6 +9,5 @@
 	"category": "drink",
 	"price": 22,
 	"product_type": "farmer",
-	"flavors": [],
-	"themes": []
+	"flavors": []
 }

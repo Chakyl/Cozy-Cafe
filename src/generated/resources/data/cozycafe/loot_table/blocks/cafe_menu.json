@@ -3,7 +3,7 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "neoforge:conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }
@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "cozycafe:cafe_sign"
+          "name": "cozycafe:cafe_menu"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "cozycafe:blocks/cafe_sign"
+  "random_sequence": "cozycafe:blocks/cafe_menu"
 }

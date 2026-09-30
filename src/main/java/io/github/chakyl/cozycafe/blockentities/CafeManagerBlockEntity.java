@@ -220,7 +220,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         if (cafeAreaRender == null) {
             BlockPos firstPos = this.getFirstPos(this.getBlockState(), this.getBlockPos());
             BlockPos secondPos = this.getSecondPos(this.getBlockState(), this.getBlockPos());
-            cafeAreaRender = new AABB(firstPos.getX(), firstPos.getY(), firstPos.getZ(), secondPos.getX() + 1, secondPos.getY() + 1, secondPos.getZ() + 1);
+            cafeAreaRender = AABB.encapsulatingFullBlocks(firstPos, secondPos);
         }
         return cafeAreaRender;
     }

@@ -14,6 +14,7 @@ import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
 import io.github.chakyl.cozycafe.gui.CafeStatsMenu;
 import io.github.chakyl.cozycafe.gui.CafeStatsScreen;
 import io.github.chakyl.cozycafe.gui.MenuSelectorMenu;
+import io.github.chakyl.cozycafe.item.CafeManagerItem;
 import io.github.chakyl.cozycafe.item.CafeSignItem;
 import io.github.chakyl.cozycafe.item.DirtyServingPlateItem;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
@@ -85,7 +86,7 @@ public final class CozyRegistry {
     public static final class BlockRegistry {
         public static void init() {}
 
-        public static final DeferredHolder<Block, Block> CAFE_MANAGER = registerWithItem("cafe_manager", () ->  new CafeManagerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).noOcclusion().strength(1.5F, 6.0F)));
+        public static final DeferredHolder<Block, Block> CAFE_MANAGER = registerWithItem("cafe_manager", () ->  new CafeManagerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).noOcclusion().strength(1.5F, 6.0F)), (blockObj) -> ItemRegistry.register("cafe_manager", () -> new CafeManagerItem(blockObj.get(), new Item.Properties())));
         public static final DeferredHolder<Block, Block> CAFE_SIGN = registerWithItem("cafe_sign", () ->  new CafeSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)), (blockObj) -> ItemRegistry.register("cafe_sign", () -> new CafeSignItem(blockObj.get(), new Item.Properties())));
         public static final DeferredHolder<Block, Block> CAFE_MENU = registerWithItem("cafe_menu", () ->  new CafeMenuBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)));
         public static final DeferredHolder<Block, Block> PLATING_STATION = registerWithItem("plating_station", () ->  new PlatingStationBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).noOcclusion().strength(1.5F, 6.0F)));

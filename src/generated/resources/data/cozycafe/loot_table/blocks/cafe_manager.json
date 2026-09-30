@@ -3,7 +3,7 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "neoforge:conditions": [
+      "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }
@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "cozycafe:plating_station"
+          "name": "cozycafe:cafe_manager"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "cozycafe:blocks/plating_station"
+  "random_sequence": "cozycafe:blocks/cafe_manager"
 }

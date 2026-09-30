@@ -67,7 +67,7 @@ public class CafeManagerBlock extends Block implements EntityBlock {
     public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
         List<ItemStack> drops = super.getDrops(pState, pBuilder);
 
-        if ( pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof CafeManagerBlockEntity cafeManager) {
+        if (pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof CafeManagerBlockEntity cafeManager) {
             for (ItemStack stack : drops) {
                 if (stack.getItem() == this.asItem()) {
                     CompoundTag customTag = new CompoundTag();
@@ -99,12 +99,13 @@ public class CafeManagerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {        if (!pLevel.isClientSide) {
+    public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
+        if (!pLevel.isClientSide) {
             if (pLevel.getBlockEntity(pPos) instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
                 pPlayer.openMenu(new SimpleMenuProvider(
                         (cId, inv, playerEntity) -> new CafeManagerMenu(cId, inv, cafeManagerBlockEntity),
                         Component.translatable("container.cozycafe.cafe_manager")
-                ),buffer -> {
+                ), buffer -> {
                     buffer.writeBlockPos(pPos);
                     List<ItemStack> menuList = cafeManagerBlockEntity.getMenu();
                     if (menuList == null) {

@@ -80,7 +80,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
                 this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
                 return;
             }
-            int resolvedInterval = (int) ((20 * ((long) CozyCafe.CONFIG.customerSpawnInterval.get() * (1 - ((double) Math.max(0, this.reputation - 1) / 5000)))) * spawnIntervalMult);
+            int resolvedInterval = Math.max(20, (int) ((20 * ((long) CozyCafe.CONFIG.customerSpawnInterval.get() * (1 - ((double) Math.max(0, this.reputation - 1) / 5000)))) * spawnIntervalMult));
             if ((level.getGameTime() %  resolvedInterval == 0)) {
                 assignCustomersInArea(level, pos, state);
             }

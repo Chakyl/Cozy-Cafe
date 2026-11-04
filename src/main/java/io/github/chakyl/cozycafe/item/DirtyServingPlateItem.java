@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -40,6 +41,7 @@ public class DirtyServingPlateItem extends Item {
         Level level = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
         Player player = pContext.getPlayer();
+        BlockState state = level.getBlockState(pos);
         if (player != null && (level.getBlockState(pos).is(CozyTags.CLEANS_DISHES))) {
             if (player.distanceToSqr(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f) <= 2.0f) {
                 player.startUsingItem(pContext.getHand());

@@ -2,6 +2,7 @@
   "values": [
     "minecraft:sponge",
     "minecraft:wet_sponge",
+    "minecraft:water_cauldron",
     { "id": "candlelight:cobblestone_kitchen_sink", "required": false },
     { "id": "candlelight:sandstone_kitchen_sink", "required": false },
     { "id": "candlelight:stone_bricks_kitchen_sink", "required": false },

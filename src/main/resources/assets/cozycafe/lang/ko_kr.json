@@ -70,6 +70,6 @@
   "gui.cozycafe.menu_selector.remove": "클릭하여 제거",
   "gui.cozycafe.menu_selector.bowl_food": "그릇에 담긴 음식. 플레이팅 불필요",
   "gui.cozycafe.menu_selector.bottle_drink": "소모 시 빈 병을 떨굼",
-  "gui.cozycafe.menu_selector.stars_required": "핗요한 최소 메뉴 수: %s",
+  "gui.cozycafe.menu_selector.stars_required": "필요한 최소 메뉴 수: %s",
   "gui.cozycafe.menu_selector.place_items": "아이템을 놓아서 등록"
 }

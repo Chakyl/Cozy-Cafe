@@ -5,11 +5,13 @@ import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.client.VolumeRendererOverlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +36,14 @@ public class CafeAreaRenderer {
         if (mc.player == null) return;
         for (AABB box : ACTIVE_AREAS.values()) {
             VolumeRendererOverlay.onRenderLevel(event.getCamera(), box);
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        for (BlockPos pos : ACTIVE_AREAS.keySet()) {
+            ACTIVE_AREAS.remove(pos);
         }
     }
 }

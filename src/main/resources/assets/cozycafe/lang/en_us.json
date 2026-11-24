@@ -48,10 +48,14 @@
 
   "block.cozycafe.cafe_menu.payment": "%s added to bank account",
   "block.cozycafe.cafe_menu.not_plated": "This dish needs to be plated at a Plating Station!",
+  "block.cozycafe.cafe_menu.customer_wants": "Customer wants: %s",
 
   "block.cozycafe.plating_station.not_main": "This type of menu item does not need to be plated!",
   "block.cozycafe.plating_station.not_menu_item": "This item cannot be served!",
   "block.cozycafe.plating_station.already_plated": "This plate already has an item!",
+
+  "stat.cozycafe.dishes_served": "Dishes Served",
+  "stat.cozycafe.dishes_cleaned": "Dishes Cleaned",
 
   "category.cozycafe.main": "Main",
   "category.cozycafe.dessert": "Dessert",
@@ -140,5 +144,10 @@
   "command.cozycafe.add_user.success": "Added player %s to customer usernames config",
   "command.cozycafe.add_user.fail": "%s is already in the config!",
   "command.cozycafe.remove_user.success": "Removed %s from customer config...",
-  "command.cozycafe.remove_user.fail": "%s is alredy not in the config!"
+  "command.cozycafe.remove_user.fail": "%s is alredy not in the config!",
+  "jei.cozycafe.title.menu_item_category": "Cafe Menu Item",
+  "jei.cozycafe.menu_item_category.price": "  Price: $%s",
+  "jei.cozycafe.title.cafe_decor_category": "Cafe Decor",
+  "jei.cozycafe.decor.max": "Max: %s",
+  "gui.cozycafe.decor.no_modifiers": "No modifiers"
 }

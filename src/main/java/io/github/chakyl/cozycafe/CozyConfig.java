@@ -15,6 +15,10 @@ public class CozyConfig {
     public final ModConfigSpec.IntValue customerOrderTime;
     public final ModConfigSpec.ConfigValue<List<? extends String>> customerUsernames;
 
+    public final ModConfigSpec.IntValue drinkReputationGain;
+    public final ModConfigSpec.IntValue mainReputationGain;
+    public final ModConfigSpec.IntValue dessertReputationGain;
+
     public final ModConfigSpec.ConfigValue<String> currency_1;
     public final ModConfigSpec.ConfigValue<String> currency_8;
     public final ModConfigSpec.ConfigValue<String> currency_16;
@@ -26,6 +30,7 @@ public class CozyConfig {
     public final ModConfigSpec.BooleanValue dailyLimit;
     public final ModConfigSpec.BooleanValue platingRequired;
     public final ModConfigSpec.BooleanValue dynamicMenuItems;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> notServed;
     public final ModConfigSpec.ConfigValue<String> quality_bonus_stage;
     public final ModConfigSpec.ConfigValue<String> pickle_bonus_stage;
 
@@ -59,6 +64,18 @@ public class CozyConfig {
         customerUsernames = builder
                 .comment("List of Minecraft usernames whose skins will be used for spawning customers.")
                 .defineList("customer_usernames", Arrays.asList("Chakyl", "unnecessarymb", "Nitbe", "MHF_Alex", "MHF_Herobrine", "MHF_Chicken", "MHF_Cow", "MHF_Pig", "MHF_Sheep", "MHF_Squid", "MHF_Villager", "MHF_Ocelot", "MHF_Blaze", "MHF_CaveSpider", "MHF_Enderman", "MHF_Ghast", "MHF_Golem", "MHF_LavaSlime", "MHF_PigZombie", "MHF_Skeleton", "MHF_Slime", "MHF_Spider", "MHF_Witch", "MHF_Zombie", "MHF_Cake", "MHF_Chest", "MHF_Melon", "MHF_OakLog", "MHF_Present1", "MHF_Present2", "MHF_Pumpkin", "MHF_TNT", "MHF_TNT2", "MHF_ArrowUp", "MHF_ArrowDown", "MHF_ArrowLeft", "MHF_ArrowRight", "MHF_Exclamation", "MHF_Question", "Ethoslab", "Keralis1", "PearlescentMoon", "Grian", "GoodTimeWithScar", "generikb", "Threefold", "Lashmak", "wdiscute", "ChosenArchitect", "kleiwright", "Vazkii"), obj -> obj instanceof String);
+        // Reputation
+
+        drinkReputationGain = builder
+                .comment("Base reputation gained by serving drinks.")
+                .defineInRange("drink_reputation_gain", 2, 0, Integer.MAX_VALUE);
+        mainReputationGain = builder
+                .comment("Base reputation gained by serving mains.")
+                .defineInRange("drink_reputation_gain", 10, 0, Integer.MAX_VALUE);
+        dessertReputationGain = builder
+                .comment("Base reputation gained by serving desserts.")
+                .defineInRange("drink_reputation_gain", 4, 0, Integer.MAX_VALUE)
+        ;
 
         // Currency
         currency_1 = builder.comment("The item to use as a 1 denomination of currency (e.g.: minecraft:emerald)").define("currency_1", "minecraft:gold_nugget");
@@ -72,6 +89,8 @@ public class CozyConfig {
         dailyLimit = builder.comment("When enabled, limits cafe opening to once per Minecraft day.").define("daily_limit", true);
         platingRequired = builder.comment("When enabled, main dishes that aren't in bowls will need to be plated using a Plating Station before serving.").define("plating_required", true);
         dynamicMenuItems = builder.comment("When enabled, items from all mods will be registered as menu items if they're edible and do not have the tag cozycafe:not_served. Turn off if you want more control over the menu.").define("dynamic_menu_items", true);
+        notServed = builder.comment("List of items ignored by dynamic menu item registration.")
+                .defineList("not_served", Arrays.asList("minecraft:dried_kelp", "minecraft:beef", "minecraft:porkchop", "minecraft:mutton", "minecraft:chicken", "minecraft:rabbit", "minecraft:tropical_fish", "minecraft:pufferfish", "minecraft:salmon", "minecraft:cod"), obj -> obj instanceof String);
 
         // Stage Config, mainly for SSV
         quality_bonus_stage = builder

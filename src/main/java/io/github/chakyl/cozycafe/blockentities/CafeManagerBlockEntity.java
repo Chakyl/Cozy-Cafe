@@ -166,7 +166,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
         Collections.shuffle(availableMenuPositions);
         if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Max Potential: " + availableMenuPositions.size());
-        if (!serverLevel.isLoaded(this.linkedSign) || availableMenuPositions.isEmpty()) return;
+        if (this.linkedSign == null || !serverLevel.isLoaded(this.linkedSign) || availableMenuPositions.isEmpty()) return;
         int i = 0;
         for (BlockPos menuPos : availableMenuPositions) {
             if (level.getBlockEntity(menuPos) instanceof CafeMenuBlockEntity cafeMenuBlockEntity && serverLevel.getBlockState(this.linkedSign).is(CozyRegistry.BlockRegistry.CAFE_SIGN.get())) {
@@ -401,7 +401,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
         }
         CafeSignBlockEntity cafeSignBlockEntity = null;
-        if (this.level.isLoaded(this.linkedSign) && this.level.getBlockEntity(this.linkedSign) instanceof CafeSignBlockEntity sign) {
+        if (this.linkedSign != null && this.level.isLoaded(this.linkedSign) && this.level.getBlockEntity(this.linkedSign) instanceof CafeSignBlockEntity sign) {
             cafeSignBlockEntity = sign;
         }
         if (cafeSignBlockEntity == null) return;
@@ -540,16 +540,16 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     private void handleReputation(CafeMenuItem menuItem, ItemStack handStack, double waitTimeDiff) {
         double increase = switch (menuItem.category()) {
-            case DRINK -> 2;
-            case MAIN -> 10;
-            case DESSERT -> 4;
+            case DRINK -> CozyCafe.CONFIG.drinkReputationGain.get();
+            case MAIN -> CozyCafe.CONFIG.mainReputationGain.get();
+            case DESSERT -> CozyCafe.CONFIG.dessertReputationGain.get();
         };
         if (CozyCafe.QUALITY_FOOD_INSTALLED) {
             increase = getQualityIncrease(handStack, increase);
         }
-        if (waitTimeDiff >= 0.95) increase *= 2;
-        if (waitTimeDiff >= 0.75) increase *= 1.5;
-        if (waitTimeDiff >= 5) increase *= 1.25;
+        if (waitTimeDiff <= 0.05) increase *= 2;
+        if (waitTimeDiff <= 0.25) increase *= 1.5;
+        if (waitTimeDiff <= 0.5) increase *= 1.25;
         if (EVENT_LOGGING) CozyCafe.LOGGER.info("[CAFE] Reputation: +" + increase);
         this.increaseReputation((int) Math.floor(increase));
     }

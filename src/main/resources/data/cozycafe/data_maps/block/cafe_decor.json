@@ -14,7 +14,7 @@
     },
     "#minecraft:flower_pots": {
       "decor_name": {
-        "translate": "decor.cozycafe.flower_pot"
+        "translate": "decor.cozycafe.flower_pots"
       },
       "modifiers": ["blooming"]
     },

@@ -159,8 +159,8 @@ dependencies {
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
 
-
-    implementation "curse.maven:jei-238222:7420587"
+    implementation "curse.maven:jei-238222:9747737"
+    implementation "curse.maven:mezzconfig-1689768:9527937"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     // Placebo
     implementation "curse.maven:placebo-283644:8463693"

@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -87,6 +88,7 @@ public class DirtyServingPlateItem extends Item {
                 ItemStack cleanPlate = new ItemStack(CozyRegistry.ItemRegistry.SERVING_PLATE.get());
                 if (!player.getInventory().add(cleanPlate)) player.drop(cleanPlate, false);
                 player.stopUsingItem();
+                player.awardStat(Stats.CUSTOM.get(CozyRegistry.CustomStatsRegistry.DISHES_CLEANED.get()));
             }
         }
     }

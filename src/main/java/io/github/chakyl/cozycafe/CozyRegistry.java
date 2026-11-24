@@ -25,6 +25,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
@@ -51,6 +52,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static io.github.chakyl.cozycafe.CozyCafe.MODID;
+import static io.github.chakyl.cozycafe.CozyCafe.loc;
 
 @SuppressWarnings("unused")
 public final class CozyRegistry {
@@ -62,6 +64,7 @@ public final class CozyRegistry {
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, MODID);
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, CozyCafe.MODID);
+    public static final DeferredRegister<ResourceLocation> CUSTOM_STATS = DeferredRegister.create(Registries.CUSTOM_STAT, CozyCafe.MODID);
 
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
@@ -71,6 +74,7 @@ public final class CozyRegistry {
         ITEMS.register(modEventBus);
         MENU_TYPES.register(modEventBus);
         DATA_COMPONENT_TYPES.register(modEventBus);
+        CUSTOM_STATS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
 
 
@@ -80,6 +84,7 @@ public final class CozyRegistry {
         ItemRegistry.init();
         MenuRegistry.init();
         DataComponentsRegistry.init();
+        CustomStatsRegistry.init();
         CreativeTabReg.init();
     }
 
@@ -176,6 +181,13 @@ public final class CozyRegistry {
         public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> LINKED_MANAGER = DATA_COMPONENT_TYPES.registerComponentType("linked_manager", builder-> builder.persistent(BlockPos.CODEC));
         public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> PLATED_FOOD = DATA_COMPONENT_TYPES.registerComponentType("plated_food", builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC));
         public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> CAFE_DATA = DATA_COMPONENT_TYPES.registerComponentType("cafe_data", builder-> builder.persistent(CompoundTag.CODEC).networkSynchronized(ByteBufCodecs.COMPOUND_TAG));
+    }
+    public static final class CustomStatsRegistry {
+        public static void init() {}
+
+        public static final DeferredHolder<ResourceLocation, ResourceLocation> DISHES_SERVED = CUSTOM_STATS.register("dishes_served", () -> loc("dishes_served"));
+        public static final DeferredHolder<ResourceLocation, ResourceLocation> DISHES_CLEANED = CUSTOM_STATS.register("dishes_cleaned", () -> loc("dishes_cleaned"));
+
     }
 
     public static final class CreativeTabReg {

@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -97,6 +98,16 @@ public class CafeManagerBlock extends Block implements EntityBlock {
             }
         }
     }
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if (!level.isClientSide()) {
+            if (level.hasNeighborSignal(pos) && level.getBlockEntity(pos) instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
+                cafeManagerBlockEntity.toggleOpen();
+            }
+        }
+    }
+
 
     @Override
     public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {

@@ -30,6 +30,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -211,7 +212,9 @@ public class CafeMenuBlockEntity extends BlockEntity {
             pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
             CafeManagerBlockEntity cafeManagerBlockEntity = this.getCafeManager(this.level);
             if (cafeManagerBlockEntity != null) {
-                cafeManagerBlockEntity.handleSuccessfulServe(menuItem, resolvedStack, (double) maxWaitTime / this.waitTime);
+                cafeManagerBlockEntity.handleSuccessfulServe(menuItem, resolvedStack, (double)  this.waitTime / maxWaitTime);
+
+                pPlayer.awardStat(Stats.CUSTOM.get(CozyRegistry.CustomStatsRegistry.DISHES_SERVED.get()));
                 this.handlePayment(pPos, pPlayer, cafeManagerBlockEntity, menuItem, resolvedStack);
             }
             this.waitTime = -1;

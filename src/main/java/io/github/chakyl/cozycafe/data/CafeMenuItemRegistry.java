@@ -60,11 +60,11 @@ public class CafeMenuItemRegistry extends DynamicRegistry<CafeMenuItem> {
          * - Config turned off
          * - Isn't edible
          * - has bad word
-         * - Is in the cozycafe:not_served tag
+         * - Is in configured to not be served
          */
         for (Item item : BuiltInRegistries.ITEM) {
             if (item == Items.AIR || item.getDefaultInstance().get(DataComponents.FOOD) == null) continue;
-            if (item.getDefaultInstance().is(CozyTags.NOT_SERVED)) continue;
+            if (CozyCafe.CONFIG.notServed.get().contains(BuiltInRegistries.ITEM.getKey(item).toString())) continue;
             ResourceLocation itemRL = BuiltInRegistries.ITEM.getKey(item);
             String itemPath = itemRL.getPath();
             if (Arrays.stream(DENIED_KEYWORDS).anyMatch(itemPath::contains)) continue;

@@ -4,6 +4,7 @@ import io.github.chakyl.cozycafe.CozyRegistry;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -71,10 +72,14 @@ public class CafeMenuBlock extends Block implements EntityBlock {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             ItemStack handStack = pPlayer.getItemInHand(pHand);
             if (entity instanceof CafeMenuBlockEntity cafeMenuBlockEntity) {
-                if (!handStack.isEmpty() && cafeMenuBlockEntity.canServe()) {
-                    pPlayer.swing(pHand);
-                    cafeMenuBlockEntity.handleServe(pPos, pPlayer, handStack);
-                    return ItemInteractionResult.CONSUME;
+                if (cafeMenuBlockEntity.canServe()) {
+                    if (!handStack.isEmpty()) {
+                        pPlayer.swing(pHand);
+                        cafeMenuBlockEntity.handleServe(pPos, pPlayer, handStack);
+                        return ItemInteractionResult.CONSUME;
+                    } else {
+                        pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.customer_wants", Component.translatable(cafeMenuBlockEntity.getRequestedItem().getDescriptionId())), true);
+                    }
                 } else {
                     cafeMenuBlockEntity.handleClearDirtyIfPossible(pPos, pPlayer, handStack);
                 }

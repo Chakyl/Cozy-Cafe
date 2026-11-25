@@ -103,7 +103,7 @@ public class CafeManagerBlock extends Block implements EntityBlock {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
         if (!level.isClientSide()) {
             if (level.hasNeighborSignal(pos) && level.getBlockEntity(pos) instanceof CafeManagerBlockEntity cafeManagerBlockEntity) {
-                cafeManagerBlockEntity.toggleOpen();
+                cafeManagerBlockEntity.toggleOpen(null);
             }
         }
     }

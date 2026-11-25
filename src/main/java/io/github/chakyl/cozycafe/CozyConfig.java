@@ -30,6 +30,8 @@ public class CozyConfig {
     public final ModConfigSpec.BooleanValue dailyLimit;
     public final ModConfigSpec.BooleanValue platingRequired;
     public final ModConfigSpec.BooleanValue dynamicMenuItems;
+    public final ModConfigSpec.DoubleValue valuePerNutrition;
+    public final ModConfigSpec.DoubleValue valuePerSaturation;
     public final ModConfigSpec.ConfigValue<List<? extends String>> notServed;
     public final ModConfigSpec.ConfigValue<String> quality_bonus_stage;
     public final ModConfigSpec.ConfigValue<String> pickle_bonus_stage;
@@ -71,10 +73,10 @@ public class CozyConfig {
                 .defineInRange("drink_reputation_gain", 2, 0, Integer.MAX_VALUE);
         mainReputationGain = builder
                 .comment("Base reputation gained by serving mains.")
-                .defineInRange("drink_reputation_gain", 10, 0, Integer.MAX_VALUE);
+                .defineInRange("main_reputation_gain", 10, 0, Integer.MAX_VALUE);
         dessertReputationGain = builder
                 .comment("Base reputation gained by serving desserts.")
-                .defineInRange("drink_reputation_gain", 4, 0, Integer.MAX_VALUE)
+                .defineInRange("dessert_reputation_gain", 4, 0, Integer.MAX_VALUE)
         ;
 
         // Currency
@@ -88,7 +90,13 @@ public class CozyConfig {
         numismaticsUtilsPayment = builder.comment("Allows customers to pay to player's bank account directly if Create Numismatics Utils is installed. Set to false if you don't want that to happen.").define("numismatics_utils_payment", true);
         dailyLimit = builder.comment("When enabled, limits cafe opening to once per Minecraft day.").define("daily_limit", true);
         platingRequired = builder.comment("When enabled, main dishes that aren't in bowls will need to be plated using a Plating Station before serving.").define("plating_required", true);
+
+        // Dynamic Generation
         dynamicMenuItems = builder.comment("When enabled, items from all mods will be registered as menu items if they're edible and do not have the tag cozycafe:not_served. Turn off if you want more control over the menu.").define("dynamic_menu_items", true);
+        valuePerNutrition = builder.comment("Menu price value per nutrition for dynamic menu items. For example, if a menu item has 10 nutrition and this config is set to 1.5, 15 will be added to the price")
+                .defineInRange("value_per_nutrition", 1.5D, 0D, Double.MAX_VALUE);
+        valuePerSaturation = builder.comment("Menu price value per saturation for dynamic menu items. For example, if a menu item has 10 saturation and this config is set to 1.5, 15 will be added to the price")
+                .defineInRange("value_per_nutrition", 1.5D, 0D, Double.MAX_VALUE);
         notServed = builder.comment("List of items ignored by dynamic menu item registration.")
                 .defineList("not_served", Arrays.asList("minecraft:dried_kelp", "minecraft:beef", "minecraft:porkchop", "minecraft:mutton", "minecraft:chicken", "minecraft:rabbit", "minecraft:tropical_fish", "minecraft:pufferfish", "minecraft:salmon", "minecraft:cod"), obj -> obj instanceof String);
 

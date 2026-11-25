@@ -2,6 +2,8 @@ package io.github.chakyl.cozycafe.blocks;
 
 import io.github.chakyl.cozycafe.CozyRegistry;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
+import io.github.chakyl.cozycafe.modevents.CafeOpenedEvent;
+import io.github.chakyl.cozycafe.modevents.DishServedEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;

@@ -16,7 +16,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
@@ -68,7 +70,8 @@ public class GeneralUtils {
     }
 
     public static @NotNull List<Component> getMenuItemTooltip(ItemStack itemStack, CafeMenuItem cafeMenuItem) {
-        if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getItemInHand(InteractionHand.OFF_HAND).getItem() == CozyRegistry.ItemRegistry.CAFE_CATALOG.get()) return getTooltipFromItem(Minecraft.getInstance(), itemStack);
+        if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getItemInHand(InteractionHand.OFF_HAND).getItem() == CozyRegistry.ItemRegistry.CAFE_CATALOG.get())
+            return getTooltipFromItem(Minecraft.getInstance(), itemStack);
         return getMenuItemTooltip(getTooltipFromItem(Minecraft.getInstance(), itemStack), itemStack, cafeMenuItem);
     }
 
@@ -93,17 +96,27 @@ public class GeneralUtils {
     // TODO: Find a way to merge renderFood and getFoodModel into just one public method?
 
     // Nullability here is a bit scuffed
-    public static void renderFood(ItemStack stack, PoseStack poseStack, MultiBufferSource buffer, @Nullable BlockEntity blockEnt, int light, int overlay) {
+    public static void renderFood(CafeMenuItem menuItem, PoseStack poseStack, MultiBufferSource buffer, @Nullable BlockEntity blockEnt, int light, int overlay) {
         Minecraft minecraft = Minecraft.getInstance();
-
-        if (stack.getItem() instanceof BlockItem blockItem) {
+        ItemStack itemStackToRender = menuItem.item().getDefaultInstance();
+        boolean overrideItem = false;
+        if (menuItem.itemRender() != Items.AIR) {
+            itemStackToRender = menuItem.itemRender().getDefaultInstance();
+            overrideItem = true;
+        }
+        if (menuItem.blockRender() != Blocks.AIR || (!overrideItem && itemStackToRender.getItem() instanceof BlockItem)) {
             if (blockEnt == null || blockEnt.getLevel() == null) {
                 return;
             }
 
             poseStack.pushPose();
 
-            BlockState blockState = blockItem.getBlock().defaultBlockState();
+            BlockState blockState;
+            if (menuItem.blockRender() != Blocks.AIR) {
+                blockState = menuItem.blockRender().defaultBlockState();
+            } else {
+                blockState = ((BlockItem) itemStackToRender.getItem()).getBlock().defaultBlockState();
+            }
             BakedModel model = minecraft.getBlockRenderer().getBlockModel(blockState);
 
             RandomSource random = RandomSource.create();
@@ -145,7 +158,7 @@ public class GeneralUtils {
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
             minecraft.getItemRenderer().renderStatic(
-                    stack,
+                    itemStackToRender,
                     ItemDisplayContext.FIXED,
                     light,
                     overlay,

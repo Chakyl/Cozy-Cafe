@@ -11,6 +11,7 @@ import io.github.chakyl.cozycafe.data.CafeModifier;
 import io.github.chakyl.cozycafe.data.CafeTheme;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
+import io.github.chakyl.cozycafe.modevents.DishServedEvent;
 import io.github.chakyl.cozycafe.util.CustomerEntityUtils;
 import io.github.chakyl.cozycafe.util.CustomerTarget;
 import io.github.chakyl.cozycafe.util.ModifierUtils;
@@ -40,6 +41,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -261,6 +263,8 @@ public class CafeMenuBlockEntity extends BlockEntity {
         }
         resolvedPrice *= getMultAttributeMultiplier(pPlayer, cafeMenuItem);
         int finalPrice = Mth.floor(resolvedPrice);
+
+        NeoForge.EVENT_BUS.post(new DishServedEvent(pPlayer, cafeManagerBlockEntity, handStack, finalPrice));
         if (CozyCafe.CONFIG.numismaticsUtilsPayment.get() && CozyCafe.NUMISMATICS_UTILS_INSTALLED) {
             CurioUtils.depositIntoPersonalOrCurio(this.level, pPlayer, finalPrice);
             pPlayer.displayClientMessage(Component.translatable("block.cozycafe.cafe_menu.payment", NumberFormat.getNumberInstance(Locale.US).format(finalPrice)), true);

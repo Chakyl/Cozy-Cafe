@@ -1,6 +1,8 @@
 package io.github.chakyl.cozycafe.item;
 
 import io.github.chakyl.cozycafe.CozyRegistry;
+import io.github.chakyl.cozycafe.data.CafeMenuItem;
+import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -33,6 +35,11 @@ public class ServingPlateItem extends Item {
 
         return container.getStackInSlot(0);
     }
+    public static CafeMenuItem getCafeMenuItem(ItemStack platedFood) {
+        ItemStack food = getStoredFood(platedFood);
+        if (food.isEmpty()) return null;
+        return CafeMenuItemRegistry.INSTANCE.getForItem(food.getItem());
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -41,24 +48,24 @@ public class ServingPlateItem extends Item {
             ItemStack storedFood = getStoredFood(plateStack);
             if (!storedFood.isEmpty()) {
                 if (!level.isClientSide) {
-                    if (!player.getInventory().add(storedFood)) {
-                        player.drop(storedFood, false);
-                    }
-
-                    if (plateStack.getCount() >= 1) {
-                        plateStack.shrink(1);
-                    } else {
-                        plateStack.set(PLATED_FOOD, null);
+                    if (!player.getInventory().add(storedFood.copy())) {
+                        player.drop(storedFood.copy(), false);
                     }
 
                     ItemStack dirtyPlate = new ItemStack(CozyRegistry.ItemRegistry.DIRTY_SERVING_PLATE.get());
-                    if (!player.getInventory().add(dirtyPlate)) {
-                        player.drop(dirtyPlate, false);
+                    if (plateStack.getCount() == 1) {
+                        player.setItemInHand(hand, dirtyPlate);
+                        plateStack = dirtyPlate;
+                    } else {
+                        plateStack.shrink(1);
+                        if (!player.getInventory().add(dirtyPlate)) {
+                            player.drop(dirtyPlate, false);
+                        }
                     }
                 }
 
                 player.playSound(net.minecraft.sounds.SoundEvents.ITEM_PICKUP, 0.2F, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
-
+                player.inventoryMenu.broadcastChanges();
                 return InteractionResultHolder.sidedSuccess(plateStack, level.isClientSide());
             }
         }

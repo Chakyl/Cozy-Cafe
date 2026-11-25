@@ -1,0 +1,7 @@
+{
+  "item": "minecraft:carrot",
+  "category": "main",
+  "item_render": "minecraft:carrot",
+  "price": 2,
+  "flavors": ["vegan", "cold"]
+}

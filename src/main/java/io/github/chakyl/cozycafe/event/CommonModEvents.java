@@ -5,14 +5,12 @@ import io.github.chakyl.cozycafe.CozyRegistry;
 import io.github.chakyl.cozycafe.command.ModifyCustomerSkinCommand;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
 import static io.github.chakyl.cozycafe.DataMapRegistry.DECOR;

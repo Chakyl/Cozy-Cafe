@@ -3,6 +3,7 @@ package io.github.chakyl.cozycafe.data;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.chakyl.cozycafe.CozyCafe;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +11,8 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.*;
@@ -25,12 +28,15 @@ import static io.github.chakyl.cozycafe.util.FoodClassificationUtils.dropsBowl;
  * @param bottleDrink
  * @param flavors
  */
-public record CafeMenuItem(Item item, MenuItemCategory category, String multAttribute, int price, boolean bowlFood,
+public record CafeMenuItem(Item item, Item itemRender, Block blockRender, MenuItemCategory category,
+                           String multAttribute, int price, boolean bowlFood,
                            Item bowl, boolean bottleDrink, Item bottle,
                            List<String> flavors) implements AbstractCafeMenuItem {
     public static final Codec<CafeMenuItem> CODEC = RecordCodecBuilder.create(inst -> inst
             .group(
                     BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(CafeMenuItem::item),
+                    BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item_render", Items.AIR).forGetter(CafeMenuItem::itemRender),
+                    BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("block_render", Blocks.AIR).forGetter(CafeMenuItem::blockRender),
                     Codec.STRING.optionalFieldOf("category", ",main").xmap(
                             s -> switch (s.toLowerCase()) {
                                 case "dessert" -> MenuItemCategory.DESSERT;
@@ -51,18 +57,18 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
                     BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle", Items.GLASS_BOTTLE).forGetter(CafeMenuItem::bottle),
                     Codec.STRING.listOf().optionalFieldOf("flavors").forGetter(CMI -> CMI.flavors().isEmpty() ? Optional.empty() : Optional.of(CMI.flavors()))
             )
-            .apply(inst, (item, category, multAttribute, price, bowlFood, bowl, bottleDrink, bottle, flavors) -> {
+            .apply(inst, (item, itemRender, blockRender, category, multAttribute, price, bowlFood, bowl, bottleDrink, bottle, flavors) -> {
                 ItemStack defaultInstance = item.getDefaultInstance();
                 int resolvedPrice = price == -1 ? getGeneratedPrice(defaultInstance) : price;
                 boolean resolvedBottleDrink = bottleDrink.orElseGet(() -> category == MenuItemCategory.DRINK && dropsBottle(defaultInstance));
                 boolean resolvedBowlFood = bowlFood.orElseGet(() -> dropsBowl(defaultInstance));
                 List<String> resolvedFlavors = addTagBasedFlavors(defaultInstance, flavors.orElse(List.of()));
-                return new CafeMenuItem(item, category, multAttribute, resolvedPrice, resolvedBowlFood, bowl, resolvedBottleDrink, bottle, resolvedFlavors);
+                return new CafeMenuItem(item, itemRender, blockRender, category, multAttribute, resolvedPrice, resolvedBowlFood, bowl, resolvedBottleDrink, bottle, resolvedFlavors);
             }));
 
 
     public CafeMenuItem(CafeMenuItem other) {
-        this(other.item, other.category, other.multAttribute, other.price, other.bowlFood, other.bowl, other.bottleDrink, other.bottle, other.flavors);
+        this(other.item, other.itemRender, other.blockRender, other.category, other.multAttribute, other.price, other.bowlFood, other.bowl, other.bottleDrink, other.bottle, other.flavors);
     }
 
 
@@ -111,7 +117,7 @@ public record CafeMenuItem(Item item, MenuItemCategory category, String multAttr
     private static int getGeneratedPrice(ItemStack food) {
         FoodProperties foodProperties = food.get(DataComponents.FOOD);
         if (foodProperties != null) {
-            return Math.max(1, Math.round(foodProperties.nutrition() + (foodProperties.saturation() * 3)));
+            return Math.max(1, (int) ((foodProperties.nutrition() * CozyCafe.CONFIG.valuePerNutrition.get()) + (foodProperties.saturation() * CozyCafe.CONFIG.valuePerSaturation.get())));
         }
         return 1;
     }

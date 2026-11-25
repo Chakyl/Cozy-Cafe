@@ -7,6 +7,7 @@ import io.github.chakyl.cozycafe.CozyCafe;
 import io.github.chakyl.cozycafe.blockentities.CafeMenuBlockEntity;
 import io.github.chakyl.cozycafe.blocks.CafeMenuBlock;
 import io.github.chakyl.cozycafe.client.SkinCache;
+import io.github.chakyl.cozycafe.data.CafeMenuItemRegistry;
 import io.github.chakyl.cozycafe.util.GeneralUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -103,7 +104,7 @@ public class CafeMenuBlockEntityRenderer implements BlockEntityRenderer<CafeMenu
 
 
             GeneralUtils.renderFood(
-                    blockEntity.getEatingItem(),
+                    CafeMenuItemRegistry.INSTANCE.getForItem(blockEntity.getEatingItem().getItem()),
                     poseStack,
                     bufferSource,
                     blockEntity,

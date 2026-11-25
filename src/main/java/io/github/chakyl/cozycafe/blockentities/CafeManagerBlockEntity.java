@@ -10,6 +10,8 @@ import io.github.chakyl.cozycafe.cafemodifiers.DecorBlock;
 import io.github.chakyl.cozycafe.data.*;
 import io.github.chakyl.cozycafe.entities.CustomerEntity;
 import io.github.chakyl.cozycafe.gui.CafeManagerMenu;
+import io.github.chakyl.cozycafe.modevents.CafeClosedEvent;
+import io.github.chakyl.cozycafe.modevents.CafeOpenedEvent;
 import io.github.chakyl.cozycafe.network.ClientBoundCafeCannotOpenPacket;
 import io.github.chakyl.cozycafe.network.EvilPacketsIHateThem;
 import io.github.chakyl.cozycafe.util.CustomerEntityUtils;
@@ -39,6 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -347,7 +350,7 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
 
     public void toggleOpenFromMenu(ServerPlayer player) {
         if (!this.open && !this.canBeOpened(player)) return;
-        this.toggleOpen();
+        this.toggleOpen(player);
     }
 
     private boolean canBeOpened(ServerPlayer player) {
@@ -390,8 +393,14 @@ public class CafeManagerBlockEntity extends BlockEntity implements MenuProvider 
         return false;
     }
 
-    public void toggleOpen() {
-        this.setOpen(!this.open, true);
+    public void toggleOpen(Player player) {
+        boolean newState = !this.open;
+        if (newState) {
+            NeoForge.EVENT_BUS.post(new CafeOpenedEvent(player, this));
+        } else {
+            NeoForge.EVENT_BUS.post(new CafeClosedEvent(player, this));
+        }
+        this.setOpen(newState, true);
     }
 
     public void setOpen(boolean open, boolean forceClose) {

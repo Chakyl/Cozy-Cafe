@@ -1,5 +1,6 @@
 package io.github.chakyl.cozycafe.client.model;
 
+import io.github.chakyl.cozycafe.data.CafeMenuItem;
 import io.github.chakyl.cozycafe.item.ServingPlateItem;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -19,9 +20,9 @@ public class ServingPlateItemOverrides extends ItemOverrides {
     @Override
     public BakedModel resolve(BakedModel pModel, ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
 
-        ItemStack food = ServingPlateItem.getStoredFood(pStack);
-        if (!food.isEmpty()) {
-            return new ServingPlateModel(plateModel, food);
+        CafeMenuItem menuItem = ServingPlateItem.getCafeMenuItem(pStack);
+        if (menuItem != null) {
+            return new ServingPlateModel(plateModel, menuItem);
         }
         return plateModel;
     }
